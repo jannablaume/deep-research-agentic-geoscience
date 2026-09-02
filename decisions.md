@@ -2,7 +2,7 @@
 
 Newest first. One entry per decision: what, why, what it rules out.
 
-## 2026-09-02 — v0.4: hard web-call cap, test run becomes a coverage probe
+## 2026-09-02 — v0.2: hard web-call cap, test run becomes a coverage probe
 
 Every run mode gets a hard cap on network calls (`test` 20, `full` 250) instead of only
 pass-count budgets, which were unbounded on the search side. `test` is redefined from a

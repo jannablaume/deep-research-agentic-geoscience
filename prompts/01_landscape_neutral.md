@@ -2,7 +2,7 @@
 
 Version: v0.2
 Output: `outputs/01_landscape/<version>/`, where `<version>` is this prompt's version string
-(`v0.2`). If that directory already exists, create `v0.4-run2`, `v0.4-run3`, … and never
+(`v0.2`). If that directory already exists, create `<version>-run2`, `<version>-run3`, … and never
 write into or over an existing one. Record the resolved output path as the first line of
 `RUN.md`.
 

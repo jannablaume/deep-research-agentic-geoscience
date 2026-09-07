@@ -1,0 +1,66 @@
+{
+  "_comment": "Query plan for harvest.py. Each band x domain group produces one query per API. Edit this file to widen or narrow coverage; never edit query strings inside the prompt.",
+
+  "from_date": "2022-11-01",
+  "openalex_max_pages": 5,
+  "arxiv_max_results": 200,
+
+  "bands": {
+    "A_agentic": {
+      "precision": "high",
+      "note": "Explicit agent vocabulary. Nearly everything here is on-topic for technique/architecture questions.",
+      "terms": [
+        "\"agentic AI\"", "\"agentic workflow\"", "\"AI agent\"", "\"LLM agent\"",
+        "\"language model agent\"", "\"autonomous agent\"", "\"multi-agent system\"",
+        "\"multi-agent LLM\"", "\"tool use\"", "\"function calling\"", "\"ReAct\"",
+        "\"chain of thought\"", "\"AI scientist\"", "\"autonomous experimentation\"",
+        "\"self-driving laboratory\"", "\"copilot\"", "\"AI assistant\"",
+        "\"retrieval-augmented generation\"", "\"agent orchestration\"", "\"planning agent\"",
+        "\"human-in-the-loop\""
+      ]
+    },
+    "B_llm": {
+      "precision": "recall",
+      "note": "Foundation-model vocabulary without an agent term. Large and noisy; exists so that agentic systems that never use the word 'agent' are still found. Screened hard.",
+      "terms": [
+        "\"large language model\"", "\"foundation model\"", "\"GPT-4\"", "\"ChatGPT\"",
+        "\"LLM\"", "\"generative AI\"", "\"prompt engineering\"", "\"vision language model\""
+      ]
+    }
+  },
+
+  "domain_groups": {
+    "core": {
+      "in_scope": true,
+      "note": "Solid-earth and subsurface. Full depth.",
+      "groups": {
+        "geomechanics": ["\"rock mechanics\"", "geomechanics", "\"rock mass\"", "\"stress field\"", "\"fault slip\"", "\"hydraulic fracturing\""],
+        "seismology": ["seismology", "seismic", "earthquake", "\"induced seismicity\"", "\"phase picking\"", "\"earthquake catalog\"", "microseismic"],
+        "hydrogeology": ["hydrogeology", "groundwater", "aquifer", "\"vadose zone\"", "\"contaminant transport\""],
+        "reservoir_engineering": ["\"reservoir engineering\"", "\"reservoir simulation\"", "\"well log\"", "\"petroleum engineering\"", "drilling", "\"production optimization\"", "\"history matching\""],
+        "geothermal": ["geothermal", "\"enhanced geothermal\"", "\"heat flow\"", "\"geothermal reservoir\""],
+        "ccs": ["\"carbon capture\"", "\"CO2 storage\"", "\"carbon sequestration\"", "\"geological storage\"", "\"CCS\""],
+        "mining": ["\"mineral exploration\"", "\"mine planning\"", "\"ore body\"", "\"grade control\"", "\"mineral prospectivity\"", "\"mining engineering\""],
+        "engineering_geology": ["\"engineering geology\"", "\"slope stability\"", "\"tunnel support\"", "\"landslide\"", "\"geotechnical\"", "\"site characterization\""],
+        "inversion": ["\"geophysical inversion\"", "\"full waveform inversion\"", "\"seismic interpretation\"", "\"electrical resistivity tomography\"", "\"subsurface imaging\"", "\"well logging\""],
+        "geological_modelling": ["\"geological modelling\"", "\"geological modeling\"", "\"geological map\"", "\"stratigraphy\"", "\"basin model\"", "\"digital geology\"", "\"geoscience knowledge graph\""]
+      }
+    },
+    "periphery": {
+      "in_scope": false,
+      "note": "Harvested for counts and characterisation only. Never deep-read, never annotated individually. Gives the report a measured statement of what sits next door instead of an assertion.",
+      "groups": {
+        "earth_observation": ["\"remote sensing\"", "\"satellite imagery\"", "\"earth observation\"", "\"land cover\""],
+        "climate_atmosphere": ["\"climate model\"", "\"weather forecast\"", "atmospheric", "\"climate simulation\""],
+        "ocean": ["oceanography", "\"ocean model\"", "\"marine science\""],
+        "planetary": ["planetary", "\"planetary geology\"", "\"lunar surface\""],
+        "geoscience_general": ["geoscience", "\"earth science\"", "geology", "geophysics"]
+      }
+    }
+  },
+
+  "venue_hints": {
+    "_comment": "Not queried by harvest.py. Passed to the model for the grey-literature pass, which is the one thing the bibliographic APIs cannot reach.",
+    "grey": ["OnePetro / SPE", "USGS", "BGS", "IEAGHG", "Stanford Geothermal Workshop", "SEG / EAGE / AGU / EGU abstracts", "GitHub", "Hugging Face", "operator and consortium technical reports"]
+  }
+}

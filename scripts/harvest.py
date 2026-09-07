@@ -1,0 +1,438 @@
+#!/usr/bin/env python3
+"""Harvest the candidate corpus from bibliographic APIs into screened.csv.
+
+Replaces the model-driven search loop. Everything here is deterministic: the same
+config produces the same corpus, counts are computed rather than estimated, and the
+abstract arrives with the record so no call is ever spent to store one.
+
+Sources: OpenAlex (primary, 200/page, abstracts, citation counts), arXiv (preprint
+freshness — OpenAlex indexing lags months, which is most of this field's lifetime),
+Semantic Scholar (supplement, best-effort; it rate-limits without a key).
+
+Usage:
+    python3 scripts/harvest.py --out outputs/01_landscape/v0.4 [--dry-run]
+    python3 scripts/harvest.py --out outputs/01_landscape/v0.4 --bands A_agentic
+    python3 scripts/harvest.py --out outputs/01_landscape/v0.4 --no-s2
+
+Re-running merges into the existing screened.csv: rows are never dropped, query
+provenance accumulates, and a row's `first_seen_run` is preserved. Screening
+decisions live in screening.csv and are never touched by this script.
+"""
+
+from __future__ import annotations
+
+import argparse
+import csv
+import json
+import os
+import re
+import sys
+import time
+import urllib.error
+import urllib.parse
+import urllib.request
+import xml.etree.ElementTree as ET
+from datetime import datetime, timezone
+
+# Optional. OpenAlex serves a faster "polite pool" to callers who identify themselves, but
+# works without. Left unset by default so no identity is baked into the repo; set
+# OPENALEX_MAILTO in an untracked settings.local.json or the shell to opt in.
+MAILTO = os.environ.get("OPENALEX_MAILTO", "")
+USER_AGENT = "deep-research-agentic-geoscience" + (f" (mailto:{MAILTO})" if MAILTO else "")
+# Optional. Without it Semantic Scholar returns 429 on nearly every call, which is why
+# --no-s2 is the documented default; with it, S2 becomes a usable third index.
+S2_API_KEY = os.environ.get("S2_API_KEY", "")
+
+SCREENED_COLS = [
+    "identity_key", "doi", "arxiv_id", "url", "title", "authors", "year", "venue",
+    "type", "cited_by", "oa_pdf_url", "abstract", "domain_group", "band",
+    "source_apis", "query_ids", "n_queries", "first_seen_run",
+]
+QUERY_COLS = [
+    "query_id", "api", "band", "scope", "domain_group", "query", "status",
+    "n_results", "n_new_unique", "elapsed_s", "note",
+]
+
+csv.field_size_limit(10_000_000)
+
+
+# ---------------------------------------------------------------- http
+
+def _get(url: str, params: dict, timeout: int = 60, retries: int = 3,
+         headers: dict | None = None) -> str:
+    qs = urllib.parse.urlencode(params, quote_via=urllib.parse.quote)
+    full = f"{url}?{qs}"
+    last = None
+    for attempt in range(retries):
+        try:
+            hdrs = {"User-Agent": USER_AGENT, **(headers or {})}
+            req = urllib.request.Request(full, headers=hdrs)
+            with urllib.request.urlopen(req, timeout=timeout) as r:
+                return r.read().decode("utf-8", "replace")
+        except urllib.error.HTTPError as e:
+            last = f"HTTP {e.code}"
+            if e.code in (429, 500, 502, 503, 504):
+                time.sleep(2 ** attempt * 3)
+                continue
+            break
+        except Exception as e:  # noqa: BLE001 - network layer, report and move on
+            last = type(e).__name__
+            time.sleep(2 ** attempt * 2)
+    raise RuntimeError(last or "unknown error")
+
+
+# ---------------------------------------------------------------- normalise
+
+_WS = re.compile(r"\s+")
+_NONWORD = re.compile(r"[^a-z0-9]+")
+
+
+def clean(s: str | None) -> str:
+    return _WS.sub(" ", (s or "").replace("\n", " ")).strip()
+
+
+def title_slug(title: str) -> str:
+    return _NONWORD.sub("", (title or "").lower())[:120]
+
+
+def norm_doi(doi: str | None) -> str:
+    if not doi:
+        return ""
+    d = doi.strip().lower()
+    for p in ("https://doi.org/", "http://doi.org/", "doi:"):
+        if d.startswith(p):
+            d = d[len(p):]
+    return d
+
+
+def norm_arxiv(s: str | None) -> str:
+    if not s:
+        return ""
+    m = re.search(r"(\d{4}\.\d{4,5})(v\d+)?", s)
+    return m.group(1) if m else ""
+
+
+def inverted_to_text(inv: dict | None) -> str:
+    if not inv:
+        return ""
+    pairs = [(p, w) for w, ps in inv.items() for p in ps]
+    pairs.sort()
+    return clean(" ".join(w for _, w in pairs))
+
+
+def identity_of(rec: dict) -> str:
+    if rec.get("doi"):
+        return f"doi:{rec['doi']}"
+    if rec.get("arxiv_id"):
+        return f"arxiv:{rec['arxiv_id']}"
+    return f"title:{title_slug(rec.get('title', ''))}"
+
+
+# ---------------------------------------------------------------- sources
+
+def openalex(query: str, from_date: str, max_pages: int) -> tuple[list[dict], int]:
+    out, cursor, total = [], "*", 0
+    select = ("id,doi,display_name,publication_year,authorships,primary_location,"
+              "cited_by_count,type,open_access,abstract_inverted_index")
+    for _ in range(max_pages):
+        params = {
+            "filter": f"from_publication_date:{from_date},title_and_abstract.search:{query}",
+            "per-page": "200", "cursor": cursor, "select": select,
+        }
+        if MAILTO:
+            params["mailto"] = MAILTO
+        data = json.loads(_get("https://api.openalex.org/works", params))
+        total = data.get("meta", {}).get("count", 0)
+        for r in data.get("results", []):
+            loc = r.get("primary_location") or {}
+            src = loc.get("source") or {}
+            oa = r.get("open_access") or {}
+            out.append({
+                "doi": norm_doi(r.get("doi")),
+                "arxiv_id": norm_arxiv(loc.get("landing_page_url") or ""),
+                "url": r.get("doi") or loc.get("landing_page_url") or r.get("id", ""),
+                "title": clean(r.get("display_name")),
+                "authors": "; ".join(
+                    clean((a.get("author") or {}).get("display_name"))
+                    for a in (r.get("authorships") or [])[:12]),
+                "year": r.get("publication_year") or "",
+                "venue": clean(src.get("display_name")),
+                "type": r.get("type") or "",
+                "cited_by": r.get("cited_by_count") or 0,
+                "oa_pdf_url": oa.get("oa_url") or "",
+                "abstract": inverted_to_text(r.get("abstract_inverted_index")),
+                "source_apis": "openalex",
+            })
+        cursor = data.get("meta", {}).get("next_cursor")
+        if not cursor or len(data.get("results", [])) < 200:
+            break
+        time.sleep(0.2)
+    return out, total
+
+
+def arxiv(query: str, from_date: str, max_results: int) -> tuple[list[dict], int]:
+    ns = {"a": "http://www.w3.org/2005/Atom"}
+    out, start, page = [], 0, 100
+    cutoff = from_date
+    total = 0
+    while start < max_results:
+        params = {
+            "search_query": query, "start": str(start),
+            "max_results": str(min(page, max_results - start)),
+            "sortBy": "submittedDate", "sortOrder": "descending",
+        }
+        root = ET.fromstring(_get("http://export.arxiv.org/api/query", params))
+        tot = root.find("{http://a9.com/-/spec/opensearch/1.1/}totalResults")
+        if tot is not None and tot.text:
+            total = int(tot.text)
+        entries = root.findall("a:entry", ns)
+        if not entries:
+            break
+        stop = False
+        for e in entries:
+            pub = (e.findtext("a:published", "", ns) or "")[:10]
+            if pub and pub < cutoff:
+                stop = True
+                continue
+            aid = norm_arxiv(e.findtext("a:id", "", ns))
+            doi_el = e.find("{http://arxiv.org/schemas/atom}doi")
+            out.append({
+                "doi": norm_doi(doi_el.text if doi_el is not None else ""),
+                "arxiv_id": aid,
+                "url": f"https://arxiv.org/abs/{aid}" if aid else e.findtext("a:id", "", ns),
+                "title": clean(e.findtext("a:title", "", ns)),
+                "authors": "; ".join(clean(a.findtext("a:name", "", ns))
+                                     for a in e.findall("a:author", ns)[:12]),
+                "year": pub[:4],
+                "venue": "arXiv",
+                "type": "preprint",
+                "cited_by": "",
+                "oa_pdf_url": f"https://arxiv.org/pdf/{aid}" if aid else "",
+                "abstract": clean(e.findtext("a:summary", "", ns)),
+                "source_apis": "arxiv",
+            })
+        if stop or len(entries) < page:
+            break
+        start += page
+        time.sleep(3)  # arXiv asks for 3s between requests
+    return out, total
+
+
+def semanticscholar(query: str, from_date: str, limit: int = 200) -> tuple[list[dict], int]:
+    params = {
+        "query": query, "limit": str(min(limit, 100)),
+        "year": f"{from_date[:4]}-",
+        "fields": "title,abstract,year,venue,citationCount,externalIds,openAccessPdf,publicationTypes",
+    }
+    hdrs = {"x-api-key": S2_API_KEY} if S2_API_KEY else None
+    data = json.loads(_get("https://api.semanticscholar.org/graph/v1/paper/search",
+                           params, headers=hdrs))
+    out = []
+    for r in data.get("data", []) or []:
+        ext = r.get("externalIds") or {}
+        oa = r.get("openAccessPdf") or {}
+        aid = norm_arxiv(ext.get("ArXiv") or "")
+        out.append({
+            "doi": norm_doi(ext.get("DOI")),
+            "arxiv_id": aid,
+            "url": (f"https://doi.org/{norm_doi(ext.get('DOI'))}" if ext.get("DOI")
+                    else (f"https://arxiv.org/abs/{aid}" if aid else "")),
+            "title": clean(r.get("title")),
+            "authors": "",
+            "year": r.get("year") or "",
+            "venue": clean(r.get("venue")),
+            "type": "; ".join(r.get("publicationTypes") or []),
+            "cited_by": r.get("citationCount") or "",
+            "oa_pdf_url": oa.get("url") or "",
+            "abstract": clean(r.get("abstract")),
+            "source_apis": "s2",
+        })
+    return out, data.get("total", len(out))
+
+
+# ---------------------------------------------------------------- query plan
+
+_BARE_OP = re.compile(r"\b(AND|OR|NOT)\b")
+
+
+def validate_config(cfg: dict) -> None:
+    """A bare AND inside an OR group makes OpenAlex return zero results with no error.
+
+    That is the worst possible failure: the corpus is silently empty for that cell and
+    every downstream count still looks plausible. Terms are single phrases; the script
+    joins them. Refuse to run rather than harvest nothing.
+    """
+    bad = []
+    for name, band in cfg["bands"].items():
+        bad += [(f"bands.{name}", t) for t in band["terms"] if _BARE_OP.search(t)]
+    for sname, scope in cfg["domain_groups"].items():
+        for g, terms in scope["groups"].items():
+            bad += [(f"{sname}.{g}", t) for t in terms if _BARE_OP.search(t)]
+    if bad:
+        for where, term in bad:
+            print(f"config error: {where}: {term!r} contains a bare boolean operator",
+                  file=sys.stderr)
+        raise SystemExit("queries.json: terms must be single phrases, no AND/OR/NOT")
+
+
+def build_plan(cfg: dict, bands: list[str] | None, scopes: list[str]) -> list[dict]:
+    plan, qid = [], 0
+    for scope_name, scope in cfg["domain_groups"].items():
+        if scope_name not in scopes:
+            continue
+        for group, dterms in scope["groups"].items():
+            for band_name, band in cfg["bands"].items():
+                if bands and band_name not in bands:
+                    continue
+                a = " OR ".join(band["terms"])
+                d = " OR ".join(dterms)
+                qid += 1
+                plan.append({
+                    "query_id": f"q{qid:03d}", "band": band_name, "scope": scope_name,
+                    "domain_group": group,
+                    "openalex": f"({a}) AND ({d})",
+                    "arxiv": "(" + " OR ".join(f"abs:{t}" for t in band["terms"]) + ") AND ("
+                             + " OR ".join(f"abs:{t}" for t in dterms) + ")",
+                    "s2": clean(band["terms"][0].strip('"') + " " + dterms[0].strip('"')),
+                })
+    return plan
+
+
+# ---------------------------------------------------------------- merge & io
+
+def read_csv(path: str) -> list[dict]:
+    if not os.path.exists(path):
+        return []
+    with open(path, newline="", encoding="utf-8") as f:
+        return list(csv.DictReader(f))
+
+
+def write_csv(path: str, cols: list[str], rows: list[dict]) -> None:
+    os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+    with open(path, "w", newline="", encoding="utf-8") as f:
+        w = csv.DictWriter(f, fieldnames=cols, quoting=csv.QUOTE_ALL, extrasaction="ignore")
+        w.writeheader()
+        for r in rows:
+            w.writerow({c: r.get(c, "") for c in cols})
+
+
+def merge(store: dict, alias: dict, rec: dict, q: dict, run_id: str) -> bool:
+    """Insert or merge one record. Returns True if it was new."""
+    key = identity_of(rec)
+    slug = title_slug(rec["title"])
+    # A preprint and its published version arrive with different keys; the title
+    # slug collapses them. Without this the corpus double-counts most of arXiv.
+    if key not in store and slug and slug in alias:
+        key = alias[slug]
+    new = key not in store
+    if new:
+        rec = dict(rec)
+        rec["identity_key"] = key
+        rec["query_ids"] = q["query_id"]
+        rec["domain_group"] = q["domain_group"]
+        rec["band"] = q["band"]
+        rec["first_seen_run"] = run_id
+        store[key] = rec
+        if slug:
+            alias.setdefault(slug, key)
+    else:
+        cur = store[key]
+        qids = [x for x in cur.get("query_ids", "").split(";") if x]
+        if q["query_id"] not in qids:
+            qids.append(q["query_id"])
+            cur["query_ids"] = ";".join(qids)
+        apis = {x for x in cur.get("source_apis", "").split(";") if x}
+        apis.add(rec["source_apis"])
+        cur["source_apis"] = ";".join(sorted(apis))
+        # Prefer the record that actually carries content.
+        for fld in ("abstract", "doi", "arxiv_id", "venue", "oa_pdf_url", "authors", "cited_by"):
+            if not cur.get(fld) and rec.get(fld):
+                cur[fld] = rec[fld]
+        if q["band"] == "A_agentic":
+            cur["band"] = "A_agentic"  # precision band wins for reporting
+    return new
+
+
+# ---------------------------------------------------------------- main
+
+def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--out", required=True, help="run output directory")
+    ap.add_argument("--config", default="reference/queries.json")
+    ap.add_argument("--bands", nargs="*", default=None)
+    ap.add_argument("--scopes", nargs="*", default=["core", "periphery"])
+    ap.add_argument("--no-arxiv", action="store_true")
+    ap.add_argument("--no-s2", action="store_true", help="skip Semantic Scholar (it rate-limits without a key)")
+    ap.add_argument("--dry-run", action="store_true", help="print the plan, call nothing")
+    ap.add_argument("--limit-queries", type=int, default=0, help="stop after N queries (smoke test)")
+    args = ap.parse_args()
+
+    cfg = json.load(open(args.config, encoding="utf-8"))
+    validate_config(cfg)
+    plan = build_plan(cfg, args.bands, args.scopes)
+    if args.limit_queries:
+        plan = plan[:args.limit_queries]
+
+    if args.dry_run:
+        for q in plan:
+            print(f"{q['query_id']}  {q['scope']:9s} {q['domain_group']:22s} {q['band']}")
+            print(f"    openalex: {q['openalex'][:150]}")
+        print(f"\n{len(plan)} queries; APIs per query: openalex"
+              f"{'' if args.no_arxiv else ' + arxiv'}{'' if args.no_s2 else ' + s2'}")
+        return 0
+
+    run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    screened_path = os.path.join(args.out, "screened.csv")
+    queries_path = os.path.join(args.out, "queries.csv")
+
+    store, alias = {}, {}
+    for r in read_csv(screened_path):
+        store[r["identity_key"]] = r
+        s = title_slug(r.get("title", ""))
+        if s:
+            alias.setdefault(s, r["identity_key"])
+    existing_queries = read_csv(queries_path)
+    print(f"loaded {len(store)} existing rows from {screened_path}", file=sys.stderr)
+
+    qrows = []
+    from_date = cfg["from_date"]
+    for i, q in enumerate(plan, 1):
+        jobs = [("openalex", lambda: openalex(q["openalex"], from_date, cfg["openalex_max_pages"]))]
+        if not args.no_arxiv:
+            jobs.append(("arxiv", lambda: arxiv(q["arxiv"], from_date, cfg["arxiv_max_results"])))
+        if not args.no_s2:
+            jobs.append(("s2", lambda: semanticscholar(q["s2"], from_date)))
+        for api, fn in jobs:
+            t0 = time.time()
+            try:
+                recs, total = fn()
+                status, note = "ok", ""
+            except Exception as e:  # noqa: BLE001 - a dead API must not kill the run
+                recs, total, status, note = [], 0, "error", f"{type(e).__name__}: {e}"
+            n_new = sum(merge(store, alias, r, q, run_id) for r in recs)
+            if status == "ok" and not recs:
+                # Distinguishable only here: an empty cell is a finding, a malformed
+                # query is a bug, and both look identical downstream.
+                status, note = "zero", "ZERO RESULTS - verify the query is well formed"
+            qrows.append({
+                "query_id": f"{q['query_id']}:{api}", "api": api, "band": q["band"],
+                "scope": q["scope"], "domain_group": q["domain_group"],
+                "query": q.get(api, ""), "status": status, "n_results": len(recs),
+                "n_new_unique": n_new, "elapsed_s": round(time.time() - t0, 1), "note": note,
+            })
+            print(f"[{i}/{len(plan)}] {q['query_id']} {api:9s} {q['domain_group']:22s} "
+                  f"total={total:<7} got={len(recs):<5} new={n_new:<5} {status} {note}",
+                  file=sys.stderr)
+            # Checkpoint every query: a run killed at 80% keeps its corpus.
+            write_csv(screened_path, SCREENED_COLS, list(store.values()))
+            write_csv(queries_path, QUERY_COLS, existing_queries + qrows)
+
+    with_abs = sum(1 for r in store.values() if r.get("abstract"))
+    print(f"\ncorpus: {len(store)} unique, {with_abs} with abstract "
+          f"({100 * with_abs // max(len(store), 1)}%), {len(qrows)} api calls", file=sys.stderr)
+    print(f"wrote {screened_path} and {queries_path}", file=sys.stderr)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

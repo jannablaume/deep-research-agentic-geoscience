@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "defaultMode": "acceptEdits",
+    "allow": [
+      "Bash(python3 scripts/harvest.py *)",
+      "Bash(python3 scripts/triage.py *)",
+      "Bash(python3 scripts/audit.py *)",
+      "Bash(python3 -c *)",
+      "Bash(mkdir *)",
+      "Bash(ls *)",
+      "Bash(wc *)",
+      "Bash(head *)",
+      "Bash(tail *)",
+      "Bash(grep *)",
+      "Bash(git status *)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Read",
+      "Glob",
+      "Grep",
+      "WebFetch",
+      "WebSearch",
+      "Write(outputs/**)",
+      "Edit(outputs/**)"
+    ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Write(prompts/**)"
+    ],
+    "ask": [
+      "Write(scripts/**)",
+      "Edit(scripts/**)"
+    ]
+  }
+}

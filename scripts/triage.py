@@ -12,10 +12,10 @@ sample drawn from *below* the cut so the cut's cost is measured rather than assu
 Writes, in --out:
     triage.csv     every harvested row + agentic_score, domain_score, band_flags, tier_suggest
     shortlist.md   the above-cut records as a compact digest, ranked, for the model to screen
-    audit_sample.md  60 randomly drawn below-cut records, for the recall check
+    audit_sample.md  150 randomly drawn below-cut records, for the recall check
     triage_stats.md  score distribution and cut cost
 
-Tune --min-score from triage_stats.md, then re-run. It costs no network call.
+Tune --min-score / --min-strong from triage_stats.md, then re-run. No network calls.
 """
 
 from __future__ import annotations
@@ -51,6 +51,21 @@ AGENT_GENERIC = [
 # case-insensitively this single pattern produced 377 false positives in a 1795-record
 # test corpus - more than every other signal combined.
 AGENT_CASED = [r"\bReAct\b", r"\bMRKL\b", r"\bToT\b"]
+# Weight 3, LLM-corroborated like AGENT_GENERIC. Systems that plan, automate or construct
+# something with an LLM but never use the word "agent". Every false negative in the v0.4
+# run's 60-record audit sample was this shape - "LLM-Powered Data Automation for 3D
+# Geological Model Updating", "LLM-assisted workflow for geological unit harmonization" -
+# and none could be recovered by lowering --min-score, because they scored on medium
+# signals alone with strong_hits at 0. Adding them costs ~15% more shortlist.
+AGENT_COMPOUND = [
+    r"(?:LLM|large language model|GPT|foundation model|language model)[-\s]"
+    r"(?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}"
+    r"(?:workflow|pipeline|automation|framework|system|assistant)",
+    r"knowledge[-\s]based\s+(?:Q&A|question[-\s]answering)",
+    r"\bQ&A system\b|question[-\s]answering system",
+    r"knowledge graphs?\s+(?:construction|generation)|construct\w*\s+(?:\w+\s+){0,3}knowledge graphs?",
+    r"automat\w+\s+(?:\w+\s+){0,2}(?:workflow|pipeline)\b",
+]
 # Weight 1: LLM-era vocabulary. Necessary but far from sufficient.
 MEDIUM = [
     r"large language models?", r"\bLLMs?\b", r"\bGPT-?[345]\b", r"\bChatGPT\b",
@@ -94,8 +109,8 @@ _C = re.IGNORECASE
 def compile_all(pats): return [re.compile(p, _C) for p in pats]
 
 
-AL_R, AG_R, MEDIUM_R, NEG_R, PRE_R = map(
-    compile_all, (AGENT_LLM, AGENT_GENERIC, MEDIUM, NEGATIVE, PRE_LLM))
+AL_R, AG_R, AX_R, MEDIUM_R, NEG_R, PRE_R = map(
+    compile_all, (AGENT_LLM, AGENT_GENERIC, AGENT_COMPOUND, MEDIUM, NEGATIVE, PRE_LLM))
 AC_R = [re.compile(p) for p in AGENT_CASED]  # case-sensitive by design
 DOMAIN_R = {k: re.compile(v, _C) for k, v in DOMAIN.items()}
 PERIPH_R = {k: re.compile(v, _C) for k, v in PERIPHERY.items()}
@@ -122,7 +137,7 @@ def score(row: dict) -> dict:
     # LLM-era vocabulary must be established independently of the generic agent terms,
     # otherwise "multi-agent system" alone promotes 1990s work into an LLM shortlist.
     llm_present = bool(al_hits or m_hits)
-    ag_hits = (hits(AG_R) | hits(AC_R)) if llm_present else set()
+    ag_hits = (hits(AG_R) | hits(AC_R) | hits(AX_R)) if llm_present else set()
     s_hits = al_hits | ag_hits
     agentic = 3 * len(s_hits) + len(m_hits)
     dom = {k: len(r.findall(text)) for k, r in DOMAIN_R.items() if r.search(text)}
@@ -166,7 +181,10 @@ def main() -> int:
     ap.add_argument("--min-score", type=int, default=3)
     ap.add_argument("--min-strong", type=int, default=1,
                     help="require at least this many weight-3 signals")
-    ap.add_argument("--audit-n", type=int, default=60)
+    ap.add_argument("--audit-n", type=int, default=150,
+                    help="below-cut records to sample. 60 was too few in v0.4: "
+                         "4 false negatives gave 6.7%% with a confidence interval "
+                         "wide enough to straddle the 5%% action threshold")
     ap.add_argument("--seed", type=int, default=20260903)
     args = ap.parse_args()
 
@@ -225,11 +243,18 @@ def main() -> int:
                 f"({100 * len(short) // max(len(rows), 1)}%)  ·  Core: {len(core)}  ·  "
                 f"Periphery: {len(peri)}  ·  Below cut: {len(below)}\n\n"
                 f"Cut applied: min-score {args.min_score}, min-strong {args.min_strong}\n\n"
-                "## Shortlist size at other thresholds\n\n| min-score | shortlisted |\n|---|---|\n")
+                "## Shortlist size at other thresholds\n\n"
+                "Both knobs, because the cut is an AND of the two and varying only one hides\n"
+                "which is binding. If a row is flat across `min-score`, the score is not what\n"
+                "is cutting - `min-strong` is, and lowering `--min-score` will change nothing.\n\n"
+                "| min-score | strong>=0 | strong>=1 | strong>=2 |\n|---|---|---|---|\n")
+
+        def count(sc, st):
+            return sum(1 for r in rows if r["agentic_score"] >= sc and r["strong_hits"] >= st
+                       and r["llm_present"] == "yes" and r["scope_computed"] != "none")
+
         for t in (1, 2, 3, 4, 6, 8, 10, 12):
-            n = sum(1 for r in rows if r["agentic_score"] >= t and r["strong_hits"] >= args.min_strong
-                    and r["llm_present"] == "yes" and r["scope_computed"] != "none")
-            f.write(f"| {t} | {n} |\n")
+            f.write(f"| {t} | " + " | ".join(str(count(t, s)) for s in (0, 1, 2)) + " |\n")
         f.write("\n## Score distribution (all harvested)\n\n| score | n |\n|---|---|\n")
         for k in sorted(dist):
             f.write(f"| {k}{'+' if k == 20 else ''} | {dist[k]} |\n")

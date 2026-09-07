@@ -91,10 +91,25 @@ agent that reports success while the file it was told to create is absent or unc
 not do the work, and its summary is not evidence that it did.
 
 Then screen `audit_sample.md` the same way, with `from_audit_sample: yes`. These are
-records the triage cut. Any you mark `in` is a false negative in the ranking. If more than
-~5% are false negatives, lower `--min-score`, re-run `triage.py`, and screen the widened
-shortlist. Report the rate in `RUN.md` either way — it is the only honest measure of what
-the corpus missed, and it is the number that tells a reader how much to trust the map.
+records the triage cut. Any you mark `in` is a false negative in the ranking. Report the
+rate in `RUN.md` whatever it is — it is the only honest measure of what the corpus missed,
+and it tells a reader how much to trust the map.
+
+**If the rate exceeds ~5%, diagnose before you widen.** Look up each false negative in
+`triage.csv` and read its `agentic_score`, `strong_hits` and `signals`. The cut is an AND
+of two thresholds, and which one is binding decides the remedy:
+
+- `strong_hits` **is 0** — the record carries no agent vocabulary at all and was cut by
+  `--min-strong`, not by score. Lowering `--min-score` will admit nothing; check the
+  `strong>=0` column in `triage_stats.md` for what dropping it would actually cost. This is
+  usually better fixed by adding the missing phrasing to `AGENT_COMPOUND` in `triage.py`
+  than by widening, because the whole class shares a vocabulary.
+- `strong_hits` **is 1 or more but the score is below the cut** — the score is binding.
+  Lower `--min-score`, re-run `triage.py`, and screen the new records.
+
+Either way, record in `RUN.md` what you diagnosed, what you changed, and the rate before
+and after. A false-negative rate that was measured and acted on is a result; one that was
+measured and quietly accepted is not.
 
 ### 3. Fill the gaps the APIs cannot reach
 

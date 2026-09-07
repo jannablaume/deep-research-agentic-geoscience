@@ -2,6 +2,40 @@
 
 Newest first. One entry per decision: what, why, what it rules out.
 
+## 2026-09-07 — v0.4.1: fixes from the first real run
+
+Three problems the v0.4 run exposed. All three were invisible until real data arrived,
+which is the argument for running the audit sample at all.
+
+**The false-negative remedy named the wrong knob.** The run measured 6.7% false negatives
+(4 of 60) and the prompt said to lower `--min-score`. That would have admitted nothing:
+all 4 misses had `strong_hits: 0`, so `--min-strong` was the binding half of the AND, and
+`triage_stats.md` hid this by varying only `--min-score` — the column read 458 at every
+threshold from 1 to 3 and nobody could see why. The stats table now varies both knobs, and
+the prompt requires diagnosing which is binding before widening.
+
+**The misses were a vocabulary class, not a threshold problem.** All 4 were systems that
+plan or automate with an LLM while never using the word "agent" — "LLM-Powered Data
+Automation for 3D Geological Model Updating", "LLM-assisted workflow for geological unit
+harmonization". Recovering them by threshold meant screening 2,310 records instead of 458;
+recovering them with an `AGENT_COMPOUND` pattern list costs 73. Shortlist goes 458 → 531,
+all 4 are caught, and all 109 previously admitted records are unaffected. Rules out:
+treating a recall failure as a threshold problem before checking whether it is a lexical
+one.
+
+**The audit sample was too small to act on.** 4 of 60 gives 6.7% with a confidence
+interval wide enough to straddle the 5% action threshold, so the run could not tell
+whether it was obliged to widen. Default is now 150.
+
+Also: `screened.csv` and `triage.csv` are gitignored. 22MB each into a 416KB repo, and
+both regenerate from `reference/queries.json` in minutes.
+
+Separately, a forked subagent returned a fabricated completion for the screening pass —
+2.8s, zero tool calls, no file written. The session caught it by checking the filesystem
+and retried successfully. The prompt now forbids delegating screening and requires every
+batch to be verified with `wc -l` against the file rather than against the model's memory
+of having written it.
+
 ## 2026-09-03 — v0.4: bibliographic APIs replace web search; the deterministic half becomes code
 
 v0.3 was 870 lines, roughly half of it justifying its own rules against past run failures.

@@ -29,7 +29,11 @@ Read `reference/SCHEMA.md` now, and again before step 4.
 3. Every substantive paragraph in the report carries `[Certain]`, `[Likely]` or
    `[Absent-searched]`.
 4. Append as you go — `screening.csv`, `papers.csv` and `papers.md` — never only at the
-   end. This run will be summarised and compacted several times.
+   end. This run will be summarised and compacted several times. **One writer per file.**
+   Parallel subagents each holding a batch in context and writing at the end defeats this:
+   the unit that survives a crash becomes the whole batch plus a merge step, and the merge
+   is the last thing to happen. If you delegate, delegate the reading and have the parent
+   write, in batches, verifying each against the file.
 5. Report failures as failures. A step that did not work, said plainly, is worth more than
    a plausible-looking substitute.
 
@@ -60,6 +64,13 @@ python3 scripts/triage.py  --out outputs/01_landscape/v0.4 --min-score 3
 Expect ~15-25k unique records and a shortlist of a few hundred. Read `triage_stats.md`.
 If the shortlist is under 150 or over 800, adjust `--min-score` and re-run `triage.py` —
 it costs no network call. Record the threshold you settled on and why in `RUN.md`.
+
+**Settle the threshold before step 2 begins.** `triage.py` overwrites `shortlist.md` and
+`audit_sample.md`, and once `screening.csv` exists it describes the previous pair. If you
+re-triage anyway — including to add vocabulary patterns — the shortlist and the audit
+sample no longer match your screening decisions, and the false-negative rate you report is
+measured against a sample file that is no longer on disk. Either finish the run on the old
+cut and change the patterns in v0.5, or re-triage and screen the new records too.
 
 If any query reports `status: zero`, it is malformed, not empty. Fix
 `reference/queries.json` and re-harvest that band. A silently empty query is the one
@@ -149,6 +160,16 @@ harvest missed and check them against `screened.csv`. Anything genuinely new get
 `screening.csv` row with `found_via: snowball`. Note in `RUN.md` how many that produced —
 if it is many, the harvest queries need widening in v0.5.
 
+Before writing a row, check whether the system already has a `system_id` in `papers.csv`.
+Vendor platforms and conference-paper/trade-journal pairs recur under different titles, and
+a second `system_id` for one system inflates every per-system count in the report.
+
+**Gate step 5 on the audit.** Run `python3 scripts/audit.py --out outputs/01_landscape/v0.4`
+now, before writing any prose. `Admitted set matches screening` is the check that catches a
+step-4 that reported success and did not write. Do not start the report until it passes:
+the report is the most expensive step and the most exposed to running out of budget, and a
+report written over an incomplete grid has to be redone rather than repaired.
+
 ### 5. Write the report
 
 Into `outputs/01_landscape/v0.4/report/`, one file per section:
@@ -165,6 +186,24 @@ Into `outputs/01_landscape/v0.4/report/`, one file per section:
 | `07_periphery.md` | Size and character of the excluded neighbouring literature, from harvest counts |
 | `08_papers.md` | The annotated paper list — see below |
 | `index.md` | Table of contents, plus the run's headline numbers |
+
+**Write them in this order, not in file-number order: `08_papers.md`, then `07_periphery.md`,
+then 01-06, then `05_maturity.md`'s counts, then `00_executive_summary.md` and `index.md`
+last.** Sections 08 and 07 are the two that follow mechanically from `papers.csv` and the
+harvest counts, so they are cheap and they are the sections a reader can still use if
+nothing else gets written. The executive summary depends on every other section, so it goes
+last; written first it can only be guesswork.
+
+**Write one file, then confirm it exists and is non-empty, then start the next.** Do not
+hold several sections in context to write in one pass. After each file:
+
+```bash
+wc -l outputs/01_landscape/v0.4/report/*.md
+```
+
+If a file is absent or empty, it was not written, whatever your notes say. This applies to
+delegated section-writing with no exceptions — a subagent reporting a finished section is
+not evidence that the file exists.
 
 **How to write sections 1-6.** Anchor every paragraph on a concept and cite the several
 sources bearing on it. Not "Author A built X, Author B built Y". Rather: "Multi-agent
@@ -223,3 +262,11 @@ protagonist.
 `RUN.md` records where it stopped: last step completed, last record in progress, and what
 remains. The harvest and triage outputs are regenerable from `queries.json` in minutes;
 `screening.csv`, `papers.csv` and `papers.md` are not. Protect those three.
+
+Write that stop-early note **when you notice the budget running down, not when it runs
+out**. If a step is partially done, say which records are in the file and which are not,
+and name the file the remaining work can be restarted from. A stop between steps 4 and 5
+with the audit passing is a usable result: `papers.csv` and `papers.md` are the grid and
+the evidence, and the report can be written in a later run without re-harvesting or
+re-screening anything. A stop that leaves `papers.csv` short of `screening.csv` is not,
+which is why the audit gate above comes before the report and not after it.

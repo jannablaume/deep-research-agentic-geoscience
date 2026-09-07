@@ -132,22 +132,36 @@ Deep-read and report-writing proceed from this point forward in this session.
   from `tier: core` to `tier: context`** in `screening.csv` (note field records the
   downgrade and points to `unreachable.md`). The `screening.csv` downgrade is done and
   verified: 74 rows carry the downgrade note.
-- **The abstract-only extraction for those 74 was started and did not finish.** Four
-  parallel subagents were dispatched to write their `papers.csv` rows from the
+- **The abstract-only extraction for those 74 was started, lost, and later redone.** Four
+  parallel subagents were first dispatched to write their `papers.csv` rows from the
   `screened.csv` abstracts (no fetching; `access_status: abstract-only`,
   `maturity_demonstrated: not stated (abstract only)` fixed for all of them per schema).
   Three were killed by an API session limit (HTTP 429); the fourth reported completion but
-  wrote nothing to `papers.csv`. **None of the 74 rows exist.** `papers.csv` holds 42 rows
-  — the 17 full-text `core` records and the 25 records screened `tier: context` before
-  step 4 — against 116 admitted records in `screening.csv`. `scripts/audit.py` flags this
-  as `Admitted set matches screening | FAIL | papers 42 vs screened-in 116`.
+  wrote nothing to `papers.csv`. None of the 74 rows survived, leaving `papers.csv` at 42
+  rows against 116 admitted records — `scripts/audit.py` flagged this as
+  `Admitted set matches screening | FAIL | papers 42 vs screened-in 116`.
 - An earlier version of this section claimed 116 rows in `papers.csv` and stated that row
-  counts had been verified. That was written ahead of the fact and was never true; it is
-  corrected here rather than reconciled. Five of the 74 have no abstract at all in
-  `screened.csv`; when the extraction is redone, those get `task` derived from title and
-  `not stated` everywhere else.
-- `papers_context.csv` is a subagent intermediate, not a schema artifact. All 25 of its
-  rows are already in `papers.csv`; it should be deleted or folded into the schema in v0.5.
+  counts had been verified. That was written ahead of the fact and was never true. It is
+  corrected here rather than reconciled.
+- **The 74 rows were then rewritten directly in a single session**, in nine batches of
+  7-10 records, each batch verified against the file (row count before and after) before
+  the next was written, and each batch committed. No fetching was needed: the abstracts
+  were already in `screened.csv` from step 1. Five of the 74 have no abstract at all
+  (`doi:10.1016/j.autcon.2026.107055`, `doi:10.1016/j.watres.2026.125886`,
+  `doi:10.13140/rg.2.2.28926.65602`, `doi:10.1016/j.autcon.2025.106257`,
+  `doi:10.1016/j.sandf.2026.101789`); those carry `task` derived from title and
+  `not stated` everywhere else, flagged in the cell itself. `papers.csv` now holds
+  **17 `core` rows (full-text, with `papers.md` extract blocks) and 99 `context` rows
+  (abstract-only)** — 116 total, 116 unique `identity_key`s, 112 distinct `system_id`s,
+  matching the 116 admitted records. Verified by `audit.py`, not by assertion.
+- Two `system_id` reuses were caught during the rewrite, both of which would otherwise
+  have double-counted systems in the report: `doi:10.2523/iptc-25122-ms` is the same
+  `ENERGYai` system as three rows already present, and `doi:10.2118/226728-ms` is the
+  underlying SPE paper for the JPT highlight `doi:10.2118/0326-0015-jpt`, already admitted
+  as `shekhawat2026-offshoresurveillance`. The step-2 note that this underlying paper was
+  "not separately in corpus" was wrong — it was in the corpus, in the core tier.
+- `papers_context.csv`, a subagent intermediate whose 25 rows were all already in
+  `papers.csv`, has been deleted. It was never a schema artifact.
 - **Backward snowballing during step 4** surfaced five candidate systems from reference
   lists / discussion of the papers that had readable full text: **TRACE** and the
   **SPECFEM MCP seismology agent** were already present in the corpus under their own
@@ -173,17 +187,18 @@ Deep-read and report-writing proceed from this point forward in this session.
 The session hit an API usage limit during the step-4 abstract-only extraction. Recorded
 here per the skill's stop-early rule.
 
-- **Last step completed:** step 3 (grey literature). Step 4 is partial: full-text
-  deep-read finished for all 91 core records, and the 74 `screening.csv` downgrades are
-  written, but the `papers.csv` rows for those 74 are not.
+- **Last step completed:** step 4, but only after the repair described above. At the halt
+  itself, step 3 was the last completed step.
 - **In progress at the halt:** four abstract-only extraction batches covering the 74
-  downgraded records. No partial output from any of them; the work is restartable from
-  `screening.csv` + `screened.csv` with no fetching.
+  downgraded records. No partial output from any of them. Since redone in-session.
 - **Not started:** step 5 (report). `outputs/01_landscape/v0.4/report/` does not exist —
   none of the nine section files were written.
-- **Audit result at the halt:** 20 of 24 checks pass (`audit.md`). Four fail: missing
-  report files, no report sections, the 42-vs-116 `papers.csv` mismatch, and the
-  false-negative rate at 7% against a 5% threshold.
+- **Audit result at the halt:** 20 of 24 checks passed. Four failed: missing report files,
+  no report sections, the 42-vs-116 `papers.csv` mismatch, and the false-negative rate at
+  7% against a 5% threshold.
+- **Audit result after the repair:** 21 of 24 (`audit.md`). The `papers.csv` mismatch is
+  resolved. The two report failures stand because step 5 has not run, and the
+  false-negative gate stands for the reason below.
 
 ### Artifacts are internally inconsistent — a sequencing bug, not a casualty of the halt
 
@@ -203,11 +218,46 @@ describe the same corpus:
 The false-negative gate therefore cannot be cleared by finishing the run — it needs
 re-screening against the current 150-record audit sample.
 
-### For v0.5
+### Fixes applied after the halt
 
-- Re-triage must happen before screening or not at all within a run; if the patterns
-  change mid-run, screening has to be redone against the new shortlist. The prompt should
-  say so and `audit.py` should check that every shortlist record has a screening row.
-- The v0.4.1 guard against subagents returning fabricated completions covered screening
-  only. Extend it to step 4: after any delegated batch, verify the rows landed in the file
-  before recording the step as done.
+Both failure modes above were prompt and tooling problems, not bad luck, so they were
+fixed rather than only noted. `prompts/01_landscape_neutral.md` (and the `SKILL.md`
+symlink to it) and `scripts/audit.py` now carry:
+
+- **One writer per durable file** (rule 4). Parallel subagents each holding a batch and
+  writing at the end move the unit of durability from the record to the batch-plus-merge,
+  and the merge runs last. That is exactly how the 74 rows were lost. Delegate the reading;
+  the parent writes and verifies.
+- **An audit gate between steps 4 and 5.** `audit.py` now has to pass before any report
+  prose is written. `Admitted set matches screening` is the check that catches a step 4
+  which reported success and wrote nothing — it existed all along but ran at step 6, after
+  the report, so it could not gate anything.
+- **Report sections written in dependency order** — `08_papers.md` and `07_periphery.md`
+  first, since they follow mechanically from `papers.csv` and the harvest counts and are
+  what a reader can still use if the run dies; `00_executive_summary.md` last, since it
+  depends on everything else. One file at a time, each confirmed non-empty on disk before
+  the next is started.
+- **Threshold settled before step 2**, with the consequence of re-triaging mid-run spelled
+  out, plus two new `audit.py` checks that make the consequence visible instead of silent:
+  `Every shortlist record was screened` and `Audit sample matches the screened audit rows`.
+  On this run they report 68 unscreened shortlist records and 59 of 60 stale audit rows.
+  The audit is now 26 checks, of which 21 pass.
+- **Stop-early notes written when the budget starts running down, not when it runs out**,
+  naming which records are in the file and which are not.
+- **A `system_id` reuse check before writing a `papers.csv` row**, since vendor platforms
+  and conference/trade-journal pairs recur under different titles and a duplicate id
+  inflates every per-system count.
+
+### Still open for v0.5
+
+- The false-negative gate cannot be cleared by finishing this run. It needs the 150-record
+  current `audit_sample.md` screened from scratch; the 7% figure above describes a sample
+  that no longer exists.
+- `audit.py`'s promotional-framing check scans report prose without distinguishing the
+  report's own voice from a quoted author claim. Several `maturity_claimed` cells hold
+  author phrases like "paradigm shift" and "transformative potential" verbatim, which is
+  correct per rule 2 but will trip the check if quoted into a section. Either exempt
+  quoted spans or require such claims to be reported indirectly.
+- `source_type` for EGU General Assembly abstracts is inconsistent in `papers.csv`
+  (`preprint` for some, `industry` for others). The schema has no value for a conference
+  abstract; either add one or state which to use.

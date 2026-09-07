@@ -88,7 +88,35 @@ def main() -> int:
     bad_dec = [r["identity_key"] for r in screening
                if r.get("decision") not in {"in", "out"}]
     chk("Screening decisions are in/out", not bad_dec, f"{len(bad_dec)} invalid")
+
+    # Re-running triage.py after screening regenerates shortlist.md and audit_sample.md
+    # underneath a screening.csv built against the previous pair. These two checks catch
+    # that: without them the run looks finished and the false-negative rate is measured
+    # against a sample file no longer on disk.
+    def md_keys(name):
+        path = os.path.join(out, name)
+        if not os.path.exists(path):
+            return set()
+        with open(path, encoding="utf-8") as fh:
+            return set(re.findall(r"^### (\S+)", fh.read(), re.M))
+
+    shortlist_keys = md_keys("shortlist.md")
+    sample_keys = md_keys("audit_sample.md")
+    screened_keys = {r["identity_key"] for r in screening}
+    unscreened = shortlist_keys - screened_keys
+    chk("Every shortlist record was screened", not unscreened,
+        f"{len(unscreened)} of {len(shortlist_keys)} shortlisted records have no screening "
+        "row - triage.py was probably re-run after screening"
+        if unscreened else f"all {len(shortlist_keys)} shortlisted records screened")
+
     audited = [r for r in screening if r.get("from_audit_sample") == "yes"]
+    stale = [r["identity_key"] for r in audited if r["identity_key"] not in sample_keys]
+    chk("Audit sample matches the screened audit rows", not stale,
+        f"{len(stale)} of {len(audited)} screened audit-sample rows are absent from the "
+        "current audit_sample.md - the false-negative rate below is measured against a "
+        "sample that has since been regenerated"
+        if stale else f"all {len(audited)} audit rows present")
+
     fn = [r for r in audited if r.get("decision") == "in"]
     rate = 100 * len(fn) / len(audited) if audited else 0
     chk("Recall audit performed", len(audited) >= 40,

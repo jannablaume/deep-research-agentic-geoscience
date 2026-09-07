@@ -5,7 +5,7 @@ The v0.3 prompt asked the model to audit its own compliance from memory, which i
 one thing a compacted long run cannot do. Every check here is executed: it parses the
 artifacts and reports what it finds. A failed check is a working audit.
 
-    python3 scripts/audit.py --out outputs/01_landscape/v0.4
+    python3 scripts/audit.py --out outputs/01_landscape/v0.5
 
 Exits non-zero if any check fails. Prints a markdown table to paste into RUN.md.
 """
@@ -64,7 +64,23 @@ def main() -> int:
     queries = load(os.path.join(out, "queries.csv")) or []
 
     chk("screened.csv parses and is non-empty", bool(screened), f"{len(screened)} rows")
-    chk("triage.csv covers the whole corpus", len(triage) == len(screened),
+    tkeys = {r["identity_key"] for r in triage}
+    skey_map = {r["identity_key"]: r for r in screened}
+    missing_from_screened = tkeys - set(skey_map)
+
+    def _greyish(r):
+        apis = r.get("source_apis") or ""
+        qids = r.get("query_ids") or ""
+        return "web" in apis or bool(re.search(r"\bw\d+", qids)) or "snowball" in qids
+
+    extras = [r for k, r in skey_map.items() if k not in tkeys]
+    bad_extra = [r["identity_key"] for r in extras if not _greyish(r)]
+    chk("triage.csv covers the API corpus", not missing_from_screened and not bad_extra,
+        f"triage {len(triage)} vs screened {len(screened)}; "
+        f"{len(extras)} grey/snowball extras; "
+        f"missing from screened: {len(missing_from_screened)}; "
+        f"untriaged non-grey extras: {len(bad_extra)}"
+        if (extras or missing_from_screened or bad_extra) else
         f"triage {len(triage)} vs screened {len(screened)}")
 
     # --- harvest health
@@ -122,7 +138,8 @@ def main() -> int:
     chk("Recall audit performed", len(audited) >= 40,
         f"{len(audited)} below-cut records screened, {len(fn)} false negatives ({rate:.0f}%)")
     chk("False-negative rate acceptable", rate <= 5 or not audited,
-        f"{rate:.0f}% - above 5% means lowering --min-score and re-running triage")
+        f"{rate:.0f}% - above 5% means diagnose which cut is binding "
+        "(min-score vs min-strong / AGENT_COMPOUND) before widening")
 
     # --- papers grid
     if papers:
@@ -169,15 +186,19 @@ def main() -> int:
     # --- report
     rdir = os.path.join(out, "report")
     rfiles = sorted(f for f in os.listdir(rdir) if f.endswith(".md")) if os.path.isdir(rdir) else []
-    text = "\n".join(open(os.path.join(rdir, f), encoding="utf-8").read() for f in rfiles)
+    # 08_papers.md is the annotated list: citations are the evidence, not [Certain] tags.
+    # Scoring it as untagged prose fails every complete run.
+    tagged_files = [f for f in rfiles if f not in {"08_papers.md", "index.md"}]
+    text = "\n".join(open(os.path.join(rdir, f), encoding="utf-8").read() for f in tagged_files)
+    all_text = "\n".join(open(os.path.join(rdir, f), encoding="utf-8").read() for f in rfiles)
     chk("Report sections present", len(rfiles) >= 5, f"{len(rfiles)} section files: {', '.join(rfiles)}")
 
-    # Strip heading, table and code lines from each block rather than discarding any
+    # Strip heading, table, list and code lines from each block rather than discarding any
     # block that starts with one: a heading with no blank line after it would otherwise
     # exempt the prose beneath it from the tag check entirely.
     def prose_of(block: str) -> str:
         return "\n".join(ln for ln in block.splitlines()
-                         if not ln.lstrip().startswith(("#", "|", "```", ">", "---")))
+                         if not ln.lstrip().startswith(("#", "|", "```", ">", "---", "- ", "* ")))
 
     paras = [p for p in (prose_of(b) for b in re.split(r"\n\s*\n", text))
              if len(p.split()) > 25]
@@ -186,17 +207,17 @@ def main() -> int:
         f"{len(untagged)} of {len(paras)} untagged" +
         (f'; first: "{untagged[0][:70]}…"' if untagged else ""))
 
-    cited = set(re.findall(r"\[\[([^\]]+)\]\]", text))
+    cited = set(re.findall(r"\[\[([^\]]+)\]\]", all_text))
     unknown = sorted(c for c in cited if c not in set(pkeys))
     chk("Every citation resolves to papers.csv", not unknown,
         f"{len(unknown)} unknown, e.g. {unknown[0]}" if unknown else f"{len(cited)} citations, all resolve")
 
-    absent = re.findall(r"\[Absent-searched\][^\n]*", text)
+    absent = re.findall(r"\[Absent-searched\][^\n]*", all_text)
     unbacked = [a for a in absent if not re.search(r"q\d{3}", a)]
     chk("Absence claims cite query ids", not unbacked, f"{len(unbacked)} of {len(absent)} unbacked")
 
     banned = re.findall(r"\b(promising|great potential|revolutionar|revolutioni[sz]|game[- ]chang|paradigm shift|cutting[- ]edge|state of the art\b)\w*",
-                        text, re.I)
+                        all_text, re.I)
     chk("No promotional framing", not banned, f"found: {', '.join(sorted(set(banned))[:5])}" if banned else "clean")
 
     # --- report

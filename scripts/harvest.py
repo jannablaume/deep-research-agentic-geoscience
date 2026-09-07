@@ -10,9 +10,9 @@ freshness — OpenAlex indexing lags months, which is most of this field's lifet
 Semantic Scholar (supplement, best-effort; it rate-limits without a key).
 
 Usage:
-    python3 scripts/harvest.py --out outputs/01_landscape/v0.4 [--dry-run]
-    python3 scripts/harvest.py --out outputs/01_landscape/v0.4 --bands A_agentic
-    python3 scripts/harvest.py --out outputs/01_landscape/v0.4 --no-s2
+    python3 scripts/harvest.py --out outputs/01_landscape/v0.5 [--dry-run]
+    python3 scripts/harvest.py --out outputs/01_landscape/v0.5 --no-s2
+    python3 scripts/harvest.py --out outputs/01_landscape/v0.5-test --no-s2 --smoke
 
 Re-running merges into the existing screened.csv: rows are never dropped, query
 provenance accumulates, and a row's `first_seen_run` is preserved. Screening
@@ -364,13 +364,23 @@ def main() -> int:
     ap.add_argument("--no-arxiv", action="store_true")
     ap.add_argument("--no-s2", action="store_true", help="skip Semantic Scholar (it rate-limits without a key)")
     ap.add_argument("--dry-run", action="store_true", help="print the plan, call nothing")
-    ap.add_argument("--limit-queries", type=int, default=0, help="stop after N queries (smoke test)")
+    ap.add_argument("--limit-queries", type=int, default=0,
+                    help="stop after N queries. First N of the plan — all core, so periphery "
+                         "is skipped. Use --smoke instead for a mechanics test.")
+    ap.add_argument("--smoke", action="store_true",
+                    help="mechanics test: seismology A_agentic, hydrogeology A_agentic, "
+                         "and earth_observation A_agentic (one periphery group)")
     args = ap.parse_args()
 
     cfg = json.load(open(args.config, encoding="utf-8"))
     validate_config(cfg)
     plan = build_plan(cfg, args.bands, args.scopes)
-    if args.limit_queries:
+    if args.smoke:
+        keep = {("core", "seismology", "A_agentic"),
+                ("core", "hydrogeology", "A_agentic"),
+                ("periphery", "earth_observation", "A_agentic")}
+        plan = [q for q in plan if (q["scope"], q["domain_group"], q["band"]) in keep]
+    elif args.limit_queries:
         plan = plan[:args.limit_queries]
 
     if args.dry_run:

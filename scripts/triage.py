@@ -7,7 +7,7 @@ none of it is done by the model. This script scores every record from its title 
 abstract, writes a ranked shortlist the model actually reads, and writes an audit
 sample drawn from *below* the cut so the cut's cost is measured rather than assumed.
 
-    python3 scripts/triage.py --out outputs/01_landscape/v0.4 [--min-score 3]
+    python3 scripts/triage.py --out outputs/01_landscape/v0.5 [--min-score 3]
 
 Writes, in --out:
     triage.csv     every harvested row + agentic_score, domain_score, band_flags, tier_suggest
@@ -186,7 +186,16 @@ def main() -> int:
                          "4 false negatives gave 6.7%% with a confidence interval "
                          "wide enough to straddle the 5%% action threshold")
     ap.add_argument("--seed", type=int, default=20260903)
+    ap.add_argument("--force", action="store_true",
+                    help="overwrite shortlist.md and audit_sample.md even if screening.csv exists")
     args = ap.parse_args()
+
+    screening_path = os.path.join(args.out, "screening.csv")
+    if os.path.exists(screening_path) and not args.force:
+        raise SystemExit(
+            f"{screening_path} exists. Re-running triage.py would regenerate shortlist.md "
+            "and audit_sample.md underneath screening already written. Pass --force only "
+            "if you will re-screen both files from scratch.")
 
     src = os.path.join(args.out, "screened.csv")
     if not os.path.exists(src):
@@ -231,9 +240,9 @@ def main() -> int:
         f.write(f"# Recall audit — {len(sample)} records drawn at random from the "
                 f"{len(below)} below the cut\n\n"
                 "Screen these exactly as the shortlist. Any that should have been admitted is a "
-                "false negative: report the rate in RUN.md and, if it exceeds 5%, lower "
-                "--min-score and re-run triage. This is what makes the cut a measurement "
-                "rather than an assumption.\n\n")
+                "false negative: report the rate in RUN.md and, if it exceeds 5%, diagnose "
+                "which cut is binding (min-score vs min-strong; see triage_stats.md) before "
+                "widening. This is what makes the cut a measurement rather than an assumption.\n\n")
         for r in sample:
             f.write(digest(r) + "\n")
 

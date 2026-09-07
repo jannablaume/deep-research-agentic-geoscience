@@ -13,7 +13,14 @@ a value to fill a cell.
 ## Identity
 
 `identity_key` is assigned by `harvest.py` and is the join key across every file:
-`doi:<lowercased doi>`, else `arxiv:<id>`, else `title:<slug>`. Never mint your own.
+`doi:<lowercased doi>`, else `arxiv:<id>`, else `title:<slug>`. Never mint a key
+that does not follow those three forms.
+
+Grey-literature and snowball records that were never in the API harvest must be
+**appended to `screened.csv` first** (same columns as `harvest.py`; `source_apis`
+includes `web`) and only then given a `screening.csv` row. `screening.csv` has no
+`found_via` column — put `found_via: grey` or `found_via: snowball` in `note`, and
+set `found_via` on the `papers.csv` row.
 
 ---
 

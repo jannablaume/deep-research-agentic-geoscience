@@ -152,3 +152,5 @@
 "doi:10.5194/egusphere-egu25-7245","out","","","not-agentic","yes","groundwater in compound flooding"
 "doi:10.1016/j.tafmec.2024.104452","out","","","not-agentic","yes","FEM crack-propagation"
 "arxiv:2608.05763","out","","","not-agentic","yes","foundation-model-assisted FWI; not an agent"
+"arxiv:2511.03852","in","context","geothermal","","no","found_via grey; GAIA agentic RAG geothermal system; abstract-only this run"
+"title:seismomcp","in","context","seismology","","no","found_via grey; GitHub MCP tool-servers for ObsPy/SAC/SU; not a paper"

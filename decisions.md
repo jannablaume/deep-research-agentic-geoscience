@@ -2,6 +2,37 @@
 
 Newest first. One entry per decision: what, why, what it rules out.
 
+## 2026-09-07 — bump to v0.5
+
+The smoke-test fixes ( `$OUT`, `--smoke`, triage refuse, grey extras, `08_papers` tag
+exemption) are the v0.5 prompt. Full runs write to `outputs/01_landscape/v0.5/`. The
+`v0.4` and `v0.4-test` directories stay as prior runs. Rules out: starting the first
+complete harvest under a v0.4 path that already holds a stalled run.
+
+## 2026-09-07 — smoke test of v0.4 before a full run
+
+A mechanics pass (`--limit-queries 6`, then scripts/prompt fixes) showed four failures
+that would have stopped a full run or made its audit lie.
+
+**`--limit-queries N` is not a smoke test.** The plan is core groups first; periphery
+starts at q021. Six queries harvested 1865 records and zero periphery, so `07_periphery.md`
+could not be written from harvest counts. `--smoke` now runs seismology, hydrogeology, and
+earth_observation (A_agentic only). Rules out: using `--limit-queries` to “test the prompt”.
+
+**Re-triage after screening, and grey rows after triage.** `triage.py` now refuses if
+`screening.csv` exists unless `--force`. Grey/snowball records are appended to
+`screened.csv` (`source_apis: web`) without re-triage; `audit.py` allows those extras
+instead of requiring `len(triage)==len(screened)`. `screening.csv` has no `found_via`
+column — that field is `papers.csv` plus a note.
+
+**The evidence-tag check scored `08_papers.md`.** Core 4–6 line annotations have no
+`[Certain]` tag by design. Audit now skips `08_papers.md` and `index.md` for tags (still
+checks citations and promotional language across all report files). Rules out: a finished
+annotated list failing the contract.
+
+**Commands hardcoded `outputs/01_landscape/v0.4` after telling the model not to overwrite
+it.** The prompt now uses `$OUT` everywhere.
+
 ## 2026-09-07 — v0.4.1: fixes from the first real run
 
 Three problems the v0.4 run exposed. All three were invisible until real data arrived,

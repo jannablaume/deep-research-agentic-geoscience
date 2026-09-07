@@ -5,7 +5,7 @@ description: Scoping review of LLM-based agentic AI in solid-earth and subsurfac
 
 # 01 — What exists in agentic AI for geoscience
 
-Version: v0.4
+Version: v0.5
 
 Map what has been built in **LLM-based agentic AI for solid-earth and subsurface
 geoscience**: the techniques, the architectures, how systems were evaluated, how mature
@@ -14,10 +14,37 @@ agenda of any kind.
 
 ## Setup
 
-Output to `outputs/01_landscape/v0.4/`. If it exists, use `v0.4-run2`, `-run3`, …; never
-write into an existing run directory. Record the resolved path on line 1 of `RUN.md`.
+Resolve the output directory first. Default is `outputs/01_landscape/v0.5/`. If it
+exists, use `v0.5-run2`, `-run3`, … A mechanics test uses `v0.5-test` (see Smoke
+test below). Never write into a directory that already has `screening.csv`. Record
+the resolved path on line 1 of `RUN.md`, and substitute it for `$OUT` in every
+command below.
 
 Read `reference/SCHEMA.md` now, and again before step 4.
+
+## Smoke test (before a full run)
+
+Do this once after editing the prompt or scripts, in a fresh
+`outputs/01_landscape/v0.5-test/` (or `-test2` if that exists). It is not a landscape.
+
+```bash
+OUT=outputs/01_landscape/v0.5-test
+python3 scripts/harvest.py --out "$OUT" --no-s2 --smoke
+python3 scripts/triage.py  --out "$OUT" --min-score 3 --audit-n 40
+```
+
+`--smoke` runs three queries (seismology A_agentic, hydrogeology A_agentic, and
+earth_observation A_agentic) so periphery counting is exercised. `--limit-queries N`
+takes the first N plan rows and **skips periphery** (periphery starts at q021); do
+not use it as the smoke test.
+
+Then screen the shortlist, screen the 40-record audit sample, deep-read 2–3 arXiv
+core papers, write the nine report files (they will be thin), run `audit.py`. Do not
+apply the 150–800 shortlist band. Do not write absence findings about the field.
+
+If harvest, triage, `screening.csv`, `papers.md` extracts, report tags, and
+`audit.py` all complete, the prompt is runnable. Then start a full run in a **new**
+directory.
 
 ## The five rules
 
@@ -57,20 +84,26 @@ harvest counts. This makes the scope boundary a measurement instead of an assert
 ### 1. Harvest — deterministic, no judgment
 
 ```bash
-python3 scripts/harvest.py --out outputs/01_landscape/v0.4 --no-s2
-python3 scripts/triage.py  --out outputs/01_landscape/v0.4 --min-score 3
+python3 scripts/harvest.py --out "$OUT" --no-s2
+python3 scripts/triage.py  --out "$OUT" --min-score 3
 ```
 
 Expect ~15-25k unique records and a shortlist of a few hundred. Read `triage_stats.md`.
-If the shortlist is under 150 or over 800, adjust `--min-score` and re-run `triage.py` —
-it costs no network call. Record the threshold you settled on and why in `RUN.md`.
+On a **full** harvest, if the shortlist is under 150 or over 800, adjust `--min-score`
+and re-run `triage.py` — it costs no network call. That band does not apply to a
+`--smoke` harvest. Record the threshold you settled on and why in `RUN.md`.
+
+Do not re-run `triage.py` after `screening.csv` exists. The script refuses unless
+`--force` is passed, and `--force` requires re-screening the new shortlist and audit
+sample from scratch. Grey or snowball records are appended to `screened.csv` without
+re-triage; `audit.py` allows those extras when `source_apis` contains `web`.
 
 **Settle the threshold before step 2 begins.** `triage.py` overwrites `shortlist.md` and
 `audit_sample.md`, and once `screening.csv` exists it describes the previous pair. If you
 re-triage anyway — including to add vocabulary patterns — the shortlist and the audit
 sample no longer match your screening decisions, and the false-negative rate you report is
 measured against a sample file that is no longer on disk. Either finish the run on the old
-cut and change the patterns in v0.5, or re-triage and screen the new records too.
+cut and change the patterns in v0.6, or re-triage and screen the new records too.
 
 If any query reports `status: zero`, it is malformed, not empty. Fix
 `reference/queries.json` and re-harvest that band. A silently empty query is the one
@@ -92,7 +125,7 @@ records that produced it.
 **Verify every batch against the file, not against your memory of writing it:**
 
 ```bash
-wc -l outputs/01_landscape/v0.4/screening.csv
+wc -l "$OUT/screening.csv"
 ```
 
 The count must rise by the size of the batch you just wrote. If it did not, the rows were
@@ -138,6 +171,12 @@ these sources is what was built and what it was applied to, and that is usually 
 abstract or landing page. Admit them as `access_status: abstract-only`, `tier: context`,
 unless the visible text genuinely supports a `core` write-up.
 
+A grey (or snowball) source not already in `screened.csv` must be appended there first
+(same columns as `harvest.py`; `source_apis: web`; `identity_key` by the harvest rules
+in SCHEMA.md). Only then add a `screening.csv` row. Put `found_via: grey` or
+`found_via: snowball` in the `note` — `screening.csv` has no `found_via` column; that
+field lives in `papers.csv`.
+
 ### 4. Deep-read the core tier
 
 For each `tier: core` record: fetch the full text, read it — **especially the evaluation,
@@ -156,15 +195,16 @@ Verify each source exists and says what you attribute to it. Failures go to
 `unreachable.md` with the reason.
 
 Backward snowballing is free: while reading, scan the reference list for systems the
-harvest missed and check them against `screened.csv`. Anything genuinely new gets a
-`screening.csv` row with `found_via: snowball`. Note in `RUN.md` how many that produced —
-if it is many, the harvest queries need widening in v0.5.
+harvest missed and check them against `screened.csv`. Anything genuinely new is appended
+to `screened.csv` first, then a `screening.csv` row with `found_via: snowball` in `note`.
+Note in `RUN.md` how many that produced —
+if it is many, the harvest queries need widening in v0.6.
 
 Before writing a row, check whether the system already has a `system_id` in `papers.csv`.
 Vendor platforms and conference-paper/trade-journal pairs recur under different titles, and
 a second `system_id` for one system inflates every per-system count in the report.
 
-**Gate step 5 on the audit.** Run `python3 scripts/audit.py --out outputs/01_landscape/v0.4`
+**Gate step 5 on the audit.** Run `python3 scripts/audit.py --out "$OUT"`
 now, before writing any prose. `Admitted set matches screening` is the check that catches a
 step-4 that reported success and did not write. Do not start the report until it passes:
 the report is the most expensive step and the most exposed to running out of budget, and a
@@ -172,7 +212,7 @@ report written over an incomplete grid has to be redone rather than repaired.
 
 ### 5. Write the report
 
-Into `outputs/01_landscape/v0.4/report/`, one file per section:
+Into `$OUT/report/`, one file per section:
 
 | File | Content |
 |---|---|
@@ -198,7 +238,7 @@ last; written first it can only be guesswork.
 hold several sections in context to write in one pass. After each file:
 
 ```bash
-wc -l outputs/01_landscape/v0.4/report/*.md
+wc -l "$OUT/report/"*.md
 ```
 
 If a file is absent or empty, it was not written, whatever your notes say. This applies to
@@ -221,7 +261,10 @@ then by tier:
   it reported, demonstrated maturity, and the authors' own stated limitation.
 - `context`: one line each, from the abstract, marked `[context]`.
 
-Every admitted source appears. This is the list you will come back to.
+Every admitted source appears. This is the list you will come back to. `audit.py`
+does not require `[Certain]` / `[Likely]` / `[Absent-searched]` tags in
+`08_papers.md` or `index.md`; citations are the evidence there. Sections 00–07 still
+need tags on every substantive paragraph.
 
 **Forbidden throughout**: gaps, opportunities, recommendations, future work. Promotional
 or dismissive framing — "promising", "great potential", "revolutionise". Adjudicating
@@ -235,7 +278,7 @@ logged queries is a search failure, not a finding.
 ### 6. Audit
 
 ```bash
-python3 scripts/audit.py --out outputs/01_landscape/v0.4
+python3 scripts/audit.py --out "$OUT"
 ```
 
 It parses the artifacts and writes `audit.md`. Fix what it flags and re-run. **Never edit
@@ -246,7 +289,7 @@ Then close `RUN.md` with: the shortlist threshold and why; the false-negative ra
 the audit sample; counts of harvested / shortlisted / screened / core / context; sources
 per subfield and how many subfields came in thin; how many records had no abstract; what
 the grey-literature pass reached and what it could not; what snowballing added; and what
-to change in v0.5.
+to change in v0.6.
 
 ## Neutrality
 

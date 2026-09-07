@@ -29,10 +29,15 @@ model's. The v0.1-v0.3 prompts asked the model to do all of it and spent most of
 length trying to stop it drifting.
 
 ```bash
-python3 scripts/harvest.py --out outputs/01_landscape/v0.4 --no-s2   # corpus
-python3 scripts/triage.py  --out outputs/01_landscape/v0.4           # ranked shortlist
+# mechanics test (3 queries, includes one periphery group)
+python3 scripts/harvest.py --out outputs/01_landscape/v0.5-test --no-s2 --smoke
+python3 scripts/triage.py  --out outputs/01_landscape/v0.5-test --min-score 3 --audit-n 40
+
+# full run — new directory; never overwrite a run that already has screening.csv
+python3 scripts/harvest.py --out outputs/01_landscape/v0.5 --no-s2   # corpus
+python3 scripts/triage.py  --out outputs/01_landscape/v0.5           # ranked shortlist
 #   ... the model screens, deep-reads and writes ...
-python3 scripts/audit.py   --out outputs/01_landscape/v0.4           # contract check
+python3 scripts/audit.py   --out outputs/01_landscape/v0.5           # contract check
 ```
 
 `harvest.py` pulls OpenAlex (200 records/call, with abstracts and citation counts) and
@@ -70,7 +75,7 @@ regenerates from `reference/queries.json` in minutes.
 
 ```markdown
 - date:
-- prompt: prompts/01_landscape_neutral.md v0.4
+- prompt: prompts/01_landscape_neutral.md v0.5
 - prompt commit:      # git rev-parse --short HEAD
 - model:
 - triage threshold:   # --min-score, and why

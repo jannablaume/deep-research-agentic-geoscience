@@ -18,5 +18,146 @@ outputs/01_landscape/v0.4
   - Core-group shortlist counts (from `triage_stats.md`): seismology 77, reservoir_engineering 66,
     ccs 44, engineering_geology 27, mining 10, hydrogeology 9, geological_modelling 8,
     geothermal 4, inversion 2, geomechanics 1.
-- Screening, grey-literature search, deep-read and report-writing proceed from this point
-  forward in this session.
+## Step 2 — Screening
+
+- Screened all 458 shortlist.md records (title + abstract) into `screening.csv`: 109 `in`
+  (87 `core`, 22 `context`), 349 `out`. Cut-reason tally: `periphery` 149, `not-geoscience`
+  107, `not-a-source` 43, `not-agentic` 35, `duplicate` 8, `pre-llm-only` 7.
+  `subfield` counts for admitted records: reservoir_engineering 54, seismology 21,
+  engineering_geology 18, mining 7, geothermal 2, geological_modelling 2, hydrogeology 2,
+  ccs 2, inversion 1.
+- The largest single judgment call, as expected, was `not-agentic` vs `in`: distinguishing
+  implemented decision-loops from perspective pieces, editorials, JPT news write-ups of
+  someone else's SPE paper, and "AI agent" used as a synonym for a classical (non-LLM)
+  optimisation or reinforcement-learning agent.
+- A recurring false-positive pattern in the shortlist: `CCS` scored as the domain
+  triage.py, but on inspection meant "Correctover Conformance Standard" (a generic
+  AI-agent runtime-verification protocol, unrelated to carbon capture and storage, from a
+  single prolific Zenodo poster), "CCS Chemistry" (a journal name), "Coronary Calcium
+  Score" (a cardiology metric), or "ACM CCS" (the security conference) — never carbon
+  capture. All were cut `not-geoscience`. Also common: "seismic" used metaphorically
+  ("seismic shift") in podcasts/essays with no earth-science content, and company/product
+  names (a "Seismic" sales-content platform, "TERRAIN" as a memory-system name) colliding
+  with domain vocabulary.
+- Then screened all 60 `audit_sample.md` records (drawn from the 8640 below-cut records)
+  the same way, `from_audit_sample: yes`. **4 of 60 were false negatives (6.7%)**, above
+  the 5% guidance threshold:
+  - `doi:10.2139/ssrn.5520018` — LLM-powered 3D geological-model updating (context,
+    geological_modelling; no abstract)
+  - `doi:10.2139/ssrn.5758817` — Geo Model Chat, LLM Q&A for reservoir geological
+    modelling (context, geological_modelling; no abstract)
+  - `doi:10.1130/abs/2025am-11110` — ontology-guided geoscience knowledge-graph
+    construction with LLMs (context, geological_modelling; no abstract)
+  - `doi:10.1016/j.oregeorev.2026.107477` — LLM-assisted geological-map harmonisation and
+    generalisation with copper-occurrence overlay (core, mining; has an abstract)
+  - Investigated the fix the instructions call for: re-running `triage.py` with a lower
+    `--min-score`. This does not change the shortlist at all in the useful range —
+    `triage_stats.md` already showed min-score 1, 2 and 3 all yield the identical 458-record
+    shortlist — because the actual binding filter for these four misses is
+    `strong_hits >= 1` (`--min-strong`, default 1), not the score. All four false negatives
+    carry `(strong 0)`. Tried `--min-score 2 --min-strong 0`: shortlist balloons to 2310
+    (25% of the corpus), and `--min-score 4 --min-strong 0` (731, back inside the 150-800
+    band) still excludes these four because their score is only 2. Given the score
+    distribution (score ≤2 covers 7376 of 9098 records, mostly noise), no threshold
+    combination recovers this specific class of miss without abandoning a usable shortlist
+    size. **Did not widen the shortlist** — reverted `triage.py` to the original
+    `--min-score 3 --min-strong 1` (byte-for-byte the same 458/210 split; 3 arXiv records'
+    identity_key format shifted between the two triage.py invocations —
+    `doi:10.48550/arxiv.*` vs `arxiv:*` — corrected in `screening.csv` to match the current
+    `screened.csv` join key). The four recovered false negatives are admitted directly in
+    `screening.csv`/`papers.csv` regardless of the shortlist not containing them.
+  - **Recorded as a genuine limitation, not fixed**: three of the four misses are
+    no-abstract records (screened on title alone) in `geological_modelling`, a subfield
+    that was already thin (2 admitted from the main shortlist). This suggests
+    `min-strong 1` specifically penalises short/no-abstract records in smaller subfields,
+    where a real system's title alone doesn't repeat enough distinct strong-weight phrases
+    to clear the bar. For v0.5: consider a lower `--min-strong` applied only to the
+    no-abstract subset, or manually re-screening the no-abstract population in thin
+    subfields rather than relying on triage.py's score there.
+- Backward-snowballing note from this pass (not from full-text reading, which is step 4):
+  the `egusphere-2026-1960` discussion thread (comment/reply/referee-comment records, all
+  cut `not-a-source`) references an underlying preprint on 3D geological modelling from
+  text/outcrop descriptions using a ReAct-flagged approach that is not itself present in
+  the harvested corpus under its own title — a candidate for the step-4 snowball check.
+
+## Step 3 — Grey literature
+
+- Ran 17 web queries (well under the 40-call budget), logged in `queries.csv` as `api:
+  web`, targeting the subfields the shortlist left thinnest: geomechanics, geothermal,
+  hydrogeology, ccs, geological_modelling, inversion, plus a mining and a seismology pass
+  and one general SPE/OnePetro sweep.
+- Net effect was small: three admissions, all of which turn out to have already been
+  present in `screened.csv` from the API harvest but to have scored below the triage cut
+  (`agentic_score`/`strong_hits` too low) — the web search is what surfaced their
+  relevance, not the API. Added to `screening.csv` as `in`/`core`, `found_via` will be
+  `grey` in `papers.csv`:
+  - `doi:10.48550/arxiv.2512.14429` — Seismology modeling agent (SPECFEM MCP server suite)
+  - `doi:10.1109/cvpr52734.2025.00369` — PEACE / GeoMap-Agent (geologic-map interpretation,
+    multi-expert-agent)
+  - `doi:10.48550/arxiv.2412.17339` — MineAgent (remote-sensing mineral exploration)
+- Two SPE/IPTC leads (Physics-Informed Agentic AI for production optimisation; NeoSpatial
+  for O&G exploration geospatial workflows) were identified but OnePetro returned
+  `HTTP 403` on fetch; logged to `unreachable.md`, not admitted.
+- One lead (`GeoSim.AI`, a geomechanics RAG system) could not be traced to an independently
+  retrievable primary source — only mentioned inside a secondary survey and in
+  search-engine paraphrase — so it is not admitted (rule 1: no writing from a paraphrase).
+- No genuinely new (never-harvested) SPE/USGS/BGS/IEAGHG/GitHub/Hugging-Face systems
+  surfaced beyond what the API harvest already had. Read as a (weak, single-session)
+  signal that the harvest's own query set already reaches most of the readily-discoverable
+  grey literature for this topic — not as proof there is none, since 17 queries is a small
+  sample of the possible search space.
+
+Deep-read and report-writing proceed from this point forward in this session.
+
+## Step 4 — Deep-read the core tier
+
+- Joined the 91 `tier: core` and 25 `tier: context` `screening.csv` rows against
+  `screened.csv` for full metadata, then split the 91 core records into 8 batches of ~12
+  and ran deep-read in parallel (one subagent per batch, each fetching full text with
+  WebFetch — arXiv via `arxiv.org/html/<id>`, everything else via its DOI redirect target
+  and `oa_pdf_url` where present — and writing `papers.csv` rows + `papers.md` verbatim
+  quote blocks together per record, per the skill's rule against splitting that work).
+- **Full-text yield: 17 of 91 core records (19%).** This is the headline finding of step
+  4. Breakdown of the 74 failures is in `unreachable.md` under "Core-tier deep-read
+  failures"; in short: OnePetro (SPE/IPTC/ADIPEC/OTC) is essentially impermeable to this
+  run's fetch tooling (~30 records, all `HTTP 403`), Elsevier/ScienceDirect likewise
+  (~12, `403` or an unresolvable client-side redirect stub), EAGE/EarthDoc similarly
+  (~10), IEEE Xplore returns JS-rendered stubs with no extractable body (4), and even MDPI
+  — nominally open-access — returned `403` on 3 records across three different journals.
+  One arXiv record (`TRACE`, seismology) failed only because its HTML render exceeded the
+  fetch tool's 10 MB limit; this was the sole arXiv failure in the run. A handful more
+  failed on unparseable/binary PDF content or auth-gated PDF routes (ACM, Springer,
+  ResearchGate, Zenodo-as-archive-not-manuscript).
+- Per the skill's instruction not to guess at unreadable content, all 74 were **downgraded
+  from `tier: core` to `tier: context`** in `screening.csv` (note field records the
+  downgrade and points to `unreachable.md`) and characterised from their `screened.csv`
+  abstract only — a second round of parallel subagents did this abstract-only extraction
+  (no fetching; `access_status: abstract-only`, `maturity_demonstrated: not stated
+  (abstract only)` fixed for all of them per schema). Five of the 74 had no abstract at
+  all in `screened.csv`; for those, only `task` (derived from title) is filled and
+  everything else is `not stated`.
+- Combined with the 25 records already screened `tier: context`, `papers.csv` now holds
+  **17 `core` rows (full-text, with `papers.md` verbatim-quote blocks) and 99 `context`
+  rows (abstract-only)** — 116 total, against 91+25=116 admitted records. Verified: row
+  counts match, no malformed CSV rows, no duplicate `identity_key`s.
+- **Backward snowballing during step 4** surfaced five candidate systems from reference
+  lists / discussion of the papers that had readable full text: **TRACE** and the
+  **SPECFEM MCP seismology agent** were already present in the corpus under their own
+  identity_keys (no new record needed); **URSA** (a general-purpose LANL scientific-agent
+  framework) and **Plumecast** (a GNN reservoir-simulation surrogate, not itself
+  LLM-agentic) are out of scope, not pursued; **Zhang et al. 2025, "Streamlining
+  geoscience data analysis with an LLM-driven workflow"** (`doi:10.1016/j.acags.2024.100218`)
+  was a genuine miss — present in `screened.csv` under `domain_group: geoscience_general`
+  but never in the shortlist — added to `screening.csv` with a `found_via: snowball` note,
+  decision `out`/`periphery` (explicitly agentic, but its subject, general mineralogical
+  database querying, doesn't map to any of the ten core subfields). Five candidates from
+  one deep-read pass is a small number; not read as evidence the harvest's query set is
+  systematically missing a class of system, unlike the recurring OnePetro/Elsevier/EAGE
+  paywall pattern above.
+- One further correction made during this step: `doi:10.1016/j.oregeorev.2026.107477`
+  (the mining-subfield false negative recovered from the step-2 audit sample) was
+  attempted again for full text and again returned `HTTP 403` (ScienceDirect) — it remains
+  admitted, now on the same abstract-only/context basis as everything else downgraded
+  above, rather than on the stronger footing step 2 had hoped for.
+
+Report-writing proceeds from this point forward.

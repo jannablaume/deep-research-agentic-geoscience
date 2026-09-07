@@ -1,10 +1,10 @@
-# Shortlist — 458 of 9098 harvested records
+# Shortlist — 531 of 9098 harvested records
 
 Cut: agentic_score >= 3, strong_hits >= 1, LLM vocabulary present, a domain group identified. Ranked by score then citations.
 Scores and groups are computed by `scripts/triage.py` from title+abstract; they are a sorting aid and carry no authority. Screen every record below.
 
 
-## Core (solid-earth / subsurface) — 248
+## Core (solid-earth / subsurface) — 295
 
 ### doi:10.5281/zenodo.21234580
 **Correctover Conformance Standard v1.0: A Protocol-Level Validation Framework for LLM Agent Systems** (2026) — Zenodo (CERN European Organization for Nuclear Research) · cites 0 · score 20 (strong 5) · core/ccs · doi:10.5281/zenodo.21234580
@@ -20,6 +20,11 @@ Recursive AI Drift: A 2025 Prediction Timeline External Validation Audit and Tec
 **CCS: A Formal Framework for Runtime Verification of Agentic AI Systems** (2026) — Zenodo (CERN European Organization for Nuclear Research) · cites 0 · score 19 (strong 5) · core/ccs · doi:10.5281/zenodo.21271910
 signals: \bAutoGen\b;\bCrewAI\b;\bLLM[- ]?agents?\b;\bLangGraph\b;agentic;agentic*
 Updated version with expanded methodology, empirical validation across 50,000 production traces, and integration evidence from major agent frameworks (AutoGen, CrewAI, LangGraph). Includes formal proof of Required(τ) ⊆ Supported(τ) conformance criterion and performance benchmarks showing 1.47μs verification overhead. Keywords: MCP, LLM Agent, Conformance Validation, Protocol Verification, Formal Verification, Agent Runtime Governance Repository: github.com/Correctover Website: correctover.com…
+
+### arxiv:2601.18381
+**AI Agent for Reverse-Engineering Legacy Finite-Difference Code and Translating to Devito** (2026) — arXiv (Cornell University) · cites 0 · score 18 (strong 4) · core/seismology · doi:10.48550/arxiv.2601.18381
+signals: \bAI agents?\b;\bAI agents?\b*;\bLangGraph\b;agent(?:ic)? workflows?;knowledge graphs?\s+(?:construction|generation)|construct\w*\s+(?:\w+\s+){0,3}knowledge graphs?
+To facilitate the transformation of legacy finite difference implementations into the Devito environment, this study develops an integrated AI agent framework. Retrieval-Augmented Generation (RAG) and open-source Large Language Models are combined through multi-stage iterative workflows in the system's hybrid LangGraph architecture. The agent constructs an extensive Devito knowledge graph through document parsing, structure-aware segmentation, extraction…
 
 ### doi:10.5281/zenodo.21513648
 **MCP Security Audit: Vulnerability Analysis Across 11 AI Agent Frameworks** (2026) — Zenodo (CERN European Organization for Nuclear Research) · cites 0 · score 18 (strong 5) · core/ccs · doi:10.5281/zenodo.21513648
@@ -51,6 +56,11 @@ Episode summary: In this episode, we dive deep into the "Promise Denied" project
 signals: \bLLM[- ]?agents?\b;\bLLM[- ]?agents?\b*;agentic
 • Discuss potential of Agentic AI application in Geotechnics. • Review the 1st Geotechathon event. • Emphasize the importance of community effort for the future of Geotechnics. This paper explores the transformative potential of Large Language Model (LLM)-based agentic artificial intelligence (AI) in addressing longstanding challenges in geotechnical engineering. It begins by highlighting the significant…
 
+### doi:10.48550/arxiv.2401.04732
+**A case study of Generative AI in MSX Sales Copilot: Improving seller productivity with a real-time question-answering system for content recommendation** (2024) — arXiv (Cornell University) · cites 2 · score 15 (strong 2) · core/seismology · doi:10.48550/arxiv.2401.04732
+signals: \bQ&A system\b|question[-\s]answering system;\bQ&A system\b|question[-\s]answering system*;\bcopilots?\b;\bcopilots?\b*
+In this paper, we design a real-time question-answering system specifically targeted for helping sellers get relevant material/documentation they can share live with their customers or refer to during a call. Taking the Seismic content repository as a relatively large scale example of a diverse dataset of sales material, we demonstrate how LLM embeddings of sellers'…
+
 ### doi:10.5281/zenodo.20155016
 **RFC-ATF-1: Agent Trust Fabric — A Post-Quantum Cryptographic Protocol for Autonomous AI Agent Authority Governance** (2026) — Zenodo (CERN European Organization for Nuclear Research) · cites 2 · score 15 (strong 4) · core/ccs · doi:10.5281/zenodo.20155016
 signals: \bAI agents?\b;\bAI agents?\b*;\bAutoGen\b;\bCrewAI\b;\bLangChain\b
@@ -65,11 +75,6 @@ The integration of Generative AI into civil engineering is currently constrained
 **Automating the seismic-resilient design of fiber-reinforced concrete using a physics-informed multi-agent system** (2026) — AI in Civil Engineering · cites 0 · score 15 (strong 3) · core/seismology · doi:10.1007/s43503-026-00102-z
 signals: \bAI agents?\b;agentic;multi[- ]?agent (?:system|framework|architecture|collaborat|approach);multi[- ]?agent (?:system|framework|architecture|collaborat|approach)*
 The design of dynamically resilient concrete materials remains a complex, fragmented process that depends on iterative modelling, expert judgment, and poorly integrated workflows spanning structural analysis, material formulation, and seismic performance evaluation. To address this challenge, we develop an autonomous multi-agent system (MAS) that optimizes the life cycle design of fiber-reinforced concrete (FRC) for earthquake…
-
-### arxiv:2601.18381
-**AI Agent for Reverse-Engineering Legacy Finite-Difference Code and Translating to Devito** (2026) — arXiv (Cornell University) · cites 0 · score 15 (strong 3) · core/seismology · doi:10.48550/arxiv.2601.18381
-signals: \bAI agents?\b;\bAI agents?\b*;\bLangGraph\b;agent(?:ic)? workflows?
-To facilitate the transformation of legacy finite difference implementations into the Devito environment, this study develops an integrated AI agent framework. Retrieval-Augmented Generation (RAG) and open-source Large Language Models are combined through multi-stage iterative workflows in the system's hybrid LangGraph architecture. The agent constructs an extensive Devito knowledge graph through document parsing, structure-aware segmentation, extraction…
 
 ### doi:10.2118/229240-ms
 **Agentic AI Revolution Across O&G Value Streams: New Strategy Through ENERGYai Examples** (2025) — n/a · cites 0 · score 15 (strong 3) · core/seismology · doi:10.2118/229240-ms
@@ -91,6 +96,11 @@ Heuristic methods remain vital for production scheduling and dispatching, yet ma
 signals: \bAI agents?\b;\bAI agents?\b*;\bAutoGen\b;\bCrewAI\b;\bLangGraph\b
 The GuardrailProvider Module is a framework-agnostic runtime security layer implementing the CCS (Computational Compliance Standard) verification protocol for AI Agent tool calls. It provides: (1) GuardrailDecisionV1 — content-addressed authorization decisions with SHA-256 integrity verification; (2) GuardrailProvider — abstract authorization protocol interface; (3) Built-in providers: AllowAll, DenyAll, ToolList (whitelist/blacklist), CKG (Constrained Knowledge Graph with 6 predicates),…
 
+### doi:10.2118/229512-ms
+**Agentic Retrieval Augmented Generation for Drilling: A Real-Time Framework for Dynamic Insights and Visualization** (2025) — n/a · cites 0 · score 14 (strong 2) · core/reservoir_engineering · doi:10.2118/229512-ms
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant);agentic;agentic*
+Abstract Large Language Models (LLMs) hold immense potential for advanced data retrieval and insight generation, yet integrating these capabilities into real-time industrial analytics poses a significant challenge. Traditional business intelligence (BI) systems relying on static dashboards and complex data transformations, often struggle to meet the dynamic demands of modern drilling operations. This paper introduces an…
+
 ### doi:10.2118/230772-ms
 **Self-Improving Generative AI Agents for Automated Daily Mud Report Parsing** (2026) — IADC/SPE International Drilling Conference and Exhibition · cites 0 · score 14 (strong 3) · core/reservoir_engineering · doi:10.2118/230772-ms
 signals: \bAI agents?\b;\bAI agents?\b*;agentic;multi[- ]?agent (?:system|framework|architecture|collaborat|approach)
@@ -106,10 +116,30 @@ _ This article, written by JPT Technology Editor Chris Carpenter, contains highl
 signals: \bReAct\b;agentic;agentic*
 Summary Large Language Models (LLM) have demonstrated remarkable capabilities in natural language contextual comprehension and generation. However, their performance in specialized domains like geoscience can be limited due to unfamiliarity with domain-specific terminology and concepts. Recently, Retrieval-Augmented Generation (RAG) became a popular method to enhance the quality of answers by integrating external knowledge bases. Then,…
 
+### doi:10.5194/egusphere-egu26-15632
+**A Multimodal Multi-Agent Framework for Automated Landslide Risk Management** (2026) — n/a · cites 0 · score 14 (strong 3) · core/engineering_geology · doi:10.5194/egusphere-egu26-15632
+signals: automat\w+\s+(?:\w+\s+){0,2}(?:workflow|pipeline)\b;multi[- ]?agent (?:system|framework|architecture|collaborat|approach);multi[- ]?agent (?:system|framework|architecture|collaborat|approach)*;planning agents?
+Landslides are among the most destructive geological hazards, requiring rapid, accurate, and comprehensive risk assessment to minimize loss of life and property. Traditional management systems often struggle to integrate heterogeneous data sources—such as real-time environmental metrics and unstructured historical records—resulting in delayed decision-making. To address this challenge, this paper proposes a novel multi-agent system framework…
+
+### doi:10.1016/j.bdes.2026.100042
+**A generalizable automated geophysical agent workflow for accessible subsurface hydrology analysis** (2026) — Big Data and Earth System · cites 0 · score 14 (strong 2) · core/inversion · doi:10.1016/j.bdes.2026.100042
+signals: agent(?:ic)? workflows?;agent(?:ic)? workflows?*;automat\w+\s+(?:\w+\s+){0,2}(?:workflow|pipeline)\b;automat\w+\s+(?:\w+\s+){0,2}(?:workflow|pipeline)\b*
+Geophysical methods are central to subsurface imaging, yet their end-to-end workflows from data ingestion and inversion to petrophysical conversion remain inaccessible to non-specialists due to steep software and methodological learning curves. Large language models (LLMs) are increasingly used as code assistants in scientific computing, but this approach still assumes that domain experts design and maintain…
+
+### doi:10.2139/ssrn.5758817
+**Geo Model Chat: A Knowledge-based Q&A System for Petroleum Reservoir Geological Modeling Based on Large Language Models** (2025) — SSRN Electronic Journal · cites 0 · score 14 (strong 2) · core/geological_modelling · doi:10.2139/ssrn.5758817
+signals: \bQ&A system\b|question[-\s]answering system;\bQ&A system\b|question[-\s]answering system*;knowledge[-\s]based\s+(?:Q&A|question[-\s]answering);knowledge[-\s]based\s+(?:Q&A|question[-\s]answering)*
+(no abstract)
+
 ### doi:10.2118/229586-ms
 **Realizing the Need for Agentic AI for Subsurface Data and Workflows** (2025) — n/a · cites 3 · score 13 (strong 2) · core/reservoir_engineering · doi:10.2118/229586-ms
 signals: \bAI agents?\b;agentic;agentic*
 Abstract Subsurface data consists of various types, and it is used in various business workflows. The efforts spent on performing data checks and running the workflows are extensive. Advancements in machine learning and natural language processing have been beneficial in extracting information form unstructured data. Especially, the AI Agents now play very useful roles and…
+
+### doi:10.2118/221864-ms
+**A Multi Modal Geologist Copilot GeoCopilot: Generative AI with Reality Augmented Generation for Automated and Explained Lithology Interpretation While Drilling** (2024) — n/a · cites 2 · score 13 (strong 2) · core/reservoir_engineering · doi:10.2118/221864-ms
+signals: \bcopilots?\b;\bcopilots?\b*;automat\w+\s+(?:\w+\s+){0,2}(?:workflow|pipeline)\b
+In well drilling operations, the rapid interpretation of geological data is crucial for optimizing drilling processes, ensuring safety, and understanding the characteristics of geological formations and reservoir fluids (Blue et al., 2019). Traditionally, these analyses depend on cuttings description, a manual and non-deterministic procedure carried out by teams of geologists in the field, combined with…
 
 ### doi:10.3997/2214-4609.202639010
 **Integration Between Seismic Interpretation and Data Management through Agentic Workflows** (2026) — n/a · cites 0 · score 13 (strong 2) · core/seismology · doi:10.3997/2214-4609.202639010
@@ -236,6 +266,11 @@ After using ChatGPT-4 for more than a year, Clinton Lott has made familiarity wi
 signals: \bAI agents?\b;\bAI agents?\b*;agentic
 Abstract As Artificial Intelligence increasingly integrates into the Oil and Gas industry, significant value-creation opportunities still remain untapped. Drilling engineers spend approximately 60% of their time on low value adding activities such as processing diverse data sets, analyzing historical well data, verifying design choices against industry standards, and generating routine reports. These inefficiencies are further…
 
+### doi:10.4043/35607-ms
+**Large Language Model-Based Workflow for Optimizing Offset Well Data Analysis and Generating Well Design Risk Profiles** (2025) — Offshore Technology Conference · cites 3 · score 11 (strong 1) · core/reservoir_engineering · doi:10.4043/35607-ms
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant);(?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmen
+Abstract Today's workflows for designing and approving new wells depend on modern well engineering practices that integrate input from multiple disciplines like subsurface, engineering, and drilling. Effective execution and planning within these workflows involve complex data analysis including data from historical events from nearby- and offset-wells. Accessing and preparing all this data requires extensive data…
+
 ### doi:10.1007/s43503-026-00088-8
 **Large language model-based multi-agent systems for automated foundation design: router-driven task classification and expert selection framework** (2026) — AI in Civil Engineering · cites 3 · score 11 (strong 1) · core/engineering_geology · doi:10.1007/s43503-026-00088-8
 signals: multi[- ]?agent (?:system|framework|architecture|collaborat|approach);multi[- ]?agent (?:system|framework|architecture|collaborat|approach)*
@@ -250,11 +285,6 @@ Seismic data exploration presents challenges due to complexity, volume, and hete
 **The Agentic AI Career Blueprint** (2026) — Zenodo (CERN European Organization for Nuclear Research) · cites 0 · score 11 (strong 2) · core/seismology · doi:10.5281/zenodo.19358458
 signals: \bReAct\b;agentic;agentic*
 Episode summary: We're moving past the chatbot honeymoon phase into a new era of AI that actually does things. This episode explores the exploding job market for agentic AI, breaking down what these systems are, how they differ from simple scripts, and where the high-salary roles are appearing. Learn about the core engineering challenges, the…
-
-### doi:10.2118/229512-ms
-**Agentic Retrieval Augmented Generation for Drilling: A Real-Time Framework for Dynamic Insights and Visualization** (2025) — n/a · cites 0 · score 11 (strong 1) · core/reservoir_engineering · doi:10.2118/229512-ms
-signals: agentic;agentic*
-Abstract Large Language Models (LLMs) hold immense potential for advanced data retrieval and insight generation, yet integrating these capabilities into real-time industrial analytics poses a significant challenge. Traditional business intelligence (BI) systems relying on static dashboards and complex data transformations, often struggle to meet the dynamic demands of modern drilling operations. This paper introduces an…
 
 ### doi:10.2118/233094-ms
 **Applying Specialized AI Agents for Plug and Abandonment Operation Analysis and Regulatory Compliance: A Fundamental Shift Towards Automating Workflows and Augmenting Engineer's Capabilities** (2026) — n/a · cites 0 · score 11 (strong 2) · core/reservoir_engineering · doi:10.2118/233094-ms
@@ -276,25 +306,40 @@ Narayanan, Kapoor, and Rabanser (arXiv:2602.16666) decomposed AI agent reliabili
 signals: agentic
 This paper presents a systematic survey of adversarial jailbreak attacks against large language models (LLMs), covering 65 peer-reviewed publications from 2022 to 2025 across NeurIPS, ICML, ICLR, USENIX Security, ACM CCS, and EMNLP. We introduce the Enterprise Threat Exposure Model (ETEM), a risk quantification framework comprising three indices: the Adversarial Penetration Index (API), Defense Residual…
 
-### doi:10.5194/egusphere-egu26-15632
-**A Multimodal Multi-Agent Framework for Automated Landslide Risk Management** (2026) — n/a · cites 0 · score 11 (strong 2) · core/engineering_geology · doi:10.5194/egusphere-egu26-15632
-signals: multi[- ]?agent (?:system|framework|architecture|collaborat|approach);multi[- ]?agent (?:system|framework|architecture|collaborat|approach)*;planning agents?
-Landslides are among the most destructive geological hazards, requiring rapid, accurate, and comprehensive risk assessment to minimize loss of life and property. Traditional management systems often struggle to integrate heterogeneous data sources—such as real-time environmental metrics and unstructured historical records—resulting in delayed decision-making. To address this challenge, this paper proposes a novel multi-agent system framework…
+### doi:10.17632/mwwbc7cgy8.1
+**Data for An Intelligent Q&A System for Geological Hazard Prevention Integrating Knowledge Graphs and Large Language Models** (2025) — Mendeley Data · cites 0 · score 11 (strong 2) · core/engineering_geology · doi:10.17632/mwwbc7cgy8.1
+signals: \bQ&A system\b|question[-\s]answering system;\bQ&A system\b|question[-\s]answering system*;knowledge graphs?\s+(?:construction|generation)|construct\w*\s+(?:\w+\s+){0,3}knowledge graphs?
+This is the dataset associated with the paper titled "An Intelligent Q&A System for Geological Hazard Prevention Integrating Knowledge Graphs and Large Language Models" . The paper is currently under peer review for potential publication in the journal "Engineering Geology." The dataset comprises the raw texts for knowledge graph construction in the geological hazard prevention…
+
+### doi:10.1080/10095020.2025.2514813
+**From knowledge graph construction to retrieval-augmented generation: a framework for comprehensive earthquake emergency support** (2025) — Geo-spatial Information Science · cites 9 · score 10 (strong 1) · core/seismology · doi:10.1080/10095020.2025.2514813
+signals: knowledge graphs?\s+(?:construction|generation)|construct\w*\s+(?:\w+\s+){0,3}knowledge graphs?;knowledge graphs?\s+(?:construction|generation)|construct\w*\s+(?:\w+\s+){0,3}knowledge graphs?*
+Effective decision-making during earthquake emergencies requires rapid access to accurate, structured, and context-specific knowledge. However, existing knowledge resources in this domain are fragmented, heterogeneous, and largely unstructured, causing decision-makers to rely heavily on intuition or scattered textual materials, which often results in delayed, inconsistent, or suboptimal emergency responses. To address these challenges, this study proposes…
 
 ### doi:10.1109/fllm67465.2025.11391215
 **Prompt Injection Detection and Mitigation with AI Multiagent NLP-based Agentic Frameworks** (2025) — n/a · cites 3 · score 10 (strong 2) · core/ccs · doi:10.1109/fllm67465.2025.11391215
 signals: \bAI agents?\b;agentic;agentic*
 Prompt injection is a significant challenge for generative AI systems because it can lead to unintended outputs. We introduce a Multiagent NLP-based experimental framework, specifically designed to address prompt injection vulnerabilities through layered detection and metadata mechanisms. The framework orchestrates specialized AI agents to generate responses, detect vulnerabilities, and mitigate injection effects. An empirical evaluation…
 
-### doi:10.2118/221864-ms
-**A Multi Modal Geologist Copilot GeoCopilot: Generative AI with Reality Augmented Generation for Automated and Explained Lithology Interpretation While Drilling** (2024) — n/a · cites 2 · score 10 (strong 1) · core/reservoir_engineering · doi:10.2118/221864-ms
-signals: \bcopilots?\b;\bcopilots?\b*
-In well drilling operations, the rapid interpretation of geological data is crucial for optimizing drilling processes, ensuring safety, and understanding the characteristics of geological formations and reservoir fluids (Blue et al., 2019). Traditionally, these analyses depend on cuttings description, a manual and non-deterministic procedure carried out by teams of geologists in the field, combined with…
-
 ### doi:10.2118/0326-0003-jpt
 **Guest Editorial: The Agentic Oil Field—No Longer a Vision, It Is Inevitable** (2026) — Journal of Petroleum Technology · cites 1 · score 10 (strong 2) · core/reservoir_engineering · doi:10.2118/0326-0003-jpt
 signals: \bAI agents?\b;agentic;agentic*
 The oil and gas industry, while working at the cutting edge of engineering physical systems, remains a laggard in adopting digital disruption. If this imbalance between physical and digital technologies persists, capital destruction will continue to grow, the time to identify sweet spots will lengthen, and the trauma of a future workforce shortage will intensify.…
+
+### doi:10.5194/egusphere-egu24-16101
+**Utilizing Large Language Models for Geoscience Literature Information Extraction** (2024) — n/a · cites 1 · score 10 (strong 1) · core/geological_modelling · doi:10.5194/egusphere-egu24-16101
+signals: knowledge graphs?\s+(?:construction|generation)|construct\w*\s+(?:\w+\s+){0,3}knowledge graphs?
+Extracting information from unstructured and semi-structured geoscience literature is a crucial step in conducting geological research. The traditional machine learning extraction paradigm requires a substantial amount of high-quality manually annotated data for model training, which is time-consuming, labor-intensive, and not easily transferable to new fields. Recently, large language models (LLMs) (e.g., ChatGPT, GPT-4, and LLaMA),…
+
+### doi:10.3390/computers15050294
+**A Self-Adaptive LLM-Based Framework for Automated Extraction and Structuring of Earthquake Information from Heterogeneous Web Sources** (2026) — Computers · cites 0 · score 10 (strong 1) · core/seismology · doi:10.3390/computers15050294
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant);(?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmen
+The rapid growth of heterogeneous web sources has created significant challenges for the automated extraction and structuring of critical domain-specific information, particularly in real-time seismic monitoring scenarios. Despite the existence of official governmental reporting systems, relevant earthquake-related data are often distributed across diverse online platforms with highly variable and dynamically evolving HTML (HyperText Markup Language)…
+
+### doi:10.3997/2214-4609.2025101389
+**Leveraging Agent-Based Frameworks and LLMs for Multimodal Analysis in Drilling and Geological Operations** (2025) — n/a · cites 0 · score 10 (strong 2) · core/reservoir_engineering · doi:10.3997/2214-4609.2025101389
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant);autonomous agents?
+Summary This study explores the potential of agent-based frameworks powered by Large Language Models (LLMs) to integrate and interpret multimodal data in well drilling operations. The research leverages autonomous agents to process diverse datasets, including images and mechanical parameters, to assess wellbore stability and drilling efficiency. Using specialized agents, tasks such as caving detection from…
 
 ### doi:10.2118/229435-ms
 **A Unified Agentic and Generative AI Framework for Enhancing Drilling Intelligence Through WITSML and Unstructured Data (pdfs) Interaction** (2025) — n/a · cites 0 · score 10 (strong 1) · core/reservoir_engineering · doi:10.2118/229435-ms
@@ -326,15 +371,25 @@ PBFuzz: Agentic Directed Fuzzing for PoV Generation Artifact for the CCS 2026 pa
 signals: agent(?:ic)? workflows?;agent(?:ic)? workflows?*
 This record archives representative outputs and supplementary materials associated with the manuscript, “GeoSAGE: A Multi-Agent Workflow for Geological Reasoning From Joint Gravity and Magnetic Inversion Models.” The GeoSAGE source code, installation instructions, example configurations, and documentation are maintained in the public GitHub repository: https://github.com/ZhengyangFang/GeoSAGE This Zenodo record contains the principal computational outputs used in the…
 
+### doi:10.1038/s41598-026-61824-9
+**LLM-powered borehole data automation for 3D geological modeling workflows: a multi-model evaluation of executable coordinate generation** (2026) — Scientific Reports · cites 0 · score 10 (strong 1) · core/geological_modelling · doi:10.1038/s41598-026-61824-9
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant);(?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmen
+Large language models (LLMs) are increasingly used for information extraction from scientific text, but their reliability in workflows that require structured outputs and executable spatial computation remains uncertain. We evaluate a borehole-report processing pipeline that converts Word documents into structured borehole entities, parses relative location descriptions, resolves survey-control references, and generates start/end coordinates for downstream…
+
+### doi:10.3390/geosciences15100382
+**Fusing Geoscience Large Language Models and Lightweight RAG for Enhanced Geological Question Answering** (2025) — Geosciences · cites 8 · score 9 (strong 1) · core/mining · doi:10.3390/geosciences15100382
+signals: knowledge graphs?\s+(?:construction|generation)|construct\w*\s+(?:\w+\s+){0,3}knowledge graphs?
+Mineral prospecting from vast geological text corpora is impeded by challenges in domain-specific semantic interpretation and knowledge synthesis. General-purpose Large Language Models (LLMs) struggle to parse the complex lexicon and relational semantics of geological texts, limiting their utility for constructing precise knowledge graphs (KGs). Our novel framework addresses this gap by integrating a domain-specific LLM,…
+
 ### doi:10.1007/s10916-025-02284-y
 **Diagnosis and Triage Performance of Contemporary Large Language Models on Short Clinical Vignettes** (2025) — Journal of Medical Systems · cites 6 · score 9 (strong 1) · core/ccs · doi:10.1007/s10916-025-02284-y
 signals: \bcopilots?\b
 General-purpose large language models (LLMs) are increasingly proposed for diagnostic and triage decision support, yet their reliability relative to humans remains unclear. We evaluated eight contemporary LLMs (ChatGPT-4, ChatGPT-o1, DeepSeek-V3, DeepSeek-R1, Gemini-2.0, Copilot, Grok-2, Llama-3.1) on 48 single-turn clinical vignettes spanning four triage levels (Emergent, 1-day, 1-week, Self-care). Models were tested without prompts and with…
 
-### doi:10.48550/arxiv.2401.04732
-**A case study of Generative AI in MSX Sales Copilot: Improving seller productivity with a real-time question-answering system for content recommendation** (2024) — arXiv (Cornell University) · cites 2 · score 9 (strong 1) · core/seismology · doi:10.48550/arxiv.2401.04732
-signals: \bcopilots?\b;\bcopilots?\b*
-In this paper, we design a real-time question-answering system specifically targeted for helping sellers get relevant material/documentation they can share live with their customers or refer to during a call. Taking the Seismic content repository as a relatively large scale example of a diverse dataset of sales material, we demonstrate how LLM embeddings of sellers'…
+### doi:10.3390/electronics14020232
+**Large Language Model-Based Tuning Assistant for Variable Speed PMSM Drive with Cascade Control Structure** (2025) — Electronics · cites 4 · score 9 (strong 1) · core/ccs · doi:10.3390/electronics14020232
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant);(?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmen
+A cascade control structure (CCS) is still the most commonly used control scheme in variable speed control (VSC) electrical drives with alternating current (AC) motors. Several tuning methods are used to select the coefficients of controllers applied in CCS. These approaches can be divided into analytical, empirical, and heuristic ones. Regardless of the tuning method…
 
 ### doi:10.1109/wf-pst65083.2025.00037
 **CrisisGuideGPT: an Agentic-Ai for Crisis Response Planning** (2025) — n/a · cites 1 · score 9 (strong 1) · core/seismology · doi:10.1109/wf-pst65083.2025.00037
@@ -350,6 +405,11 @@ Large-scale earthquake simulations produce massive, high-fidelity datasets essen
 **STA-CoT: Structured Target-Centric Agentic Chain-of-Thought for Consistent Multi-Image Geological Reasoning** (2025) — Underline Science Inc. · cites 1 · score 9 (strong 1) · core/mining · doi:10.18653/v1/2025.findings-emnlp.1386
 signals: agentic;agentic*
 Reliable multi-image geological reasoning is essential for automating expert tasks in remotesensing mineral exploration, yet remains challenging for multimodal large language models (MLLMs) due to the need for locating target areas, accurate cross-image referencing, and consistency over long reasoning chains.We propose STA-CoT, a Structured Target-centric Agentic Chain-of-Thought framework that orchestrates planning, execution, and verification agents…
+
+### doi:10.3389/feart.2025.1738096
+**LLM-driven rapid construction of knowledge graph for mineral resources: a case study of the Dajishan hydrothermal tungsten deposit** (2025) — Frontiers in Earth Science · cites 1 · score 9 (strong 1) · core/mining · doi:10.3389/feart.2025.1738096
+signals: knowledge graphs?\s+(?:construction|generation)|construct\w*\s+(?:\w+\s+){0,3}knowledge graphs?;knowledge graphs?\s+(?:construction|generation)|construct\w*\s+(?:\w+\s+){0,3}knowledge graphs?*
+The volume of mineral resources big data is rapidly increasing due to geological exploration and mining activities. Such data are characterized by multi-source heterogeneity, complex structures, and unclear interrelationships. Knowledge Graph (KG), with its powerful capabilities in knowledge structuring, semantic association, and intelligent reasoning, is being increasingly applied in the field of mineral resources, highlighting…
 
 ### doi:10.3997/2214-4609.202639107
 **Harnessing Generative and Agentic AI to Facilitate Seismic Processing and Imaging** (2026) — n/a · cites 0 · score 9 (strong 1) · core/seismology · doi:10.3997/2214-4609.202639107
@@ -386,6 +446,11 @@ Abstract Even in the present day and age, the upstream oil and gas industry cont
 signals: \bAI agents?\b;agentic;agentic*
 Monitoring destructive debris flows using seismic data and machine learning is a novel protective strategy. However, traditional supervised pipelines often fail during operational deployment because data distributions change over time, a phenomenon known as concept drift. Selecting a suitable model to overcome concept drift presents a significant challenge. This study introduces an Agentic Spec Kit…
 
+### doi:10.51219/urforum.2024.oluwatimilehin-odubola
+**AI in Social Good: LLM-Based Multi-Agent Interventions in Crisis Management and Disaster Response** (2024) — n/a · cites 0 · score 9 (strong 2) · core/seismology · doi:10.51219/urforum.2024.oluwatimilehin-odubola
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant);multi[- ]?agent (?:system|framework|architecture|collaborat|approach)
+Crisis management and disaster response are critical domains that benefit immensely from technological advancements.Recent strides in AI, particularly the application of Large Language Models (LLMs), present novel opportunities to enhance coordination, real-time analysis, and effective interventions during emergencies.This study explores the deployment of LLM-based multi-agent systems as a robust approach to augment disaster preparedness, response,…
+
 ### doi:10.5281/zenodo.19361485
 **Ep. 855: The Agentic Internet: Google's New Web MCP Standard** (2026) — Zenodo (CERN European Organization for Nuclear Research) · cites 0 · score 9 (strong 2) · core/seismology · doi:10.5281/zenodo.19361485
 signals: \bAI agents?\b;agentic;agentic*
@@ -395,6 +460,11 @@ Episode summary: The internet is undergoing a fundamental shift from human-centr
 **TERRAIN MEMORY: LEVERAGING THE FULL BREADTH OF LLM TRAINING FOR EXPERIENTIAL AI AGENT MEMORY** (2026) — Zenodo (CERN European Organization for Nuclear Research) · cites 0 · score 9 (strong 1) · core/hydrogeology · doi:10.5281/zenodo.19054913
 signals: \bAI agents?\b;\bAI agents?\b*
 AI coding agents built on large language models (LLMs) currently access a narrow fraction of their training data—the technical vocabulary of programming—while ignoring the vast majority: literature, nature writing, navigation, warfare, poetry, and the full breadth of human sensory and emotional experience. Simultaneously, all existing agent memory systems operate on a single factual axis, recording…
+
+### title:computationalcomparativeanalysisofglobalwaterlegislationannlpandllmbasedframeworkforcrossjurisdictionalpolicyassessment
+**Computational comparative analysis of global water legislation: an NLP and LLM-based framework for cross-jurisdictional policy assessment** (2026) — Nazarbayev University Repository (Nazarbayev University) · cites 0 · score 9 (strong 1) · core/hydrogeology · https://nur.nu.edu.kz/handle/123456789/18745
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant);(?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmen
+The research outlined within this dissertation provides an approach to analyzing inter- national water legislation by using a computational pipeline to process water legislation from 165 different countries written in over 35 different languages and represented by over 10 different writing systems. The computational pipeline included seven steps: extracting the text from documents, translating that…
 
 ### doi:10.36227/techrxiv.175979241.11582889/v1
 **Explainability as a Catalyst for Agentic AI Adoption in Subsurface Oil & Gas Workflows** (2025) — n/a · cites 0 · score 9 (strong 2) · core/reservoir_engineering · doi:10.36227/techrxiv.175979241.11582889/v1
@@ -416,6 +486,11 @@ Abstract Objective This paper introduces an AI-powered framework designed to enh
 signals: \bAI agents?\b;\bAI agents?\b*;multi[- ]?agent (?:system|framework|architecture|collaborat|approach)
 Abstract While multiple solutions exist to predict stuck pipe incidents, most fall short in preventing such incidents due to limitations in accuracy, interpretability, general applicability and/or timeliness of incident warnings. This paper proposes a novel method for real-time sticking risk assessment that is interpretable, universally applicable, and comprehensive, evaluating all primary sticking mechanisms. The approach…
 
+### doi:10.5194/egusphere-egu26-10918
+**From Unstructured Geological Data to 3D Models: A Human-in-the-Loop LLM assisted Workflow for Automated Geological Model Building** (2026) — n/a · cites 0 · score 9 (strong 1) · core/geological_modelling · doi:10.5194/egusphere-egu26-10918
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant);(?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmen
+Building implicit 3D geological models requires the detailed integration of diverse data sources, including legacy drill logs, technical reports, and stratigraphic descriptions. While this process is fundamental to understanding the subsurface, the manual translation of unstructured text into quantitative model inputs is a time-intensive task. Large Language Models (LLMs) offer promising capabilities to assist in…
+
 ### doi:10.2118/0226-0003-jpt
 **Guest Editorial: Shale to Silicon Where Oil and Gas Fits Into the Fifth Industrial Revolution** (2026) — Journal of Petroleum Technology · cites 0 · score 9 (strong 2) · core/reservoir_engineering · doi:10.2118/0226-0003-jpt
 signals: \bAI agents?\b;autonomous agents?
@@ -426,10 +501,20 @@ _ As we begin 2026, the US remains the world’s largest producer of crude oil, 
 signals: agentic;agentic*;multi[- ]?agent (?:system|framework|architecture|collaborat|approach)
 This paper presents a comprehensive framework for AI-enhanced curriculum development in rare earth elements (REE) education, addressing critical workforce gaps across K-12, higher education, and veteran transition programs. As global demand for critical minerals escalates amid geopolitical tensions and supply chain vulnerabilities, we propose an integrated educational approach that bridges artificial intelligence with traditional geosciences.…
 
+### doi:10.1109/caibda65784.2025.11182767
+**Automated Mineralization Prediction System Driven by Large Language Models** (2025) — n/a · cites 0 · score 9 (strong 2) · core/mining · doi:10.1109/caibda65784.2025.11182767
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant);function[- ]calling
+This paper presents a mineralization prediction system driven by a large language model (LLM) agent, aiming to explore the automation process of mineralization prediction tasks, reduce the accessibility threshold, and improve prediction efficiency. The system integrates functionalities such as data preprocessing, model selection, training, and result visualization, achieving a modular design through a function-calling mechanism…
+
 ### doi:10.2139/ssrn.6515171
 **MAS-LAND: A Multi-Agent System for Landslide detection and rapid response** (2026) — SSRN Electronic Journal · cites 0 · score 9 (strong 1) · core/engineering_geology · doi:10.2139/ssrn.6515171
 signals: multi[- ]?agent (?:system|framework|architecture|collaborat|approach);multi[- ]?agent (?:system|framework|architecture|collaborat|approach)*
 : Landslides require rapid, data-driven post-event assessment to support emergency response, yet most existing approaches focus on stand-alone landslide detection or mapping accuracy, with limited integration into operational decision-support workflows. This study presents MAS-LAND (Multi-Agent System for Landslide Detection and Rapid Response), a multi-agent, LLM-enhanced framework structured around three main stages: (1) post-event landslide detection,…
+
+### doi:10.48550/arxiv.2606.10286
+**Sim2Schedule: A Simulator-Guided LLM Framework for Autonomous Open-Pit Mine Scheduling** (2026) — arXiv (Cornell University) · cites 0 · score 9 (strong 2) · core/engineering_geology · doi:10.48550/arxiv.2606.10286
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant);\bLLM[- ]?agents?\b
+Open-pit mine scheduling is a critical process for maximizing economic return under complex geotechnical and operational constraints. While Mixed-Integer Linear Programming (MILP) provides mathematically optimal baselines, its exponential computational complexity and inability to adapt in real time limit its practical deployment in dynamic industrial environments. This work introduces a simulator-driven Large Language Model (LLM) scheduling…
 
 ### doi:10.5281/zenodo.19078874
 **GeoSAGE: A Reproducible Multi-Agent Framework for Geological Reasoning From Joint Gravity and Magnetic Inversion Models** (2026) — Zenodo (CERN European Organization for Nuclear Research) · cites 0 · score 9 (strong 2) · core/geological_modelling · doi:10.5281/zenodo.19078874
@@ -496,6 +581,11 @@ Abstract Large Language Models (LLMs) have emerged in recent years as one of the
 signals: agentic;agentic*
 (no abstract)
 
+### doi:10.48550/arxiv.2607.24984
+**Automatic Knowledge Graph Construction and Query for Earthquake Catalogs** (2026) — arXiv (Cornell University) · cites 0 · score 8 (strong 1) · core/seismology · doi:10.48550/arxiv.2607.24984
+signals: knowledge graphs?\s+(?:construction|generation)|construct\w*\s+(?:\w+\s+){0,3}knowledge graphs?;knowledge graphs?\s+(?:construction|generation)|construct\w*\s+(?:\w+\s+){0,3}knowledge graphs?*
+In recent years, the number of events in earthquake catalogs has significantly increased due to the utilization of more effective deep learning based detectors and phase pickers but answering open ended questions such as what characterizes this sequence? remains constrained by rigid spatiotemporal windowing and subjective expert interpretation. We present the first systematic application of…
+
 ### doi:10.5281/zenodo.21768634
 **ESHM20-MCP: an LLM-agent interface to the 2020 European Seismic Hazard and Risk Models** (2026) — Zenodo (CERN European Organization for Nuclear Research) · cites 0 · score 8 (strong 1) · core/seismology · doi:10.5281/zenodo.21768634
 signals: \bLLM[- ]?agents?\b;\bLLM[- ]?agents?\b*
@@ -551,6 +641,16 @@ Neural networks for seismic fault segmentation are often borrowed from computer 
 signals: \bcopilots?\b;agentic
 The escalating complexity of global water challenges in the 21st century, arising from population growth, overexploitation, climate change and emerging contaminants, demands a fundamental rethinking of how water treatment infrastructure is planned, operated, and maintained. Traditional infrastructure design and management approaches often rely on experience-guided rules and reactive process control and maintenance (PC&M) strategies, which…
 
+### doi:10.2118/227420-ms
+**Transforming Historical Drilling Data into Strategic Insights with Large Language Models** (2025) — n/a · cites 0 · score 8 (strong 1) · core/reservoir_engineering · doi:10.2118/227420-ms
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant)
+Abstract This paper explores the integration of Large Language Models (LLMs), such as DeepSeek, with unstructured data repositories in upstream petroleum operations. The goal is to develop an LLM-driven assistant that processes historical drilling documents to support strategic well planning, with a focus on risk mitigation and operational efficiency. Our approach involves combining a Retrieval-Augmented…
+
+### doi:10.2118/227906-ms
+**Modular Framework Integrating Large Language Models with Drilling Hazard Detection Systems to Provide Operational Context-Informed Interpretations and Recommended Actions** (2025) — SPE Annual Technical Conference and Exhibition · cites 0 · score 8 (strong 1) · core/reservoir_engineering · doi:10.2118/227906-ms
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant)
+Abstract Large Language Models (LLMs) have emerged as transformative Artificial Intelligence tools for advancing how computers process and generate text data, enabling improvements in applications ranging from natural language understanding and translation, to summarization, content creation and decision support. This work describes a modular framework integrating open-source LLMs with drilling hazard detection systems that generate…
+
 ### doi:10.2118/0925-0003-jpt
 **Oilfield Intelligence: Generative AI Applications Deliver Real-World Value** (2025) — Journal of Petroleum Technology · cites 0 · score 8 (strong 2) · core/reservoir_engineering · doi:10.2118/0925-0003-jpt
 signals: \bcopilots?\b;agent(?:ic)? workflows?
@@ -571,6 +671,11 @@ LLM-based agents operating in long-horizon sessions are subject to a reliability
 signals: agentic;autonomous experimentation
 Agentic AI has automated parts of scientific discovery, including paper generation, expert-level coding, therapeutic proposal, and autonomous experimentation. Complex physical engineering design remains a gap, because candidates must satisfy simultaneous constraints in fluid dynamics, solid mechanics, and structural stability. We introduce The AI Engineer, an agentic framework that couples large language models (LLMs) to deterministic…
 
+### doi:10.1145/3793302.3793560
+**A Blueprint for Trustworthy Code Annotation at Scale: An LLM-Powered Pipeline for Industrial Software Analytics** (2026) — n/a · cites 0 · score 8 (strong 1) · core/ccs · doi:10.1145/3793302.3793560
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant);(?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmen
+CCS Concepts…
+
 ### doi:10.3997/2214-4609.202620128
 **Leveraging the GEOH5 Data Structure and AI Agents in Mineral Exploration** (2026) — n/a · cites 0 · score 8 (strong 1) · core/mining · doi:10.3997/2214-4609.202620128
 signals: \bAI agents?\b;\bAI agents?\b*
@@ -580,6 +685,11 @@ Summary Modern mineral exploration increasingly depends on the efficient integra
 **Developing an ESP-Oriented LLM Agent “Mining Lingua” for Mining Engineering and Its Pedagogical Implications** (2026) — Creative Education Studies · cites 0 · score 8 (strong 1) · core/mining · doi:10.12677/ces.2026.143190
 signals: \bLLM[- ]?agents?\b;\bLLM[- ]?agents?\b*
 (no abstract)
+
+### doi:10.1016/j.oregeorev.2026.107477
+**LLM-assisted workflow for geological unit harmonization and tectonic-unit-constrained map generalization with copper occurrence overlay** (2026) — Ore Geology Reviews · cites 0 · score 8 (strong 1) · core/mining · doi:10.1016/j.oregeorev.2026.107477
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant);(?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmen
+Geological map generalization is important for regional mineral exploration because it reduces map complexity and supports consistent interpretation across heterogeneous datasets. In Pakistan, geological maps compiled from different sources commonly contain inconsistent unit codes, names, and attribute descriptions, which complicate automated integration. This study presents an LLM-assisted workflow in which the language model is used…
 
 ### doi:10.1016/j.cacaie.2026.100079
 **Uncertainty-aware multi-agent system for automated and real-time geotechnical analysis in tunneling** (2026) — Computer-Aided Civil and Infrastructure Engineering · cites 0 · score 8 (strong 1) · core/engineering_geology · doi:10.1016/j.cacaie.2026.100079
@@ -596,10 +706,15 @@ signals: language model agents?;language model agents?*
 signals: agent(?:ic)? workflows?;agentic
 The 2nd GeoTechathon, held in conjunction with 3FOMLIG, explored the emerging role of agentic AI in geotechnical engineering. Building on earlier community efforts focused on large language models (LLMs), the event shifted toward task-oriented systems capable of reasoning, tool orchestration, and multimodal data interpretation. Six international teams developed agentic workflows for applications such as parameter…
 
-### doi:10.1016/j.bdes.2026.100042
-**A generalizable automated geophysical agent workflow for accessible subsurface hydrology analysis** (2026) — Big Data and Earth System · cites 0 · score 8 (strong 1) · core/inversion · doi:10.1016/j.bdes.2026.100042
-signals: agent(?:ic)? workflows?;agent(?:ic)? workflows?*
-Geophysical methods are central to subsurface imaging, yet their end-to-end workflows from data ingestion and inversion to petrophysical conversion remain inaccessible to non-specialists due to steep software and methodological learning curves. Large language models (LLMs) are increasingly used as code assistants in scientific computing, but this approach still assumes that domain experts design and maintain…
+### doi:10.1130/abs/2025am-11110
+**Ontology-Guided Construction of Geoscience Knowledge Graphs Using Large Language Models** (2025) — Abstracts with programs - Geological Society of America · cites 0 · score 8 (strong 1) · core/geological_modelling · doi:10.1130/abs/2025am-11110
+signals: knowledge graphs?\s+(?:construction|generation)|construct\w*\s+(?:\w+\s+){0,3}knowledge graphs?;knowledge graphs?\s+(?:construction|generation)|construct\w*\s+(?:\w+\s+){0,3}knowledge graphs?*
+(no abstract)
+
+### doi:10.2139/ssrn.5520018
+**LLM-Powered Data Automation for 3D Geological Model Updating: Uncovering Architectural Divergence and the Efficiency-Effectiveness Paradox** (2025) — SSRN Electronic Journal · cites 0 · score 8 (strong 1) · core/geological_modelling · doi:10.2139/ssrn.5520018
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant);(?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmen
+(no abstract)
 
 ### doi:10.1016/j.jgsce.2024.205469
 **Artificial general intelligence for the upstream geoenergy industry: A review** (2024) — Gas Science and Engineering · cites 23 · score 7 (strong 1) · core/reservoir_engineering · doi:10.1016/j.jgsce.2024.205469
@@ -620,6 +735,11 @@ Abstract Advanced seismic data processing involves specialized methods often imp
 **Domain Driven Methodology Adopting Generative AI Application in Oil and Gas Drilling Sector** (2024) — n/a · cites 2 · score 7 (strong 1) · core/reservoir_engineering · doi:10.2118/221883-ms
 signals: \bLLM[- ]?agents?\b
 Abstract In dynamic landscape of oil and gas drilling, Generative Artificial Intelligence (Generative AI) emerges as the indispensable ally, leveraging historical drilling data to revolutionize operational efficiency, mitigate risks, and empower informed decision-making. Existing Generative AI methods and tools, such as Large Language Models (LLMs) and agents, require tuning and customization to the oil and…
+
+### doi:10.2118/224571-ms
+**From Unstructured Frac Data to Decisions: An Automated WorkFlow to Unlock Operational Excellence** (2025) — n/a · cites 1 · score 7 (strong 1) · core/geomechanics · doi:10.2118/224571-ms
+signals: automat\w+\s+(?:\w+\s+){0,2}(?:workflow|pipeline)\b;automat\w+\s+(?:\w+\s+){0,2}(?:workflow|pipeline)\b*
+Abstract A persistent challenge in leveraging data analytics in hydraulic fracturing operations is the prevalence of unstructured data formats and the lack of some data on rock mechanics and reservoir parameters. In this paper, an in-house code was developed to majorly 1) automate data extraction from 200 non-tabular documents of frac operations, 2) investigate intercorrelations…
 
 ### doi:10.3997/2214-4609.202410350
 **Building a Large Language Model based Seismic Data Processing Assistant** (2024) — n/a · cites 1 · score 7 (strong 1) · core/seismology · doi:10.3997/2214-4609.202410350
@@ -646,6 +766,11 @@ Methane pyrolysis via molten catalysts offers a transformative route for coke-fr
 signals: multi[- ]?agent (?:system|framework|architecture|collaborat|approach);multi[- ]?agent (?:system|framework|architecture|collaborat|approach)*
 Inferring physical mechanisms that govern earthquake sequences from geophysical observations remains a challenging task, particularly across tectonically distinct environments where similar seismic patterns can reflect different underlying processes. Current seismological processing and interpretation rely heavily on experts' choice of parameters and the synthesis of various seismological products, limiting reproducibility and the formation of generalizable knowledge…
 
+### doi:10.19987/j.dzkxjz.2025-081
+**Pilot study of the knowledge graph and question-answering system for earthquake communication network operation and maintenance in Shaanxi Province** (2026) — DOAJ (DOAJ: Directory of Open Access Journals) · cites 0 · score 7 (strong 1) · core/seismology · doi:10.19987/j.dzkxjz.2025-081
+signals: \bQ&A system\b|question[-\s]answering system;\bQ&A system\b|question[-\s]answering system*
+Facing challenges of multiple operation and maintenance entities, extensive materials, and multiple users, a question-answering system based on the knowledge graph of earthquake communication network operation and maintenance in Shaanxi Province has been established. The system utilizes Neo4j for knowledge storage, employs the Django framework for system development, and achieves the digitization and visualization of…
+
 ### doi:10.21275/sr26705204512
 **Exploring Students' Experiences and Learning Outcomes of Python through BBC Micro:bit in the Age of Generative AI: A Mixed-Methods Classroom Action Research Study** (2026) — International Journal of Science and Research (IJSR) · cites 0 · score 7 (strong 1) · core/seismology · doi:10.21275/sr26705204512
 signals: \bcopilots?\b
@@ -671,15 +796,15 @@ In recent years, the pharmaceutical industry has been undergoing a seismic shift
 signals: agentic;agentic*
 The energy sector confronts a significant challenge in managing and extracting value from ever-expanding multidimensional datasets, with seismic and sensor data reaching petabyte scales. Legacy software applications lack the scalability and interoperability to handle this volume and variety, leading to disjointed workflows and the underutilization of valuable data. This work introduces a solution that leverages…
 
+### doi:10.1016/j.hazadv.2026.101103
+**Enhancing PFAS data integrity: An LLM-based FAIR+Environmental principle for improved evaluation of environmental contaminants and related constituent databases** (2026) — Journal of Hazardous Materials Advances · cites 0 · score 7 (strong 1) · core/hydrogeology · doi:10.1016/j.hazadv.2026.101103
+signals: automat\w+\s+(?:\w+\s+){0,2}(?:workflow|pipeline)\b
+• PFAS datasets assessed with FAIR principles and data quality, integration metrics. • A semi-automated LLM assessment pipeline reliably assessed >100 PFAS datasets. • PFOA in groundwater is higher compared to surface, drinking water. • ∼34% of drinking water samples exceed PFOA MCL (4 ng/L). • Public PFAS soil occurrence datasets are limited. Per- and…
+
 ### doi:10.1016/s1876-3804(26)60734-3
 **A multi-agent collaborative framework with human-in-the-loop for well log interpretation and applications** (2026) — Petroleum Exploration and Development · cites 0 · score 7 (strong 1) · core/reservoir_engineering · doi:10.1016/s1876-3804(26)60734-3
 signals: multi[- ]?agent (?:system|framework|architecture|collaborat|approach);multi[- ]?agent (?:system|framework|architecture|collaborat|approach)*
 This paper proposes a multi-agent system centered on large language models to address the issues that traditional well log interpretation relies on expert experience and poses great difficulty in multi-disciplinary collaboration and constructs a digital twin architecture across three dimensions of agents, tools and environment. At the agent level, a role-based architecture is established to…
-
-### doi:10.3997/2214-4609.2025101389
-**Leveraging Agent-Based Frameworks and LLMs for Multimodal Analysis in Drilling and Geological Operations** (2025) — n/a · cites 0 · score 7 (strong 1) · core/reservoir_engineering · doi:10.3997/2214-4609.2025101389
-signals: autonomous agents?
-Summary This study explores the potential of agent-based frameworks powered by Large Language Models (LLMs) to integrate and interpret multimodal data in well drilling operations. The research leverages autonomous agents to process diverse datasets, including images and mechanical parameters, to assess wellbore stability and drilling efficiency. Using specialized agents, tasks such as caving detection from…
 
 ### doi:10.2118/233425-ms
 **Transforming Engineering Workflows: A Data-Driven Generative AI Solution for Multidisciplinary Design Generation and Optimization** (2026) — n/a · cites 0 · score 7 (strong 1) · core/reservoir_engineering · doi:10.2118/233425-ms
@@ -701,10 +826,20 @@ Veterinary medicine, animal husbandry, and health sciences operate in data-satur
 signals: \bLLM[- ]?agents?\b
 Abstract The upstream oil and gas industry is currently undergoing digital transformation, presenting numerous opportunities as well as significant challenges, particularly in the digitalization of reservoir management with Large Language Model (LLM). Meanwhile, reservoir management is a field rich in specialized knowledge and technical complexity. Most of the LLMs available todayare designed for general domains…
 
+### doi:10.3997/2214-4609.202539053
+**Application Of Large Language Models for Analysis Of Textual Data From The Oil & Gas Industry** (2025) — n/a · cites 0 · score 7 (strong 1) · core/reservoir_engineering · doi:10.3997/2214-4609.202539053
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant)
+Summary This study explores the use of Large Language Models (LLMs) to address communication challenges in oil and gas operations, particularly in the drilling domain. By integrating LLMs with specialized prompts, the approach enables rapid analysis and prototyping of diverse textual data sources, surpassing traditional Natural Language Processing methods. The benefits include automated identification of…
+
 ### doi:10.5281/zenodo.21731397
 **Correctover Self-Evolving Agent with DeepSeek Integration** (2026) — Zenodo (CERN European Organization for Nuclear Research) · cites 0 · score 7 (strong 2) · core/ccs · doi:10.5281/zenodo.21731397
 signals: \bAI agents?\b;tool[- ]calling
 A self-evolving AI Agent system featuring an MCP Server with 5 integrated tools and a DeepSeek-powered LLM deep analysis layer. The system implements async multi-turn tool calling (chat_with_tools_loop), replacing the previous Qwen/DashScope integration with DeepSeek deepseek-v4-flash for lower cost and faster inference. End-to-end verified: OS command injection detection with 0.95 confidence and accurate remediation. Part…
+
+### doi:10.1109/geoinformatics67279.2025.11173529
+**Construction of a Spatiotemporal Knowledge Graph for Carbon Source and Sink Dynamics Driven by Multi-Source Sensing Collaboration** (2025) — n/a · cites 0 · score 7 (strong 1) · core/ccs · doi:10.1109/geoinformatics67279.2025.11173529
+signals: knowledge graphs?\s+(?:construction|generation)|construct\w*\s+(?:\w+\s+){0,3}knowledge graphs?;knowledge graphs?\s+(?:construction|generation)|construct\w*\s+(?:\w+\s+){0,3}knowledge graphs?*
+Driven by global climate change and the “0Dual Carbon” goals, the precise analysis of spatiotemporal carbon sourcesink dynamics has become a central challenge in environmental governance. Traditional approaches relying on single data sources and static models often fail to adequately capture spatiotemporal heterogeneity. To address this, this study proposes a multi-source sensing collaborative-driven knowledge graph…
 
 ### doi:10.22214/ijraset.2025.75808
 **Brahmaputra-CoPilot: A Multilingual Edge-AI Framework for Flood and Landslide Early-warning across Northeast India** (2025) — International Journal for Research in Applied Science and Engineering Technology · cites 0 · score 7 (strong 1) · core/engineering_geology · doi:10.22214/ijraset.2025.75808
@@ -715,6 +850,21 @@ One of the major hazards for Northeast India is floods and landslides. While hyd
 **ADAGENT: Anomaly Detection Agent With Multimodal Large Models in Adverse Environments** (2024) — IEEE Access · cites 17 · score 6 (strong 1) · core/ccs · doi:10.1109/access.2024.3480250
 signals: \bAI agents?\b
 Multimodal Language Models (MMLMs), such as LLaVA and GPT-4V, have shown zero-shot generalization capabilities for understanding images and text across various domains. However, their effectiveness in open-world visual tasks, particularly anomaly detection under challenging conditions, such as low light or poor image quality, has yet to be thoroughly investigated. Assessing the robustness and limitations of…
+
+### doi:10.1016/j.jag.2025.104527
+**More intelligent knowledge graph: A large language model-driven method for knowledge representation in geospatial digital twins** (2025) — International Journal of Applied Earth Observation and Geoinformation · cites 12 · score 6 (strong 1) · core/seismology · doi:10.1016/j.jag.2025.104527
+signals: knowledge graphs?\s+(?:construction|generation)|construct\w*\s+(?:\w+\s+){0,3}knowledge graphs?
+• Construct a geographic knowledge graph capable of representing virtual geographic entities. • Explore the great potential of large language models for representing geographical knowledge. • Develop an intelligent knowledge graph that supports users to communicate with the expertise graph using natural language. • Enable real-time updating of geographic knowledge graphs. Knowledge graphs (KGs) can…
+
+### doi:10.1109/cvpr52734.2025.01849
+**PhD: A ChatGPT-Prompted Visual hallucination Evaluation Dataset** (2025) — arXiv (Cornell University) · cites 6 · score 6 (strong 1) · core/ccs · doi:10.1109/cvpr52734.2025.01849
+signals: automat\w+\s+(?:\w+\s+){0,2}(?:workflow|pipeline)\b
+Multimodal Large Language Models (MLLMs) hallucinate, resulting in an emerging topic of visual hallucination evaluation (VHE). This paper contributes a ChatGPT-Prompted visual hallucination evaluation Dataset (PhD) for objective VHE at a large scale. The essence of VHE is to ask an MLLM questions about specific images to assess its susceptibility to hallucination. Depending on what…
+
+### doi:10.3390/min16010050
+**Gold Deposit Ontology Guides Large Language Model to Transform Text into Knowledge Graphs for Gold Deposits** (2025) — Minerals · cites 2 · score 6 (strong 1) · core/geological_modelling · doi:10.3390/min16010050
+signals: knowledge graphs?\s+(?:construction|generation)|construct\w*\s+(?:\w+\s+){0,3}knowledge graphs?
+The rise of artificial intelligence has led to the emergence of geoscience knowledge graphs (GeoKG) as effective tools for organizing and representing complex knowledge. The growing complexity of geoscience data calls for innovative strategies for structuring and interpreting extensive information. Conventional knowledge extraction methods often rely on manual annotation and deep learning techniques, which can…
 
 ### doi:10.3997/2214-4609.2025101096
 **Agentic AI in Geoscience: Advancing Predictive Models for Agile Decision-Making** (2025) — n/a · cites 1 · score 6 (strong 1) · core/seismology · doi:10.3997/2214-4609.2025101096
@@ -786,15 +936,25 @@ Agentic AI is poised to usher in a seismic paradigm shift in Software Engineerin
 signals: \bAI agents?\b
 Abstract. Natural and technological disasters continue to threaten communities, infrastructure, and the environment, and the cascading nature of contemporary risks complicates their assessment. This study presents a disaster risk analysis model coupling Geographic Information Systems (GIS), ensemble machine learning, and AI-driven interpretation tools, collectively termed GeoAI, to support multi-hazard risk assessment, resilience planning, and citizen-oriented…
 
-### doi:10.51219/urforum.2024.oluwatimilehin-odubola
-**AI in Social Good: LLM-Based Multi-Agent Interventions in Crisis Management and Disaster Response** (2024) — n/a · cites 0 · score 6 (strong 1) · core/seismology · doi:10.51219/urforum.2024.oluwatimilehin-odubola
-signals: multi[- ]?agent (?:system|framework|architecture|collaborat|approach)
-Crisis management and disaster response are critical domains that benefit immensely from technological advancements.Recent strides in AI, particularly the application of Large Language Models (LLMs), present novel opportunities to enhance coordination, real-time analysis, and effective interventions during emergencies.This study explores the deployment of LLM-based multi-agent systems as a robust approach to augment disaster preparedness, response,…
-
 ### doi:10.5281/zenodo.18371320
 **mnemorphics** (2026) — Zenodo (CERN European Organization for Nuclear Research) · cites 0 · score 6 (strong 2) · core/seismology · doi:10.5281/zenodo.18371320
 signals: \bAutoGen\b;agent orchestration
 Short takeaway: Mnemorphics is a mega‑document—a merged research codex—combining acoustic metamaterials, shockwave diodes, energy‑harvesting physics, AI cognitive‑warfare systems, particle‑capture engineering, and large‑scale defensive architecture. It reads like a fusion of hard engineering, corrected physical models, and myth‑tech conceptual systems, ultimately converging into a coherent, physically‑grounded defensive infrastructure. Below is a structured, deep summary of the…
+
+### doi:10.1016/j.pdisas.2026.100571
+**Effects of uncertainty and affective content on large language models' disaster assessment: A controlled comparison using synthetic disaster data** (2026) — Progress in Disaster Science · cites 0 · score 6 (strong 1) · core/seismology · doi:10.1016/j.pdisas.2026.100571
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant)
+Large language models (LLMs) are increasingly integrated into disaster management systems, yet the extent to which data properties, such as uncertainty and affective content, systematically influence LLM-based disaster analyses remains underexplored. We conducted three experiments using synthetic scenarios across three disaster types (earthquake, wildfire, chemical incident), testing eight LLMs on 26,400 assessment tasks. Synthetic materials…
+
+### arxiv:2605.00829
+**LLM-based uncertainty assessment of social media situational signals for crisis reporting** (2026) — arXiv (Cornell University) · cites 0 · score 6 (strong 1) · core/seismology · doi:10.48550/arxiv.2605.00829
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant)
+Social media has become a critical source of situational awareness during disasters, providing real-time insights into evolving impacts and emerging needs. To support crisis response at scale, recent work has increasingly leveraged large language models (LLMs) to automatically classify and summarize situational information from social media streams. However, existing approaches implicitly assume that extracted situational…
+
+### arxiv:2602.21212
+**Disaster Question Answering with LoRA Efficiency and Accurate End Position** (2026) — arXiv (Cornell University) · cites 0 · score 6 (strong 1) · core/seismology · doi:10.48550/arxiv.2602.21212
+signals: \bQ&A system\b|question[-\s]answering system
+Natural disasters such as earthquakes, torrential rainfall, floods, and volcanic eruptions occur with extremely low frequency and affect limited geographic areas. When individuals face disaster situations, they often experience confusion and lack the domain-specific knowledge and experience necessary to determine appropriate responses and actions. While disaster information is continuously updated, even when utilizing RAG search…
 
 ### doi:10.1111/gwat.70067
 **Natural Language Processing for Groundwater Insights** (2026) — Ground Water · cites 0 · score 6 (strong 1) · core/hydrogeology · doi:10.1111/gwat.70067
@@ -866,10 +1026,15 @@ _ In this article, Gaurav Agrawal, a member of the SPE Research and Development 
 signals: \bAI agents?\b;agentic
 Episode summary: In this episode of My Weird Prompts, we explore the shifting landscape of artificial intelligence in 2026, moving beyond the traditional silicon monoliths to a new "constellation of specialized nodes" across the United States. While San Francisco remains the high-pressure "engine room" for frontier models and foundational research—driven by the intense physical density…
 
-### doi:10.1109/caibda65784.2025.11182767
-**Automated Mineralization Prediction System Driven by Large Language Models** (2025) — n/a · cites 0 · score 6 (strong 1) · core/mining · doi:10.1109/caibda65784.2025.11182767
-signals: function[- ]calling
-This paper presents a mineralization prediction system driven by a large language model (LLM) agent, aiming to explore the automation process of mineralization prediction tasks, reduce the accessibility threshold, and improve prediction efficiency. The system integrates functionalities such as data preprocessing, model selection, training, and result visualization, achieving a modular design through a function-calling mechanism…
+### doi:10.22541/au.177188048.80779493/v2
+**Reframing Museum Intelligence: A Survey of Large Language Models in Museums** (2026) — n/a · cites 0 · score 6 (strong 1) · core/ccs · doi:10.22541/au.177188048.80779493/v2
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant)
+Large Language Models (LLMs) have recently emerged as a transformative technology for museums, enabling a shift from static content delivery toward interactive and intelligent systems. However, existing studies and deployments remain fragmented, with a lack of systematic analysis of how LLM capabilities align with the unique goals, constraints, and values of museum contexts. This gap…
+
+### doi:10.1007/s10462-026-11637-z
+**Large language models for knowledge-centric scientific intelligence: methods, challenges, and lessons from geoscience** (2026) — Artificial Intelligence Review · cites 0 · score 6 (strong 1) · core/mining · doi:10.1007/s10462-026-11637-z
+signals: knowledge graphs?\s+(?:construction|generation)|construct\w*\s+(?:\w+\s+){0,3}knowledge graphs?
+Abstract Large language models (LLMs) are increasingly being explored in geoscience, where scientific knowledge is expressed through specialized terminology, heterogeneous documents, maps, imagery, geospatial structures, and temporally ordered interpretations. This review critically examines the emerging literature on geoscience-oriented LLMs (GeoLLMs), focusing on the tasks, construction strategies, evaluation needs, and unresolved challenges that distinguish them from…
 
 ### doi:10.56726/irjmets86671
 **Agentic-AI Driven System for Real-Time Disaster Alerts** (2026) — International Research Journal of Modernization in Engineering Technology and Science · cites 0 · score 6 (strong 1) · core/engineering_geology · doi:10.56726/irjmets86671
@@ -885,11 +1050,6 @@ This article presents an optimization design method for geogrid slope support sy
 **Multimodal AI for Landslide Disaster Response: Fusing IoT Prediction, UAV Detection, and Social Media Triage** (2026) — Zenodo (CERN European Organization for Nuclear Research) · cites 0 · score 6 (strong 1) · core/engineering_geology · doi:10.5281/zenodo.21512815
 signals: \bAI agents?\b
 Finding a way to predict landslides, detect the physical damage, and organize rescues on the fly is incredibly difficult for emergency teams. This paper presents "Multimodal AI for Landslide Disaster Response: Fusing IoT Prediction, UAV Detection, and Social Media Triage", an end-to-end machine learning framework designed to manage the complete timeline of an emergency. Rather…
-
-### doi:10.48550/arxiv.2606.10286
-**Sim2Schedule: A Simulator-Guided LLM Framework for Autonomous Open-Pit Mine Scheduling** (2026) — arXiv (Cornell University) · cites 0 · score 6 (strong 1) · core/engineering_geology · doi:10.48550/arxiv.2606.10286
-signals: \bLLM[- ]?agents?\b
-Open-pit mine scheduling is a critical process for maximizing economic return under complex geotechnical and operational constraints. While Mixed-Integer Linear Programming (MILP) provides mathematically optimal baselines, its exponential computational complexity and inability to adapt in real time limit its practical deployment in dynamic industrial environments. This work introduces a simulator-driven Large Language Model (LLM) scheduling…
 
 ### doi:10.3997/2214-4609.202639113
 **Geological Modeling Agent: Automated Static Model Uncertainty Assessment Using AI Agent and Geology-Aware Guidance** (2026) — n/a · cites 0 · score 6 (strong 1) · core/geological_modelling · doi:10.3997/2214-4609.202639113
@@ -911,6 +1071,11 @@ Rick Kern's (2024, this issue) critical engagement with the implications of tech
 signals: \bcopilots?\b
 Are you among the millions of ChatGPT users/experimenters around the world? Or impatiently parked on the waitlist? OpenAI launched ChatGPT in late November 2022 with little fanfare. Within a week, the company reported 1 million users. Within the first month, it exceeded 57 million users. Since then, it has been updated several times and a…
 
+### doi:10.4043/35625-ms
+**Automatic Daily Drilling Mud Report Processing Using Generative AI to Maximize the Operational Efficiency** (2025) — Offshore Technology Conference · cites 7 · score 5 (strong 1) · core/reservoir_engineering · doi:10.4043/35625-ms
+signals: automat\w+\s+(?:\w+\s+){0,2}(?:workflow|pipeline)\b
+Abstract Large service companies process an excessive amount of drilling mud reports daily, requiring engineers to perform labor-intensive, costly, and error-prone manual analysis work. Generative AI offers an ideal solution to automate this routine task. This study proposes an innovative yet resource-efficient mud report processing framework using generative AI. Within this framework, an automated pipeline…
+
 ### doi:10.48550/arxiv.2411.13239
 **Transforming the Hybrid Cloud for Emerging AI Workloads** (2024) — arXiv (Cornell University) · cites 2 · score 5 (strong 1) · core/ccs · doi:10.48550/arxiv.2411.13239
 signals: agentic
@@ -921,10 +1086,25 @@ This white paper, developed through close collaboration between IBM Research and
 signals: autonomous agents?
 Scientific discoveries increasingly depend on data and data processing, and Web Science is no exception.As an established practice, data-intensive research typically uses scientific workflows and provenance to facilitate data and method sharing while automatically preserving processing history.Prior research has reported the possibility of ex-post policy-based compliance checking from provenance data.Based on these works, in this…
 
+### doi:10.1061/nhrefo.nheng-2256
+**Automated Virtual Earthquake Reconnaissance Reporting Using Natural Language Processing** (2025) — Natural Hazards Review · cites 1 · score 5 (strong 1) · core/seismology · doi:10.1061/nhrefo.nheng-2256
+signals: automat\w+\s+(?:\w+\s+){0,2}(?:workflow|pipeline)\b
+Posthazard reconnaissance is essential following natural hazards, such as earthquakes, strike a community. Conducting reconnaissance efforts with efficiency and accuracy is necessary to expedite recovery and support decision-making processes. The Structural Extreme Events Reconnaissance (StEER) Network provides a natural hazards engineering (NHE) community-centered approach to accelerate the Data to Knowledge (D2K) life cycle and emphasize…
+
 ### doi:10.2118/225325-ms
 **Robot Field Development Teams: Harnessing Multi-Agent Artificial Intelligence Systems in Petroleum Engineering** (2025) — n/a · cites 1 · score 5 (strong 1) · core/reservoir_engineering · doi:10.2118/225325-ms
 signals: multi[- ]?agent (?:system|framework|architecture|collaborat|approach)
 Abstract This paper explores the transformative potential of multi-agent artificial intelligence (AI), highlighting their distinctive capabilities in collaborative decision-making, dynamic adaptability, and the seamless integration of diverse domain expertise within petroleum engineering. Multi-agent AI systems, especially when combined with advanced large language models (LLMs), are gaining traction across various industries including healthcare, finance, logistics, and…
+
+### doi:10.1038/s44387-026-00106-1
+**MOFMeld: a structure–language fusion framework for MOF property prediction in carbon capture** (2026) — npj Artificial Intelligence · cites 1 · score 5 (strong 1) · core/ccs · doi:10.1038/s44387-026-00106-1
+signals: automat\w+\s+(?:\w+\s+){0,2}(?:workflow|pipeline)\b
+Efficient carbon capture requires sorbents that combine high CO 2 affinity, stability, and low regeneration energy. While metal–organic frameworks (MOFs) are promising candidates, their efficient screening remains a significant challenge: performance is governed by crystal topology, yet relevant data is scattered across the literature, and conventional experimental or computational methods are time-intensive and data-limited. To…
+
+### doi:10.3724/j.issn.1007-2802.20260008
+**The construction and application of a Knowledge Graph for prospecting mineral resources in the East Tianshan−North Mountain region based on the large language model** (2026) — Bulletin of Mineralogy Petrology and Geochemistry · cites 1 · score 5 (strong 1) · core/mining · doi:10.3724/j.issn.1007-2802.20260008
+signals: knowledge graphs?\s+(?:construction|generation)|construct\w*\s+(?:\w+\s+){0,3}knowledge graphs?
+The current utilization of the new generation intelligent information-based mineral exploration technology is of great significance for the intelligent information-based mineral exploration. Facing with complex mineralization processes and multi-source heterogeneous geoscientific data, the existing expert experience rules and mineral exploration methods are insufficient to meet the intelligent demands of mineral resource prediction. To address this…
 
 ### doi:10.1021/acs.accounts.6c00187
 **Leveling Up Upconverting Nanoparticles with Machine Learning** (2026) — Accounts of Chemical Research · cites 1 · score 5 (strong 1) · core/inversion · doi:10.1021/acs.accounts.6c00187
@@ -935,6 +1115,21 @@ ConspectusUpconverting nanoparticles (UCNPs) transform low-energy light into hig
 **Ep. 107: The $5.5 Million Breakthrough: DeepSeek's AI Disruption** (2025) — Zenodo (CERN European Organization for Nuclear Research) · cites 0 · score 5 (strong 1) · core/seismology · doi:10.5281/zenodo.19354173
 signals: agentic
 Episode summary: In this episode of My Weird Prompts, Herman and Corn dive deep into the seismic shift occurring in the artificial intelligence landscape as Eastern models like DeepSeek and Z.ai challenge the status quo. While Western giants like OpenAI and Anthropic spend hundreds of millions on training, DeepSeek has managed to produce world-class performance…
+
+### doi:10.48550/arxiv.2605.20539
+**OpenSeisML: Open Large-Scale Real Seismic and well-log Dataset for Generative AI** (2026) — arXiv (Cornell University) · cites 0 · score 5 (strong 1) · core/seismology · doi:10.48550/arxiv.2605.20539
+signals: automat\w+\s+(?:\w+\s+){0,2}(?:workflow|pipeline)\b
+The advent of machine learning (ML) and computer vision has significantly accelerated seismic inversion workflows by reducing the computational cost of traditionally expensive iterative methods. However, the development and evaluation of ML methods remain limited by the scarcity of realistic velocity models, as most high-quality data are privately owned by oil and gas companies. To…
+
+### doi:10.1038/s41598-025-23044-5
+**An end-to-end fault interpretation method driven by visual foundation model with domain adaptation fine-tuning** (2025) — Scientific Reports · cites 0 · score 5 (strong 1) · core/seismology · doi:10.1038/s41598-025-23044-5
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant)
+Accurate geological fault interpretation is critical for the safe construction and efficient operation of underground gas storage sites. However, traditional manual interpretation suffers from inefficiency and reliance on expert experience. Existing deep learning-based methods face three major challenges: limited generalization due to scarce seismic samples, unreliable annotations in low signal-to-noise ratio regions, and neglect of…
+
+### doi:10.25781/kaust-x37tz
+**A Deep Learning-Based Comprehensive Framework for Automated Seismic Data Processing and Velocity Model Building** (2025) — King Abdullah University of Science and Technology Repository (King Abdullah University of Science and Technology) · cites 0 · score 5 (strong 1) · core/seismology · doi:10.25781/kaust-x37tz
+signals: automat\w+\s+(?:\w+\s+){0,2}(?:workflow|pipeline)\b
+Seismic data processing and velocity model building are fundamental stages in the seismic value chain, as they directly impact the accuracy of subsurface imaging and interpretation. Conventional workflows, while grounded in physics and empirical knowledge, often require extensive expertise and struggle to handle the growing complexity of modern seismic data. Recent advances in deep learning…
 
 ### doi:10.2118/230773-ms
 **From Data to Decisions: Harnessing the Potential of Language Based AI in Drilling** (2026) — IADC/SPE International Drilling Conference and Exhibition · cites 0 · score 5 (strong 1) · core/reservoir_engineering · doi:10.2118/230773-ms
@@ -991,6 +1186,11 @@ Author: Khan Tahsin Abrar Affiliation: Independent Researcher, Bangladesh Email:
 signals: \bAI agents?\b
 AI innovation is increasingly focusing on the development and utilization of AI agents: systems that gather information, make decisions and take actions with some degree of autonomy. Agents represent a natural evolution from AI that generates outputs following user commands, such as ChatGPT, to AI that plays a much more active role by completing tasks.…
 
+### doi:10.1016/j.petsci.2025.08.018
+**Automated labeling and segmentation based on segment anything model: Quantitative analysis of bubbles in gas–liquid flow** (2025) — Petroleum Science · cites 1 · score 4 (strong 1) · core/reservoir_engineering · doi:10.1016/j.petsci.2025.08.018
+signals: automat\w+\s+(?:\w+\s+){0,2}(?:workflow|pipeline)\b
+The quantitative analysis of dispersed phases (bubbles, droplets, and particles) in multiphase flow systems represents a persistent technological challenge in petroleum engineering applications, including CO 2 -enhanced oil recovery, foam flooding, and unconventional reservoir development. Current characterization methods remain constrained by labor-intensive manual workflows and limited dynamic analysis capabilities, particularly for processing large-scale microscopy data…
+
 ### title:artificialintelligenceingeoscienceapplicationsaimodelsforseismicdenoisingearthquakesourcecharacterizationandgroundmotion
 **Artificial Intelligence in geoscience applications. AI models for seismic denoising, earthquake source characterization, and ground-motion prediction using the Italian Seismic Network** (2026) — IRIS Research product catalog (Sapienza University of Rome) · cites 0 · score 4 (strong 1) · core/seismology · https://hdl.handle.net/11573/1761231
 signals: \bAI agents?\b
@@ -1035,6 +1235,16 @@ New research suggests that butterflies and moths come with mental baggage…left
 **SeisEvo: Evolution of Seismic Data Reconstruction Algorithms by Agents** (2026) — arXiv (Cornell University) · cites 0 · score 4 (strong 1) · core/seismology · doi:10.48550/arxiv.2608.18272
 signals: agentic
 Classical seismic data reconstruction relies on manually designed structural priors and iterative operators, whose coupled design space is far larger than manual trial and error can explore systematically. Deep-learning methods encode the reconstruction rules in learned weights rather than in an explicit operator that can be inspected and modified. We propose SeisEvo (Seismic Algorithm Evolution),…
+
+### doi:10.48550/arxiv.2510.18055
+**Developing an Open-access Telegram Bot for Automated, estimation and IA-based interpreted of OpenQuake Ground-Motion intensity measures** (2025) — arXiv (Cornell University) · cites 0 · score 4 (strong 1) · core/seismology · doi:10.48550/arxiv.2510.18055
+signals: automat\w+\s+(?:\w+\s+){0,2}(?:workflow|pipeline)\b
+The prediction of Intensity Measures (IMs) using Ground-Motion Models (GMM) is a fundamental component of seismic hazard assessment. However, the best estimation of IMs traditionally requires specialised searchers, programming expertise, and the manual sourcing of regression coefficients. This complexity creates a significant barrier to rapid, scenario-based analysis for engineers, researchers, and students. To address this…
+
+### doi:10.5281/zenodo.20286597
+**Hydra-Flux Addendum (Shale Archetype )** (2026) — Zenodo (CERN European Organization for Nuclear Research) · cites 0 · score 4 (strong 1) · core/geomechanics · doi:10.5281/zenodo.20286597
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant)
+This addendum, designated as Archetype S, extends the Hydra-Flux architectural framework to deep source-rock (shale) reservoirs, bridging the gap between gas hydrate extraction and unconventional hydrocarbon production. While the core Compendium focuses on hydrate-bearing sediments (T3), this extension introduces a hybrid "Ionic Engine" designed to harness osmotic disruption for fragmentation in ultra-tight matrices. By utilizing…
 
 ### doi:10.5281/zenodo.18346658
 **GEB v0.1: a large-scale agent-based socio-hydrological model -- simulating 10 million individual farming households in a fully distributed hydrological model** (2026) — Zenodo (CERN European Organization for Nuclear Research) · cites 0 · score 4 (strong 1) · core/hydrogeology · doi:10.5281/zenodo.18346658
@@ -1091,10 +1301,30 @@ Soil science has always dealt with complexity. Soil is a dynamic, living system 
 signals: agentic
 Research artifact for the AgenticAI4HPC'26 paper Planners as First-Class Tools: Automating HTN Domain Authoring for Robust LLM Orchestration of HPC Services (1st International Workshop on Agentic AI for HPC, co-located with SC26, Chicago, 15 November 2026). Contents: (A1) GTPyhop 2.0.0 and the hand-authored rikyu_hpc domain for containerized training on the RIKEN R-CCS Rikyu system; (A2)…
 
+### doi:10.3997/2214-4609.2024637030
+**A Framework for Life-cycle Subsurface Uncertainty Quantification** (2024) — n/a · cites 0 · score 4 (strong 1) · core/ccs · doi:10.3997/2214-4609.2024637030
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant)
+Summary Taking learning from oil industry in handling subsurface uncertainties, a new LLM-based framework is proposed for life-cycle subsurface uncertainty quantification, particularly a methodology to quantify full uncertainties encompassing all conceivable geological features in both geometries and their hydro-thermal-mechanical- (bio)chemical properties, for geoenergy and secure geological storage projects.…
+
+### doi:10.48448/7mst-9g80
+**From Keyterms to Context: Exploring Topic Description Generation in Scientific Corpora** (2025) — Underline Science Inc. · cites 0 · score 4 (strong 1) · core/ccs · doi:10.48448/7mst-9g80
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant)
+Topic models represent topics as ranked term lists, which are often hard to interpret in scientific domains. We explore Topic Description for Scientific Corpora, an approach to generating structured summaries for topic-specific document sets. We propose and investigate two LLM-based pipelines: Selective Context Summarisation (SCS), which uses maximum marginal relevance to select representative documents; and…
+
 ### doi:10.48550/arxiv.2503.11517
 **Prompt Injection Detection and Mitigation via AI Multi-Agent NLP Frameworks** (2025) — arXiv (Cornell University) · cites 0 · score 4 (strong 1) · core/ccs · doi:10.48550/arxiv.2503.11517
 signals: multi[- ]?agent (?:system|framework|architecture|collaborat|approach)
 Prompt injection constitutes a significant challenge for generative AI systems by inducing unintended outputs. We introduce a multi-agent NLP framework specifically designed to address prompt injection vulnerabilities through layered detection and enforcement mechanisms. The framework orchestrates specialized agents for generating responses, sanitizing outputs, and enforcing policy compliance. Evaluation on 500 engineered injection prompts demonstrates a…
+
+### doi:10.1016/j.oregeorev.2026.107411
+**OntoGRC: ontology-guided mineral exploration knowledge extraction from geological texts using generate–reflect–correct prompting** (2026) — Ore Geology Reviews · cites 0 · score 4 (strong 1) · core/mining · doi:10.1016/j.oregeorev.2026.107411
+signals: knowledge graphs?\s+(?:construction|generation)|construct\w*\s+(?:\w+\s+){0,3}knowledge graphs?
+High-quality knowledge graphs for ore-forming systems and mineral exploration are essential for “knowledge-driven” prospecting, but they remain difficult to construct from geological exploration texts. Geological prose is long, specialised and mechanism-rich, with multi-scale spatiotemporal coupling and ambiguous terminology, which challenges conventional information extraction methods. Deep-learning models such as BERT-BiLSTM-CRF require large labelled datasets and often…
+
+### doi:10.48550/arxiv.2605.07640
+**LithoBench: Benchmarking Large Multimodal Models for Remote-Sensing Lithology Interpretation** (2026) — arXiv (Cornell University) · cites 0 · score 4 (strong 1) · core/mining · doi:10.48550/arxiv.2605.07640
+signals: automat\w+\s+(?:\w+\s+){0,2}(?:workflow|pipeline)\b
+Remote sensing lithology interpretation is fundamental to geological surveys, mineral exploration, and regional geological mapping. Unlike general land-cover recognition, lithology interpretation is a knowledge-intensive task that requires experts to infer rock types from various features, e.g., subtle visual, spectral, textural, geomorphological, and contextual cues, making reliable automated interpretation highly challenging. Geological knowledge-guided large multimodal models…
 
 ### doi:10.1016/j.sandf.2026.101863
 **Foreword to “Special issue on machine learning in geotechnics”** (2026) — SOILS AND FOUNDATIONS · cites 0 · score 4 (strong 1) · core/engineering_geology · doi:10.1016/j.sandf.2026.101863
@@ -1105,6 +1335,11 @@ This special issue comprises nine papers selected out of 44 papers presented at 
 **LandslideAgent with Multimodal LandslideBench: A Domain-Rule-Augmented Agent for Autonomous Landslide Identification and Analysis** (2026) — arXiv (Cornell University) · cites 0 · score 4 (strong 1) · core/engineering_geology · doi:10.48550/arxiv.2606.18661
 signals: agentic
 Intelligent landslide hazard interpretation is critical for disaster prevention, yet current paradigms struggle to simultaneously extract visual features and high-level geoscientific semantics, while general-purpose vision-language models (VLMs) suffer from perceptual limitations and domain hallucinations in complex geological scenarios. To address these challenges, we propose an instruction-driven agentic framework comprising three components. First, LandslideBench, a multimodal…
+
+### doi:10.5194/egusphere-egu26-4351
+**Global landslide susceptibility mapping: a 1 km resolution model derived from a 2-million-event inventory with uncertainty quantification** (2026) — n/a · cites 0 · score 4 (strong 1) · core/engineering_geology · doi:10.5194/egusphere-egu26-4351
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant)
+Landslide susceptibility mapping (LSM) at the global scale is a prerequisite for hazard risk management but has long been hindered by inventory bias and unquantified model uncertainties. Existing global products are often constrained by substantial spatial sampling biases, leading to inconsistent prediction performance across data-scarce and vegetated regions. Addressing these challenges, this study presents a…
 
 ### doi:10.5194/egusphere-2026-1960-cec1
 **Comment on egusphere-2026-1960 - No compliance with the policy of the journal** (2026) — n/a · cites 0 · score 4 (strong 1) · core/geological_modelling · doi:10.5194/egusphere-2026-1960-cec1
@@ -1247,17 +1482,22 @@ signals: \bAI agents?\b
 In the context of the AGEMERA project (European Union's Horizon Europe research and innovation programme under grant agreement No 101058178), OPT/NET introduced the AGEMERA Platform as an extension to its flagship product, MONITORED AITM. AGEMERA's core objectives include unlocking the EU's resource potential, enhancing public awareness of critical raw materials, and fostering environmentally and socially…
 
 
-## Periphery (counted, not deep-read) — 210
+## Periphery (counted, not deep-read) — 236
 
 ### doi:10.5281/zenodo.19286774
-**Microsoft's Secret Agentic AI Stack, Explained** (2026) — Zenodo (CERN European Organization for Nuclear Research) · cites 0 · score 35 (strong 10) · periphery/climate_atmosphere · doi:10.5281/zenodo.19286774
-signals: \bAI agents?\b;\bAutoGen\b;\bLangChain\b;\bcopilots?\b;\btool[- ]use\b;agent orchestration;agent(?:ic)? workflows?;agentic;agentic*;function[- ]calling;multi[- ]?agent (?:system|framework|architecture|collaborat|approach)
+**Microsoft's Secret Agentic AI Stack, Explained** (2026) — Zenodo (CERN European Organization for Nuclear Research) · cites 0 · score 38 (strong 11) · periphery/climate_atmosphere · doi:10.5281/zenodo.19286774
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant);\bAI agents?\b;\bAutoGen\b;\bLangChain\b;\bcopilots?\b;\btool[- ]use\b;agent orchestration;agent(?:ic)
 Episode summary: Microsoft has been quietly building a comprehensive agentic AI stack that most people have never heard of. From the open-source AutoGen framework for multi-agent conversations to the low-code power of Copilot Studio and the specialized FI models, there's a coherent strategy hiding in plain sight. This episode unpacks how these three layers work…
 
 ### doi:10.71366/ijwos03082654990
 **Weather forecasting using agentic ai** (2026) — International Journal of Web of Multidisciplinary Studies · cites 0 · score 21 (strong 6) · periphery/climate_atmosphere · doi:10.71366/ijwos03082654990
 signals: \bAutoGPT\b;\bAutoGen\b;\bReAct\b;\btool[- ]use\b;agent orchestration;agentic;agentic*
 Traditionally, weather forecasting has been achieved by numerical weather prediction (NWP) systems built from physics-based models that numerically integrate the equations of motion for air on a supercomputer, which are accurate but expensive to run, can be in error due to chaotic dynamics in the atmosphere, and require a significant amount of computing power to…
+
+### doi:10.48550/arxiv.2604.07681
+**Multi-Agent Orchestration for High-Throughput Materials Screening on a Leadership-Class System** (2026) — arXiv (Cornell University) · cites 0 · score 20 (strong 5) · periphery/climate_atmosphere · doi:10.48550/arxiv.2604.07681
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant);agent orchestration;agent orchestration*;agentic;multi[- ]?agent (?:system|framework|architecture|coll
+The integration of Artificial Intelligence (AI) with High-Performance Computing (HPC) is transforming scientific workflows from human-directed pipelines into adaptive systems capable of autonomous decision-making. Large language models (LLMs) play a critical role in autonomous workflows; however, deploying LLM-based agents at scale remains a significant challenge. Single-agent architectures and sequential tool calls often become serialization bottlenecks…
 
 ### doi:10.22541/essoar.15007515/v1
 **ChatGeo-Magi: A Retrieval-Augmented and Tool-Using Language Model for Geomagnetic Data Access and User Support** (2026) — n/a · cites 0 · score 20 (strong 4) · periphery/climate_atmosphere · doi:10.22541/essoar.15007515/v1
@@ -1284,6 +1524,11 @@ Large language models, multimodal foundation models, and agent systems are incre
 signals: \bLLM[- ]?agents?\b;\bLangChain\b;\bLangGraph\b;agentic;agentic*
 Wildfires are becoming increasingly destructive and costly each year, affecting lives, damaging infrastructure, and degrading ecosystems. To address this growing threat, the fire and land management community need smarter, data-driven tools to understand the landscape and plan their essential prescribed burns that reduce hazardous fuels. With the ultimate goal to minimize the devastation of wildfires…
 
+### doi:10.5194/egusphere-egu26-13454
+**Agentic AI for Earth-Observation-Driven Maritime Monitoring - the SeaScope Project** (2026) — n/a · cites 0 · score 17 (strong 3) · periphery/earth_observation · doi:10.5194/egusphere-egu26-13454
+signals: \bAI agents?\b;agentic;agentic*;automat\w+\s+(?:\w+\s+){0,2}(?:workflow|pipeline)\b
+We present SeaScope, an explainable AI agent that accelerates interaction with complex Earth Observation (EO) workflows. Users express analytical questions in natural language, which are transformed into transparent, executable EO analyses. By combining generative AI, vision–language models, and Retrieval-Augmented Generation (RAG), SeaScope links scientific literature, satellite data descriptions, and validated analysis methods to automatically generate,…
+
 ### doi:10.5194/wbf2026-553
 **AI inference service in Digital Twins** (2026) — n/a · cites 0 · score 17 (strong 5) · periphery/earth_observation · doi:10.5194/wbf2026-553
 signals: \bCrewAI\b;\bLLM[- ]?agents?\b;\bLangChain\b;agent(?:ic)? workflows?;agentic
@@ -1293,11 +1538,6 @@ Biodiversity research increasingly relies on digital twins—high‑fidelity, da
 **CLIMATEAGENT: Multi-Agent Orchestration for Complex Climate Data Science Workflows** (2025) — arXiv (Cornell University) · cites 0 · score 17 (strong 4) · periphery/climate_atmosphere · doi:10.48550/arxiv.2511.20109
 signals: \bLLM[- ]?agents?\b;\bcopilots?\b;agent orchestration;agent orchestration*;multi[- ]?agent (?:system|framework|architecture|collaborat|approach)
 Climate science demands automated workflows to transform comprehensive questions into data-driven statements across massive, heterogeneous datasets. However, generic LLM agents and static scripting pipelines lack climate-specific context and flexibility, thus, perform poorly in practice. We present ClimateAgent, an autonomous multi-agent framework that orchestrates end-to-end climate data analytic workflows. ClimateAgent decomposes user questions into executable sub-tasks…
-
-### doi:10.48550/arxiv.2604.07681
-**Multi-Agent Orchestration for High-Throughput Materials Screening on a Leadership-Class System** (2026) — arXiv (Cornell University) · cites 0 · score 17 (strong 4) · periphery/climate_atmosphere · doi:10.48550/arxiv.2604.07681
-signals: agent orchestration;agent orchestration*;agentic;multi[- ]?agent (?:system|framework|architecture|collaborat|approach);planning agents?
-The integration of Artificial Intelligence (AI) with High-Performance Computing (HPC) is transforming scientific workflows from human-directed pipelines into adaptive systems capable of autonomous decision-making. Large language models (LLMs) play a critical role in autonomous workflows; however, deploying LLM-based agents at scale remains a significant challenge. Single-agent architectures and sequential tool calls often become serialization bottlenecks…
 
 ### doi:10.5281/zenodo.19521073
 **SENTINEL: The Architecture of Sovereign Autonomous Attribution Forensics in the Agentic Era** (2026) — Zenodo (CERN European Organization for Nuclear Research) · cites 0 · score 17 (strong 4) · periphery/climate_atmosphere · doi:10.5281/zenodo.19521073
@@ -1324,6 +1564,21 @@ Remote-sensing vision-language models (RS-VLMs) have advanced Earth-observation 
 signals: \btool[- ]using\b;agentic;autonomous agents?
 8th International Conference on Machine Learning & Applications (CMLA 2026) July 16 ~ 17, 2026, London, United Kingdom https://cmla2026.org/index Scope & Topics The 8th International Conference on Machine Learning & Applications (CMLA 2026) provides a premier global forum for researchers, practitioners, and industry experts to share the latest advances in machine learning theory, methodologies, and…
 
+### doi:10.1109/cait70489.2026.11553641
+**A Multi-Agent Collaboration-Based Method for Satellite Remote Sensing Workflow Planning** (2026) — n/a · cites 0 · score 15 (strong 3) · periphery/earth_observation · doi:10.1109/cait70489.2026.11553641
+signals: \bReAct\b;automat\w+\s+(?:\w+\s+){0,2}(?:workflow|pipeline)\b;multi[- ]?agent (?:system|framework|architecture|collaborat|approach);multi[- ]?agent (?:system|framework|architecture|collaborat|approach)*
+Remote sensing task planning often relies on manual interpretation and experience-driven workflow design, limiting the automatic mapping of complex tasks into executable units. To address this challenge, this paper proposes a natural language-driven framework for automatic workflow generation in remote sensing applications. Built upon large language models, a multi-agent collaborative system is developed, in which…
+
+### doi:10.5194/egusphere-egu26-22037
+**Risk to Resilience: LLM-Driven Agentic AI for Natural Hazard Assessment and Decision Support** (2026) — n/a · cites 0 · score 15 (strong 3) · periphery/earth_observation · doi:10.5194/egusphere-egu26-22037
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant);\bLLM[- ]?agents?\b;agentic;agentic*
+Recent advances in large language models (LLMs) are transforming how geoscientists interact with data, models, and decision-support systems. Beyond literature web search and text processing, LLMs now enable new forms of knowledge discovery, real-time analysis, and human–AI collaboration in natural hazards and climate-risk research. At the same time, the increasing availability of geospatial data, remote…
+
+### doi:10.14711/thesis-hdl167707
+**Orchestrating Multi‑Agent Systems for End‑to‑End Climate Data Science Workflows** (2026) — n/a · cites 0 · score 15 (strong 4) · periphery/climate_atmosphere · doi:10.14711/thesis-hdl167707
+signals: \bLLM[- ]?agents?\b;\bcopilots?\b;agent orchestration;automat\w+\s+(?:\w+\s+){0,2}(?:workflow|pipeline)\b
+Climate science relies on automated workflows to transform comprehensive research questions into data-driven insights over massive, heterogeneous datasets distributed across multiple data repositories. With the rise of large language models, automated workflow generation has become increasingly feasible. However, existing approaches face significant challenges: generic LLM agents lack domain-specific knowledge of climate data sources and analysis…
+
 ### doi:10.5281/zenodo.19593419
 **7th International Conference on Big Data and Machine Learning (BDML 2026)** (2026) — Zenodo (CERN European Organization for Nuclear Research) · cites 0 · score 15 (strong 3) · periphery/climate_atmosphere · doi:10.5281/zenodo.19593419
 signals: \btool[- ]using\b;autonomous agents?;multi[- ]?agent (?:system|framework|architecture|collaborat|approach)
@@ -1334,15 +1589,20 @@ signals: \btool[- ]using\b;autonomous agents?;multi[- ]?agent (?:system|framewor
 signals: \bAutoGen\b;\bcopilots?\b;\bcopilots?\b*;agentic
 We present GeoLLM-Squad, a geospatial Copilot that introduces the novel multi-agent paradigm to remote sensing (RS) workflows. Unlike existing single-agent approaches that rely on monolithic large language models (LLM), GeoLLM-Squad separates agentic orchestration from geospatial task-solving, by delegating RS tasks to specialized sub-agents. Built on the open-source AutoGen and GeoLLM-Engine frameworks, our work enables the…
 
+### doi:10.1049/icp.2025.2536
+**AI-driven smart home energy optimization: integrating AI agents with IoT for adaptive decision-making** (2025) — IET conference proceedings. · cites 2 · score 14 (strong 3) · periphery/climate_atmosphere · doi:10.1049/icp.2025.2536
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant);\bAI agents?\b;\bAI agents?\b*;agentic
+As the Internet of Things (IoT) revolutionizes intelligent environments, energy efficiency remains a critical challenge. Traditional IoT-based energy management systems rely on predefined rule-based automation, which lacks adaptability to dynamic environmental conditions. This study proposes an Agentic AIoT system that integrates AI Agents, Large Language Models (LLMs), and Digital Twin technology to enhance IoT decision-making…
+
 ### doi:10.48448/y1zq-8p90
 **Towards LLM Agents for Earth Observation** (2026) — Underline Science Inc. · cites 0 · score 14 (strong 2) · periphery/earth_observation · doi:10.48448/y1zq-8p90
 signals: \bAI agents?\b;\bLLM[- ]?agents?\b;\bLLM[- ]?agents?\b*
 Earth Observation (EO) provides critical planetary data for environmental monitoring, disaster management, climate science, and other scientific domains. In this work we ask: Are AI systems ready for reliable Earth Observation? To answer this, we introduce UnivEARTH, a coding benchmark of 408 yes/no questions from NASA Earth Observatory articles across 7 various topics and over…
 
-### doi:10.5194/egusphere-egu26-13454
-**Agentic AI for Earth-Observation-Driven Maritime Monitoring - the SeaScope Project** (2026) — n/a · cites 0 · score 14 (strong 2) · periphery/earth_observation · doi:10.5194/egusphere-egu26-13454
-signals: \bAI agents?\b;agentic;agentic*
-We present SeaScope, an explainable AI agent that accelerates interaction with complex Earth Observation (EO) workflows. Users express analytical questions in natural language, which are transformed into transparent, executable EO analyses. By combining generative AI, vision–language models, and Retrieval-Augmented Generation (RAG), SeaScope links scientific literature, satellite data descriptions, and validated analysis methods to automatically generate,…
+### doi:10.3390/rs18172849
+**SeaScope: A Transparent and Reproducible LLM-Assisted Framework for Maritime Earth Observation Analysis** (2026) — Remote Sensing · cites 0 · score 14 (strong 2) · periphery/earth_observation · doi:10.3390/rs18172849
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant);(?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmen
+Earth Observation (EO) analysis increasingly relies on large and heterogeneous satellite datasets, yet developing EO workflows often requires specialized expertise in data selection, geospatial programming, and cloud-based processing. Recent advances in Large Language Models (LLMs) offer new opportunities for natural-language interaction with EO systems, although challenges related to transparency, reproducibility, and domain-specific reasoning remain. This…
 
 ### arxiv:2605.11633
 **Can LLM Agents Respond to Disasters? Benchmarking Heterogeneous Geospatial Reasoning in Emergency Operations** (2026) — arXiv (Cornell University) · cites 0 · score 14 (strong 3) · periphery/earth_observation · doi:10.48550/arxiv.2605.11633
@@ -1404,16 +1664,6 @@ Wildfires are environmental hazards with severe ecological, social, and economic
 signals: \bLLM[- ]?agents?\b;multi[- ]?agent (?:system|framework|architecture|collaborat|approach);multi[- ]?agent (?:system|framework|architecture|collaborat|approach)*
 Recent advances have enabled large language model (LLM) agents to solve complex tasks by orchestrating external tools. However, these agents often struggle in specialized, tool-intensive domains that demand long-horizon execution, tight coordination across modalities, and strict adherence to implicit tool constraints. Earth Observation (EO) tasks exemplify this challenge due to the multi-modal and multi-temporal data…
 
-### doi:10.1109/cait70489.2026.11553641
-**A Multi-Agent Collaboration-Based Method for Satellite Remote Sensing Workflow Planning** (2026) — n/a · cites 0 · score 12 (strong 2) · periphery/earth_observation · doi:10.1109/cait70489.2026.11553641
-signals: \bReAct\b;multi[- ]?agent (?:system|framework|architecture|collaborat|approach);multi[- ]?agent (?:system|framework|architecture|collaborat|approach)*
-Remote sensing task planning often relies on manual interpretation and experience-driven workflow design, limiting the automatic mapping of complex tasks into executable units. To address this challenge, this paper proposes a natural language-driven framework for automatic workflow generation in remote sensing applications. Built upon large language models, a multi-agent collaborative system is developed, in which…
-
-### doi:10.5194/egusphere-egu26-22037
-**Risk to Resilience: LLM-Driven Agentic AI for Natural Hazard Assessment and Decision Support** (2026) — n/a · cites 0 · score 12 (strong 2) · periphery/earth_observation · doi:10.5194/egusphere-egu26-22037
-signals: \bLLM[- ]?agents?\b;agentic;agentic*
-Recent advances in large language models (LLMs) are transforming how geoscientists interact with data, models, and decision-support systems. Beyond literature web search and text processing, LLMs now enable new forms of knowledge discovery, real-time analysis, and human–AI collaboration in natural hazards and climate-risk research. At the same time, the increasing availability of geospatial data, remote…
-
 ### doi:10.5194/egusphere-egu26-10390
 **Development of a Context-Aware AI Agent for Forest Applications Using Multi-Sensor Data** (2026) — n/a · cites 0 · score 12 (strong 2) · periphery/earth_observation · doi:10.5194/egusphere-egu26-10390
 signals: \bAI agents?\b;\bAI agents?\b*;agentic
@@ -1428,11 +1678,6 @@ Climate and environmental decision-making increasingly requires reasoning across
 **Autonomous AI Agents in Scientific Discovery – How Agentic AI Accelerates Research in Drug Design, Materials Science, or Climate Modeling** (2025) — n/a · cites 0 · score 12 (strong 2) · periphery/climate_atmosphere · doi:10.1109/icaiqsa67794.2025.11440385
 signals: \bAI agents?\b;\bAI agents?\b*;agentic;agentic*
 You know, science is getting a serious upgrade thanks to these new agentic AI systems. We’re not talking about the old-school, "let’s analyze some data and hope for the best" kind of stuff—now AI can actually plan, learn, and run experiments on its own, all in this wild sort of feedback loop where it designs,…
-
-### doi:10.14711/thesis-hdl167707
-**Orchestrating Multi‑Agent Systems for End‑to‑End Climate Data Science Workflows** (2026) — n/a · cites 0 · score 12 (strong 3) · periphery/climate_atmosphere · doi:10.14711/thesis-hdl167707
-signals: \bLLM[- ]?agents?\b;\bcopilots?\b;agent orchestration
-Climate science relies on automated workflows to transform comprehensive research questions into data-driven insights over massive, heterogeneous datasets distributed across multiple data repositories. With the rise of large language models, automated workflow generation has become increasingly feasible. However, existing approaches face significant challenges: generic LLM agents lack domain-specific knowledge of climate data sources and analysis…
 
 ### doi:10.5194/egusphere-egu26-15002
 **Toward Federated Agentic Workflows for Numerical Weather Prediction With Chiltepin** (2026) — n/a · cites 0 · score 12 (strong 2) · periphery/climate_atmosphere · doi:10.5194/egusphere-egu26-15002
@@ -1454,10 +1699,10 @@ Alternative Combined Title–1 Why Physics Needs Artificial Intelligence: A Unif
 signals: \bLLM[- ]?agents?\b;\bLLM[- ]?agents?\b*
 Existing change detection methods often lack the versatility to handle diverse real-world queries and the intelligence for comprehensive analysis. This paper presents a general agent framework, integrating Large Language Models (LLM) with vision foundation models to form ChangeGPT. A hierarchical structure is employed to mitigate hallucination. The agent was evaluated on a curated dataset of…
 
-### doi:10.1049/icp.2025.2536
-**AI-driven smart home energy optimization: integrating AI agents with IoT for adaptive decision-making** (2025) — IET conference proceedings. · cites 2 · score 11 (strong 2) · periphery/climate_atmosphere · doi:10.1049/icp.2025.2536
-signals: \bAI agents?\b;\bAI agents?\b*;agentic
-As the Internet of Things (IoT) revolutionizes intelligent environments, energy efficiency remains a critical challenge. Traditional IoT-based energy management systems rely on predefined rule-based automation, which lacks adaptability to dynamic environmental conditions. This study proposes an Agentic AIoT system that integrates AI Agents, Large Language Models (LLMs), and Digital Twin technology to enhance IoT decision-making…
+### doi:10.5194/isprs-archives-xlix-b3-2026-1419-2026
+**Risk-Aware LLM Agents for Geospatial Data Retrieval: Design and Preliminary Adversarial Evaluation** (2026) — The international archives of the photogrammetry, remote sensing and spatial information sciences/International archives of the photogrammetry, remote sensing and spatial information sciences · cites 1 · score 11 (strong 2) · periphery/earth_observation · doi:10.5194/isprs-archives-xlix-b3-2026-1419-2026
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant);\bLLM[- ]?agents?\b;\bLLM[- ]?agents?\b*
+Abstract. We present an LLM-driven framework for retrieving remote sensing data from cloud-based geospatial catalogues using natural language queries. The system converts user intent into structured API calls, enabling efficient access to satellite imagery and environmental datasets. The architecture integrates three agents: Guardrail for safety and policy enforcement, General-QA for intent interpretation, and Recommender-Analyst for…
 
 ### doi:10.5194/epsc2026-276
 **ASTER - Agentic Science Toolkit for Exoplanet Research** (2026) — arXiv · cites 1 · score 11 (strong 2) · periphery/climate_atmosphere · doi:10.5194/epsc2026-276
@@ -1574,6 +1819,11 @@ Recent deep learning-based remote sensing analysis models often struggle with pe
 signals: agentic;multi[- ]?agent (?:system|framework|architecture|collaborat|approach)
 Over 850 people joined the first International Workshop on AI Foundation Model (FM) for Earth Observation (EO) co-organized by ESA and NASA 5-7 May 2025. Hosted at ESRIN (ESA’s Earth Observation Center, Italy), the event welcomed around 300 people on site, and an additional 550 online, with the promise that FMs can revolutionize EO and…
 
+### doi:10.65262/q1cdwg98
+**4D GIS Visualisation of Agentic-AI Models** (2025) — Acta Architectonica et Urbanistica · cites 1 · score 9 (strong 2) · periphery/earth_observation · doi:10.65262/q1cdwg98
+signals: agentic;agentic*;automat\w+\s+(?:\w+\s+){0,2}(?:workflow|pipeline)\b
+This research describes the Sarajevo Urban Digital Twin (UDT) as an applied tool for city planning and for presenting complex simulation results in an adequate way for a broad audience. Developed within the Urban Transformation Project Sarajevo (UTPS), it explains how traffic simulations from the ETH Zurich (ETHZ) software EnerPol are transformed from raw binary…
+
 ### doi:10.55041/ijsrem24893
 **AI-Driven Copilot: Revolutionizing Scientific Discovery and Innovation through Self-Learning Systems** (2023) — INTERANTIONAL JOURNAL OF SCIENTIFIC RESEARCH IN ENGINEERING AND MANAGEMENT · cites 1 · score 9 (strong 2) · periphery/climate_atmosphere · doi:10.55041/ijsrem24893
 signals: \bAI agents?\b;\bcopilots?\b;\bcopilots?\b*
@@ -1613,6 +1863,11 @@ Calibrating distributed hydrologic models is a critical bottleneck across operat
 **7th International Conference on Machine Learning & Trends (MLT 2026)** (2026) — Zenodo (CERN European Organization for Nuclear Research) · cites 0 · score 9 (strong 2) · periphery/earth_observation · doi:10.5281/zenodo.19908777
 signals: \btool[- ]using\b;agentic
 7th International Conference on Machine Learning & Trends (MLT 2026) June 20 ~ 21, 2026, Sydney, Australia https://sai2026.org/mlt/index Scope & Topics 7th International Conference on Machine Learning & Trends (MLT 2026) serves as a premier global forum for presenting and exchanging the latest advancements in Machine Learning theory, methodologies, and real world applications. As machine…
+
+### doi:10.1145/3805622.3810785
+**SatCLA: A Collaborative LLM-Driven Framework for Annotation of LEO Satellite Imagery** (2026) — n/a · cites 0 · score 9 (strong 1) · periphery/earth_observation · doi:10.1145/3805622.3810785
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant);(?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmen
+Real-world applications such as on-orbit disaster assessment, precision agriculture, and maritime surveillance demand immediate semantic understanding of satellite imagery. Unfortunately, the lack of efficient, high-quality annotation for large-scale satellite imagery limits the responsiveness of low Earth orbit (LEO) constellations in dynamic observation scenarios. We propose SatCLA, a lightweight framework for collaborative LLM-driven annotation of LEO…
 
 ### doi:10.48550/arxiv.2606.07697
 **TianJi-Environ: An Autonomous AI Scientist for Atmospheric Environmental Research** (2026) — arXiv (Cornell University) · cites 0 · score 9 (strong 2) · periphery/climate_atmosphere · doi:10.48550/arxiv.2606.07697
@@ -1669,11 +1924,6 @@ Traditional cancer rate estimations are often limited in spatial resolutions and
 signals: agentic;agentic*
 Recent advances in large language models (LLMs) have enabled agentic AI systems that go beyond single-pass generation by combining reasoning with tool-mediated actions. Geospatial domains are a natural but challenging setting for this paradigm, requiring agents to integrate heterogeneous modalities, operate under spatial and temporal constraints, and interact reliably with external resources such as GIS…
 
-### doi:10.5194/isprs-archives-xlix-b3-2026-1419-2026
-**Risk-Aware LLM Agents for Geospatial Data Retrieval: Design and Preliminary Adversarial Evaluation** (2026) — The international archives of the photogrammetry, remote sensing and spatial information sciences/International archives of the photogrammetry, remote sensing and spatial information sciences · cites 1 · score 8 (strong 1) · periphery/earth_observation · doi:10.5194/isprs-archives-xlix-b3-2026-1419-2026
-signals: \bLLM[- ]?agents?\b;\bLLM[- ]?agents?\b*
-Abstract. We present an LLM-driven framework for retrieving remote sensing data from cloud-based geospatial catalogues using natural language queries. The system converts user intent into structured API calls, enabling efficient access to satellite imagery and environmental datasets. The architecture integrates three agents: Guardrail for safety and policy enforcement, General-QA for intent interpretation, and Recommender-Analyst for…
-
 ### doi:10.20944/preprints202601.2236.v1
 **A Comprehensive Survey of Agentic AI for Spatio-Temporal Data** (2026) — Preprints.org · cites 1 · score 8 (strong 1) · periphery/earth_observation · doi:10.20944/preprints202601.2236.v1
 signals: agentic;agentic*
@@ -1684,15 +1934,15 @@ Recent advances in large language models (LLMs) have enabled agentic AI systems 
 signals: \bLLM[- ]?agents?\b;\bLLM[- ]?agents?\b*
 Understanding urban environment change is essential for sustainable development. However, current approaches, particularly remote sensing change detection, often rely on rigid, single-modal analysis. To overcome these limitations, we propose MMUEChange, a multi-modal agent framework that flexibly integrates heterogeneous urban data via a modular toolkit and a core module, Modality Controller for cross- and intra-modal alignment,…
 
+### doi:10.1109/jstars.2026.3655557
+**Construction of Remote Sensing Knowledge Graph for Spatiotemporal Analysis** (2026) — IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing · cites 1 · score 8 (strong 1) · periphery/earth_observation · doi:10.1109/jstars.2026.3655557
+signals: knowledge graphs?\s+(?:construction|generation)|construct\w*\s+(?:\w+\s+){0,3}knowledge graphs?;knowledge graphs?\s+(?:construction|generation)|construct\w*\s+(?:\w+\s+){0,3}knowledge graphs?*
+Currently, a significant portion of knowledge in the field of remote sensing (RS) is stored in unstructured formats, leading to inefficient data analysis and the formation of information silos due to fragmented data accumulation. Consequently, there is an urgent need for an effective knowl edge representation and modeling framework tailored to the characteristics of RS…
+
 ### doi:10.1109/tgrs.2026.3710264
 **LLM Agent-Enhanced Bi-Level Online Order Dispatching and Scheduling for Large-Scale Agile Earth Observation Satellites** (2026) — IEEE Transactions on Geoscience and Remote Sensing · cites 0 · score 8 (strong 1) · periphery/earth_observation · doi:10.1109/tgrs.2026.3710264
 signals: \bLLM[- ]?agents?\b;\bLLM[- ]?agents?\b*
 (no abstract)
-
-### doi:10.3390/rs18172849
-**SeaScope: A Transparent and Reproducible LLM-Assisted Framework for Maritime Earth Observation Analysis** (2026) — Remote Sensing · cites 0 · score 8 (strong 1) · periphery/earth_observation · doi:10.3390/rs18172849
-signals: \bAI agents?\b
-Earth Observation (EO) analysis increasingly relies on large and heterogeneous satellite datasets, yet developing EO workflows often requires specialized expertise in data selection, geospatial programming, and cloud-based processing. Recent advances in Large Language Models (LLMs) offer new opportunities for natural-language interaction with EO systems, although challenges related to transparency, reproducibility, and domain-specific reasoning remain. This…
 
 ### arxiv:2606.07538
 **Bidirectional Semantic Complementary Tool Retrieval for Remote Sensing Agents** (2026) — arXiv (Cornell University) · cites 0 · score 8 (strong 2) · periphery/earth_observation · doi:10.48550/arxiv.2606.07538
@@ -1754,10 +2004,20 @@ Improving air quality and addressing climate change relies on accurate understan
 signals: agentic;agentic*
 The Coupled Model Intercomparison Project Phase 6 (CMIP6) has generated thousands of peer-reviewed publications documenting model configurations, evaluation procedures, emergent constraints, and projection uncertainties. As the community transitions toward CMIP7, efficiently extracting and operationalizing this unstructured knowledge alongside live data analysis represents a critical bottleneck. Here we present CMIP-Forge, a hybrid retrieval-augmented generation (RAG) and…
 
+### doi:10.3390/rs18091308
+**An End-to-End Foundation Model-Based Framework for Robust LAI Retrieval Under Cloud Cover** (2026) — Remote Sensing · cites 0 · score 8 (strong 1) · periphery/earth_observation · doi:10.3390/rs18091308
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant);(?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmen
+Leaf Area Index is a crucial biophysical variable, and its accurate estimation is essential for understanding vegetation dynamics. However, cloud cover significantly restricts optical remote sensing, hindering the generation of spatially continuous Leaf Area Index products. Remote sensing foundation models offer novel solutions to this challenge. This study presents an end-to-end framework based on the…
+
 ### arxiv:2603.11515
 **Multi-Agent Collaboration for Automated Design Exploration on High Performance Computing Systems** (2026) — arXiv (Cornell University) · cites 0 · score 8 (strong 1) · periphery/climate_atmosphere · doi:10.48550/arxiv.2603.11515
 signals: multi[- ]?agent (?:system|framework|architecture|collaborat|approach);multi[- ]?agent (?:system|framework|architecture|collaborat|approach)*
 Today's scientific challenges, from climate modeling to Inertial Confinement Fusion design to novel material design, require exploring huge design spaces. In order to enable high-impact scientific discovery, we need to scale up our ability to test hypotheses, generate results, and learn from them rapidly. We present MADA (Multi-Agent Design Assistant), a Large Language Model (LLM)…
+
+### doi:10.1609/aaaiss.v8i1.42579
+**State Machine Structured Agents for Physical Science Reasoning** (2026) — Proceedings of the AAAI Symposium Series · cites 0 · score 8 (strong 2) · periphery/ocean · doi:10.1609/aaaiss.v8i1.42579
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant);agentic
+Large language models (LLMs) have shown promise as scientific assistants capable of reasoning, tool invocation, and autonomous analysis. However, their use in the physical sciences remains limited by the need for strong guarantees of explainability, traceable reasoning over long computational workflows, and the high consequences of subtle errors. Many existing LLM-based agent systems rely on…
 
 ### doi:10.1016/j.ese.2025.100608
 **Fine-tuning large language models for interdisciplinary environmental challenges** (2025) — Environmental Science and Ecotechnology · cites 20 · score 7 (strong 1) · periphery/climate_atmosphere · doi:10.1016/j.ese.2025.100608
@@ -1778,6 +2038,11 @@ Multimodal Large Language Models (MLLMs) mimic human perception and reasoning sy
 **A review of large language models in geomatics: integrating multimodal data, addressing challenges, and exploring synergies** (2026) — Spatial Information Research · cites 2 · score 7 (strong 1) · periphery/earth_observation · doi:10.1007/s41324-026-00670-3
 signals: \bcopilots?\b
 Abstract The exponential growth of geospatial data from satellite imagery and LiDAR to crowdsourced and sensor-based streams poses challenges for traditional geomatics methods. This review examines the transformative role of large language models (LLMs) and vision language models (VLMs) in addressing these challenges by enabling the integration, interpretation, and automation of multimodal geospatial data. The…
+
+### doi:10.1109/lgrs.2026.3663856
+**RS_DeepReason: LLM-Driven Deep Reasoning for Multigranularity Remote Sensing Scene Interpretation** (2026) — IEEE Geoscience and Remote Sensing Letters · cites 1 · score 7 (strong 1) · periphery/earth_observation · doi:10.1109/lgrs.2026.3663856
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant)
+Vision-Language Models (VLMs) have achieved remarkable results in remote sensing scene interpretation. However, existing models primarily rely on a single-step reasoning paradigm, which suffers fromIncomplete PerceptionandGranularity Limitationwhen confronting complex tasks requiring comprehensive, multi-granularity visual contexts. To overcome these bottlenecks, we propose DeepRS, a training-free, LLM-driven Deep Reasoning Framework. This framework leverages the logical planning capabilities…
 
 ### doi:10.5194/egusphere-egu26-20206
 **Building Connected Earth Observation Ecosystems with Agentic AI using EVE** (2026) — n/a · cites 0 · score 7 (strong 1) · periphery/earth_observation · doi:10.5194/egusphere-egu26-20206
@@ -1804,6 +2069,11 @@ With the rapid growth of remote sensing data and multimodal information, foundat
 signals: agentic;agentic*
 Source code accompanying the manuscript "An AI-Orchestrated Multi-Agent Pipeline for Urban Heat Island Detection, Analysis, and Mitigation Mapping Using Landsat 8/9 Satellite Imagery: A Case Study of Houston, Texas," submitted to Sustainable Cities and Society. The pipeline orchestrates six specialized agents (acquisition, preprocessing, segmentation, tiling, aggregation, and export) under a central orchestrator to detect and…
 
+### doi:10.3390/rs18101509
+**Embodied AI in the Sky: A Comparative Review of UAV Embodied AI, from Autonomous Remote Sensing to Task Execution** (2026) — Remote Sensing · cites 0 · score 7 (strong 2) · periphery/earth_observation · doi:10.3390/rs18101509
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant);autonomous agents?
+Unmanned Aerial Vehicle (UAV), particularly rotary-wing platforms such as quadcopters and octocopters, has evolved from controlled remote sensing platforms into autonomous agents capable of active task execution. This evolution from collect-then-analyze workflows to closed-loop perception, reasoning, and action signifies a paradigm shift toward Embodied AI, unlocking opportunities for the low-altitude economy. However, current research on…
+
 ### arxiv:2603.19858
 **Beyond detection: cooperative multi-agent reasoning for rapid onboard EO crisis response** (2026) — arXiv (Cornell University) · cites 0 · score 7 (strong 2) · periphery/earth_observation · doi:10.48550/arxiv.2603.19858
 signals: \bAI agents?\b;multi[- ]?agent (?:system|framework|architecture|collaborat|approach)
@@ -1813,6 +2083,11 @@ Rapid identification of hazardous events is essential for next-generation Earth 
 **Designing Domain-Specific Agents via Hierarchical Task Abstraction Mechanism** (2025) — arXiv (Cornell University) · cites 0 · score 7 (strong 2) · periphery/earth_observation · doi:10.48550/arxiv.2511.17198
 signals: \bReAct\b;multi[- ]?agent (?:system|framework|architecture|collaborat|approach)
 LLM-driven agents, particularly those using general frameworks like ReAct or human-inspired role-playing, often struggle in specialized domains that necessitate rigorously structured workflows. Fields such as remote sensing, requiring specialized tools (e.g., correction, spectral indices calculation), and multi-step procedures (e.g., numerous intermediate products and optional steps), significantly challenge generalized approaches. To address this gap, we introduce…
+
+### doi:10.48550/arxiv.2501.14101
+**StreamingRAG: Real-time Contextual Retrieval and Generation Framework** (2025) — arXiv (Cornell University) · cites 0 · score 7 (strong 1) · periphery/earth_observation · doi:10.48550/arxiv.2501.14101
+signals: knowledge graphs?\s+(?:construction|generation)|construct\w*\s+(?:\w+\s+){0,3}knowledge graphs?
+Extracting real-time insights from multi-modal data streams from various domains such as healthcare, intelligent transportation, and satellite remote sensing remains a challenge. High computational demands and limited knowledge scope restrict the applicability of Multi-Modal Large Language Models (MM-LLMs) on these data streams. Traditional Retrieval-Augmented Generation (RAG) systems address knowledge limitations of these models, but suffer…
 
 ### doi:10.48448/nc2s-6k89
 **Logistics Bulk Fuel Expeditionary Analysis and Simulation Tool (LOGBEAST)** (2026) — Underline Science Inc. · cites 0 · score 7 (strong 1) · periphery/earth_observation · doi:10.48448/nc2s-6k89
@@ -1889,6 +2164,11 @@ The Argo and Biogeochemical-Argo (BGC-Argo) initiatives have significantly advan
 signals: \bAI agents?\b;\bcopilots?\b
 What's Changed Update to 1.0.0 alpha.1 by @xylar in https://github.com/E3SM-Project/polaris/pull/502 Move polaris.parallel to mache.parallel by @xylar in https://github.com/E3SM-Project/polaris/pull/474 Switch deployment to mache.deploy by @xylar in https://github.com/E3SM-Project/polaris/pull/501 Make sure auto-build raises an error on build failures by @xylar in https://github.com/E3SM-Project/polaris/pull/498 Update Omega submodule by @xylar in https://github.com/E3SM-Project/polaris/pull/508 Update e3sm_update utility for new deployment by @xylar in…
 
+### doi:10.1007/978-3-032-05607-8_26
+**How Good are LLMs at Retrieving Documents in a Specific Domain?** (2025) — Lecture notes in computer science · cites 0 · score 7 (strong 1) · periphery/ocean · doi:10.1007/978-3-032-05607-8_26
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant)
+Classical search engines using indexing methods in data infrastructures primarily allow keyword-based queries to retrieve content. While these indexing-based methods are highly scalable and efficient, due to a lack of an appropriate evaluation dataset and a limited understanding of semantics, they often fail to capture the user's intent and generate incomplete responses during evaluation. This…
+
 ### doi:10.5194/isprs-archives-xlviii-1-w2-2023-1729-2023
 **TREE-GPT: MODULAR LARGE LANGUAGE MODEL EXPERT SYSTEM FOR FOREST REMOTE SENSING IMAGE UNDERSTANDING AND INTERACTIVE ANALYSIS** (2023) — The international archives of the photogrammetry, remote sensing and spatial information sciences/International archives of the photogrammetry, remote sensing and spatial information sciences · cites 17 · score 6 (strong 1) · periphery/earth_observation · doi:10.5194/isprs-archives-xlviii-1-w2-2023-1729-2023
 signals: \bLLM[- ]?agents?\b
@@ -1909,20 +2189,35 @@ The use of AI technologies in remote sensing (RS) tasks has been the focus of ma
 signals: function[- ]calling
 Large language models (LLMs) have demonstrated remarkable collaboration and interaction capabilities across numerous work domains. Therefore, could LLMs also contribute to remote sensing classification and interpretation, which are among the most fundamental tasks in the field of remote sensing? To answer this question, the ‘Chat with remote sensing image classification’ (Chat-RSC) method is proposed in…
 
-### doi:10.65262/q1cdwg98
-**4D GIS Visualisation of Agentic-AI Models** (2025) — Acta Architectonica et Urbanistica · cites 1 · score 6 (strong 1) · periphery/earth_observation · doi:10.65262/q1cdwg98
-signals: agentic;agentic*
-This research describes the Sarajevo Urban Digital Twin (UDT) as an applied tool for city planning and for presenting complex simulation results in an adequate way for a broad audience. Developed within the Urban Transformation Project Sarajevo (UTPS), it explains how traffic simulations from the ETH Zurich (ETHZ) software EnerPol are transformed from raw binary…
+### doi:10.1021/acs.est.5c10297
+**Evaluating the Performance of Large Language Models for One Atmosphere Using Automated Extracted Datasets** (2025) — Environmental Science & Technology · cites 2 · score 6 (strong 1) · periphery/climate_atmosphere · doi:10.1021/acs.est.5c10297
+signals: automat\w+\s+(?:\w+\s+){0,2}(?:workflow|pipeline)\b
+Large language models (LLMs) have great potential to improve the efficiency of atmospheric science research and air pollution control decision-making. However, due to the absence of a systematic evaluation benchmark, it remains unclear whether LLMs can be trusted to support core air pollution control tasks such as pollution alarming and mitigation recommendation, which limits their…
 
 ### doi:10.1109/tgrs.2026.3700605
 **A Tri-Stage LLM-Coordinated Framework for Order-Driven Scheduling of Earth Observation Satellite Tasks** (2026) — IEEE Transactions on Geoscience and Remote Sensing · cites 1 · score 6 (strong 1) · periphery/earth_observation · doi:10.1109/tgrs.2026.3700605
 signals: multi[- ]?agent (?:system|framework|architecture|collaborat|approach)
 The Earth Observation Satellite Task Scheduling Problem (EOSTSP) is an NP-Hard challenge critical for space-based information acquisition. Conventional optimization methods are hampered by high development costs, limited adaptability to dynamic scenarios, and poor interpretability. We propose a training-free solution that leverages the reasoning capabilities of Large Language Models (LLMs) through a multi-agent framework. Our approach…
 
+### doi:10.1038/s41598-025-31346-x
+**Large language model-driven knowledge graph reasoning for enhanced semantic segmentation** (2025) — Scientific Reports · cites 1 · score 6 (strong 1) · periphery/earth_observation · doi:10.1038/s41598-025-31346-x
+signals: knowledge graphs?\s+(?:construction|generation)|construct\w*\s+(?:\w+\s+){0,3}knowledge graphs?
+Urban scene segmentation is essential for 3D city modeling and plays a crucial role in various remote sensing applications, including urban planning and environmental monitoring. While integrating knowledge graphs with scene segmentation has improved accuracy, existing methods often depend on dataset-specific knowledge graphs, limiting their generalizability across diverse remote sensing data. To address this, we…
+
+### doi:10.1109/mipr62202.2024.00072
+**Parameter-Efficient Adaptation of Foundation Models for Damaged Building Assessment** (2024) — n/a · cites 1 · score 6 (strong 1) · periphery/earth_observation · doi:10.1109/mipr62202.2024.00072
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant)
+The accurate and timely assessment of building damage is critical for effective post-disaster response efforts. However, traditional methods, reliant on manual inspection, are time-consuming and impractical in the face of large affected ar-eas. This work introduces a novel vision foundation model-based framework (SAM- RS) that leverages the knowledge embedded in pre-trained Segment Anything Model (SAM)…
+
 ### doi:10.1145/3675888.3676146
 **Enhancing Campus Navigation: A Conversational AI Agent for Location Assistance** (2024) — n/a · cites 1 · score 6 (strong 1) · periphery/climate_atmosphere · doi:10.1145/3675888.3676146
 signals: \bAI agents?\b;\bAI agents?\b*
 Chatbots are "chat robots" that deliver extremely engaging, conversational experiences via voice and text and maybe modiﬁed and used on mobile devices, web browsers, and popular chat platforms. Chatbots are designed and educated with artiﬁcial intelligence or machine learning algorithms to provide a service to individuals or businesses who interact with them via instant messaging…
+
+### doi:10.1109/tkde.2026.3674110
+**OKG-LLM: Aligning Ocean Knowledge Graph With Observation Data via LLMs for Global Sea Surface Temperature Prediction** (2026) — IEEE Transactions on Knowledge and Data Engineering · cites 1 · score 6 (strong 1) · periphery/climate_atmosphere · doi:10.1109/tkde.2026.3674110
+signals: knowledge graphs?\s+(?:construction|generation)|construct\w*\s+(?:\w+\s+){0,3}knowledge graphs?
+Sea surface temperature (SST) prediction is a critical task in ocean science, supporting various applications, such as weather forecasting, fisheries management, and storm tracking. While existing data-driven methods have demonstrated significant success, they often neglect to leverage the rich domain knowledge accumulated over the past decades, limiting further advancements in prediction accuracy. The recent emergence…
 
 ### doi:10.2139/ssrn.7227564
 **Agentic AI for Urban Heat Island Detection, Analysis, and Mitigation Mapping from Satellite Imagery: A Houston Case Study** (2026) — SSRN Electronic Journal · cites 0 · score 6 (strong 1) · periphery/earth_observation · doi:10.2139/ssrn.7227564
@@ -1959,6 +2254,11 @@ The integration of artificial intelligence (AI) multiagent systems into soil sci
 signals: \bAI agents?\b;agentic
 Episode summary: The April 2026 Iran-Israel ceasefire is holding, but the forecasting community is divided on how to measure its stability. While high-compute agentic wargaming simulates every possible escalation, prediction markets and structured expert elicitation are telling a different story. This episode explores the "ensemble" approach to geopolitical forecasting, breaking down the strengths and blind…
 
+### arxiv:2607.03591
+**Responsibility Distribution Estimation in Ego-View Accident Videos with Multimodal Large Language Models** (2026) — arXiv · cites 0 · score 6 (strong 1) · periphery/earth_observation · arXiv:2607.03591
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant)
+Recent studies on multimodal traffic accident understanding have mainly relied on infrastructure-camera footage, satellite imagery, or structured crash records. However, such data sources are costly to deploy and maintain at large scale, and they cannot objectively capture what the driver was actually able to observe before the accident. In contrast, ego-view accident videos directly represent…
+
 ### doi:10.55041/ijsrem60346
 **Smart AgriAdvisor: An Agentic AI-Based Real-Time Integrated Decision Support System for Precision Agriculture** (2026) — INTERANTIONAL JOURNAL OF SCIENTIFIC RESEARCH IN ENGINEERING AND MANAGEMENT · cites 0 · score 6 (strong 1) · periphery/climate_atmosphere · doi:10.55041/ijsrem60346
 signals: agentic;agentic*
@@ -1974,20 +2274,45 @@ Modern agriculture increasingly depends on data-driven decision-making to improv
 signals: agentic
 Large language models (LLMs) can translate and modify source code, and have been shown to do so for codes of different complexity. Whether they can port a complete, production geophysical model to a different language without degrading its physics has not been established. We demonstrate that LLM-assisted code translation can preserve the physics of a…
 
+### doi:10.5194/egusphere-egu24-18493
+**Leveraging recent advances in Large Language Models for the ocean science community** (2024) — n/a · cites 0 · score 6 (strong 1) · periphery/ocean · doi:10.5194/egusphere-egu24-18493
+signals: \bQ&A system\b|question[-\s]answering system
+Large Language Models (LLMs) have made significant strides in language understanding, including natural language processing, summarization, and translation, and they have the potential to be applied to a range of climate-related challenges. For instance, LLMs can be leveraged for data cleaning and transformation, and also assisting scientists/engineers in their daily work tasks.For the machine learning…
+
 ### doi:10.22541/essoar.15004148/v1
 **EarthSpec-LLM: LLM-Driven Intelligent Spectrum Management and Decision-Making for Earth Observation Systems** (2026) — n/a · cites 0 · score 6 (strong 1) · periphery/earth_observation · doi:10.22541/essoar.15004148/v1
 signals: multi[- ]?agent (?:system|framework|architecture|collaborat|approach)
 The rapid expansion of Earth observation satellite networks has created urgent demands for intelligent spectrum management and real-time decision-making in Earth science applications. Existing approaches typically treat spectrum allocation and Earth science decision tasks independently, resulting in suboptimal end-to-end performance. In this paper, we propose EarthSpec- LLM, a unified framework that integrates large language model…
+
+### doi:10.1109/tgrs.2024.3365825
+**A New Learning Paradigm for Foundation Model-Based Remote-Sensing Change Detection** (2024) — IEEE Transactions on Geoscience and Remote Sensing · cites 110 · score 5 (strong 1) · periphery/earth_observation · doi:10.1109/tgrs.2024.3365825
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant)
+Change detection (CD) is a critical task to observe and analyze dynamic processes of land cover. Although numerous deep learning-based CD models have performed excellently, their further performance improvements are constrained by the limited knowledge extracted from the given labelled data. On the other hand, the foundation models that emerged recently contain a huge amount…
 
 ### doi:10.18355/xl.2024.17.01.01
 **The use of ChatGPT in creative writing assistance** (2024) — XLinguae · cites 11 · score 5 (strong 1) · periphery/climate_atmosphere · doi:10.18355/xl.2024.17.01.01
 signals: \bAI agents?\b
 This paper explores the integration of ChatGPT, an advanced AI language model, into creative writing. The paper investigates the capabilities of ChatGPT in generating novel story ideas, characters, plots, and stylistic elements such as metaphors and dialogue within various genres, including narrative, poetry, and drama. With its generative potential, ChatGPT is a valuable tool to…
 
+### doi:10.1109/cvprw63382.2024.00283
+**Enrich, Distill and Fuse: Generalized Few-Shot Semantic Segmentation in Remote Sensing Leveraging Foundation Model’s Assistance** (2024) — n/a · cites 10 · score 5 (strong 1) · periphery/earth_observation · doi:10.1109/cvprw63382.2024.00283
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant)
+Generalized few-shot semantic segmentation (GFSS) unifies semantic segmentation with few-shot learning, showing great potential for Earth observation tasks under data scarcity conditions, such as disaster response, urban planning, and natural resource management. GFSS requires simultaneous prediction for both base and novel classes, with the challenge lying in balancing the segmentation performance of both. Therefore, this…
+
+### doi:10.1109/tgrs.2025.3584094
+**Burden-Free Distillation From Foundation Model for Efficient Remote Sensing Change Detection** (2025) — IEEE Transactions on Geoscience and Remote Sensing · cites 3 · score 5 (strong 1) · periphery/earth_observation · doi:10.1109/tgrs.2025.3584094
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant)
+Applying vision foundation models to remote sensing change detection (CD) has attracted extensive research attention. These studies employ inherent general knowledge from vision foundation models to enhance CD performance. Existing methods explicitly employ the foundation model as a feature extractor while designing additional learnable modules to bridge the task gap. However, these methods substantially increase…
+
 ### doi:10.65109/hfzd6332
 **MapBot: A Multi-Modal Agent for Geospatial Analysis** (2025) — n/a · cites 1 · score 5 (strong 1) · periphery/earth_observation · doi:10.65109/hfzd6332
 signals: \bLLM[- ]?agents?\b
 MapBot is an interactive system to manipulate, analyze, and visualize geospatial data. It combines frontier computer vision models with a large language model running in a Read-Eval-Print Loop (REPL). Users can upload or select aerial or satellite imagery, annotate objects, and query the data using natural language and a point-and-click interface. The LLM agent loop…
+
+### doi:10.1016/j.compag.2026.111523
+**A hierarchical foundation model framework for generalizable agricultural and crop parcel delineation** (2026) — Computers and Electronics in Agriculture · cites 1 · score 5 (strong 1) · periphery/earth_observation · doi:10.1016/j.compag.2026.111523
+signals: automat\w+\s+(?:\w+\s+){0,2}(?:workflow|pipeline)\b
+Precise, multi-scale mapping of agricultural landscapes—ranging from management-oriented Agricultural Parcels (APs) to fine-grained Crop Parcels (CPs)—is critical for land administration and precision agriculture. However, automated delineation remains challenging due to the accuracy limitations and poor generalizability of existing methods. While the Segment Anything Model (SAM) offers powerful zero-shot segmentation capabilities, its direct application is hindered…
 
 ### doi:10.1145/3748636.3762765
 **GeoPandas-AI: A Smart Class Bringing LLM as Stateful AI Code Assistant** (2025) — arXiv · cites 1 · score 5 (strong 1) · periphery/climate_atmosphere · doi:10.1145/3748636.3762765
@@ -2029,6 +2354,11 @@ Eco-Environmental systems are dynamic and interconnected, while health outcomes 
 signals: agentic
 Effective foundation modeling in remote sensing requires spatially aligned heterogeneous modalities coupled with semantically grounded supervision, yet such resources remain limited at scale. We present GeoMeld, a large-scale multimodal dataset with approximately 2.5 million spatially aligned samples. The dataset spans diverse modalities and resolutions and is constructed under a unified alignment protocol for modality-aware representation…
 
+### arxiv:2606.20177
+**Evaluating and Enhancing Negation Comprehension in Remote Sensing MLLMs** (2026) — arXiv · cites 0 · score 5 (strong 1) · periphery/earth_observation · arXiv:2606.20177
+signals: automat\w+\s+(?:\w+\s+){0,2}(?:workflow|pipeline)\b
+Multimodal Large Language Models (MLLMs) have demonstrated remarkable success in various Remote Sensing (RS) tasks. However, their ability to comprehend negation remains underexplored, limiting deployment in real-world applications where models must explicitly identify what is false or absent, e.g., emergency responders need to locate non-flooded routes for evacuation. To comprehensively study this limitation, we introduce…
+
 ### arxiv:2606.04433
 **Stateful Visual Encoders for Vision-Language Models** (2026) — arXiv · cites 0 · score 5 (strong 1) · periphery/earth_observation · arXiv:2606.04433
 signals: agentic
@@ -2048,6 +2378,11 @@ In the past decade, microdroplet chemistry has developed rapidly and the remarka
 **SORA-ATMAS: Adaptive Trust Management and Multi-LLM Aligned Governance for Future Smart Cities** (2025) — arXiv · cites 0 · score 5 (strong 1) · periphery/climate_atmosphere · doi:10.2139/ssrn.5774580
 signals: agentic
 The rapid evolution of smart cities has increased the reliance on intelligent interconnected services to optimize infrastructure, resources, and citizen well-being. Agentic AI has emerged as a key enabler by supporting autonomous decision-making and adaptive coordination, allowing urban systems to respond in real time to dynamic conditions. Its benefits are evident in areas such as…
+
+### doi:10.18653/v1/2025.findings-acl.368
+**Question Answering in Climate Adaptation for Agriculture: Model Development and Evaluation with Expert Feedback** (2025) — n/a · cites 0 · score 5 (strong 1) · periphery/climate_atmosphere · doi:10.18653/v1/2025.findings-acl.368
+signals: \bQ&A system\b|question[-\s]answering system
+The generative capabilities of the large language models (LLMs) are deployed for domainspecific question answering systems.However, their ability to answer climate adaptation questions remains unclear.In particular, can they be used by agronomists and climate scientists to answer questions on the best climate adaptation strategies?Answering questions in this domain requires knowledge of climate data and its…
 
 ### doi:10.21203/rs.3.rs-3626057/v1
 **Developing Time Series Forecasting Models with Generative Artificial Intelligence** (2023) — Research Square · cites 0 · score 5 (strong 1) · periphery/climate_atmosphere · doi:10.21203/rs.3.rs-3626057/v1
@@ -2079,20 +2414,35 @@ Aerospace Medicine & Human Performance Calculator Suite is an open-source, peer-
 signals: autonomous agents?
 PROMETHEUS NEEDS AN OPERATING SYSTEM: Why Jeff Bezos’ $6.2B Vision Requires the CollectiveOS Anti-Scarcity Stack 1. Introduction: The Limits of Promethean Thinking The mythological Prometheus stole fire from the gods to empower humanity, an act of rebellion that catalyzed the dawn of civilization. In late 2025, Jeff Bezos, the founder of Amazon and Blue Origin,…
 
-### doi:10.1609/aaaiss.v8i1.42579
-**State Machine Structured Agents for Physical Science Reasoning** (2026) — Proceedings of the AAAI Symposium Series · cites 0 · score 5 (strong 1) · periphery/ocean · doi:10.1609/aaaiss.v8i1.42579
-signals: agentic
-Large language models (LLMs) have shown promise as scientific assistants capable of reasoning, tool invocation, and autonomous analysis. However, their use in the physical sciences remains limited by the need for strong guarantees of explainability, traceable reasoning over long computational workflows, and the high consequences of subtle errors. Many existing LLM-based agent systems rely on…
+### doi:10.5281/zenodo.19203221
+**AQUA DEEPAI Powered ARGO Oceanographic Data System** (2026) — Zenodo (CERN European Organization for Nuclear Research) · cites 0 · score 5 (strong 1) · periphery/ocean · doi:10.5281/zenodo.19203221
+signals: automat\w+\s+(?:\w+\s+){0,2}(?:workflow|pipeline)\b
+This research paper introduces AquaDeep, an artificial intelligence-powered ocean monitoring platform designed to analyze complex marine telemetry and predict environmental variables in real-time. Since critical indicators like temperature, salinity, and pressure are essential for monitoring climate change and ecosystem health, this study addresses the accessibility gap caused by traditional, manual processing of large NetCDF datasets.…
 
 ### arxiv:2604.08896
 **GeoMMBench and GeoMMAgent: Toward Expert-Level Multimodal Intelligence in Geoscience and Remote Sensing** (2026) — arXiv (Cornell University) · cites 0 · score 5 (strong 1) · periphery/earth_observation · doi:10.48550/arxiv.2604.08896
 signals: multi[- ]?agent (?:system|framework|architecture|collaborat|approach)
 Recent advances in multimodal large language models (MLLMs) have accelerated progress in domain-oriented AI, yet their development in geoscience and remote sensing (RS) remains constrained by distinctive challenges: wide-ranging disciplinary knowledge, heterogeneous sensor modalities, and a fragmented spectrum of tasks. To bridge these gaps, we introduce GeoMMBench, a comprehensive multimodal question-answering benchmark covering diverse RS…
 
+### doi:10.1109/mgrs.2025.3648119
+**Progress and Perspectives of Crop Type Mapping With Remote Sensing: A review** (2026) — IEEE Geoscience and Remote Sensing Magazine · cites 9 · score 4 (strong 1) · periphery/earth_observation · doi:10.1109/mgrs.2025.3648119
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant)
+Crop type mapping is a core topic in agricultural remote sensing, playing a strategic role in global food security and resource management. Advances in remote sensing and artificial intelligence have shifted crop type mapping from traditional expert-driven approaches toward data- and knowledge-driven paradigms. However, a systematic synthesis that links key components of crop identification across…
+
+### doi:10.1016/j.jag.2025.104623
+**DMRS: Long-tailed remote sensing recognition via semantic-aware mixing and diversity experts** (2025) — International Journal of Applied Earth Observation and Geoinformation · cites 2 · score 4 (strong 1) · periphery/earth_observation · doi:10.1016/j.jag.2025.104623
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant)
+Long-tailed class distributions pose a significant challenge in remote sensing scene recognition, where certain scene categories appear far less frequently than others. However, existing long-tailed learning approaches often overlook the unique spatial hierarchies and contextual semantic relationships inherent in remote sensing imagery, limiting their effectiveness in this domain. To address this, we propose Diversity-Mix Remote…
+
 ### doi:10.1109/icscds65426.2025.11167647
 **An Integrated System for Real-Time Greenhouse Environmental Forecasting and Adaptive Crop Management** (2025) — n/a · cites 1 · score 4 (strong 1) · periphery/earth_observation · doi:10.1109/icscds65426.2025.11167647
 signals: multi[- ]?agent (?:system|framework|architecture|collaborat|approach)
 This paper presents the Greenhouse Intelligence System, an advanced agricultural platform that integrates NASA Earth observation data with artificial intelligence analytics to optimize greenhouse management. The system employs a multi-agent architecture combining real-time environmental monitoring, predictive modeling, and natural language processing to deliver actionable recommendations for crop development. Temperature prediction utilizes a Gated Recurrent Unit…
+
+### doi:10.1021/acs.jpca.6c01748
+**Benchmarking the UMA Foundation Interatomic Potential for Gas-Phase Chemical Kinetics** (2026) — The Journal of Physical Chemistry A · cites 1 · score 4 (strong 1) · periphery/climate_atmosphere · doi:10.1021/acs.jpca.6c01748
+signals: automat\w+\s+(?:\w+\s+){0,2}(?:workflow|pipeline)\b
+Foundation machine-learned interatomic potentials promise rapid access to high-quality potential energy surfaces, but their fitness for gas-phase chemical kinetics remains largely untested. Here we benchmark the Universal Models for Atoms (UMA) foundation model for gas-phase kinetics applications relevant to combustion and atmospheric chemistry using our automated KinBot workflow across 12 representative systems. We compare optimized…
 
 ### arxiv:2608.10494
 **GeoForge: Non-Parametric Self-Evolving Agents for Earth-Observation Reasoning** (2026) — arXiv (Cornell University) · cites 0 · score 4 (strong 1) · periphery/earth_observation · arXiv:2608.10494
@@ -2109,11 +2459,6 @@ Ultra-high-resolution (UHR) remote-sensing (RS) imagery provides fine-grained Ea
 signals: \btool[- ]use\b
 Geoscience research requires complex analysis and domain expertise, with remote sensing (RS) observations as a key foundation. However, existing RS agents built on general-purpose LLMs remain largely domain-agnostic, resulting in brittle and error-prone workflows. Moreover, these failures are seldom consolidated into a reusable experience for subsequent analyses. To address this issue, we introduce RSMeM, a…
 
-### doi:10.3390/rs18101509
-**Embodied AI in the Sky: A Comparative Review of UAV Embodied AI, from Autonomous Remote Sensing to Task Execution** (2026) — Remote Sensing · cites 0 · score 4 (strong 1) · periphery/earth_observation · doi:10.3390/rs18101509
-signals: autonomous agents?
-Unmanned Aerial Vehicle (UAV), particularly rotary-wing platforms such as quadcopters and octocopters, has evolved from controlled remote sensing platforms into autonomous agents capable of active task execution. This evolution from collect-then-analyze workflows to closed-loop perception, reasoning, and action signifies a paradigm shift toward Embodied AI, unlocking opportunities for the low-altitude economy. However, current research on…
-
 ### doi:10.48550/arxiv.2508.01109
 **Platonic Representations for Poverty Mapping: Unified Vision-Language Codes or Agent-Induced Novelty?** (2025) — arXiv (Cornell University) · cites 0 · score 4 (strong 1) · periphery/earth_observation · doi:10.48550/arxiv.2508.01109
 signals: \bAI agents?\b
@@ -2128,6 +2473,11 @@ JupyterGIS is an open-source web-GIS (Geographic Information System) designed to
 **The CIA's Open-Source Wargames** (2026) — Zenodo (CERN European Organization for Nuclear Research) · cites 0 · score 4 (strong 1) · periphery/earth_observation · doi:10.5281/zenodo.19489348
 signals: multi[- ]?agent (?:system|framework|architecture|collaborat|approach)
 Episode summary: The CIA is on GitHub. This episode explores the intelligence community's surprising embrace of open-source AI, from the public "Snowglobe" wargaming project to a sprawling network of venture arms and accelerators. We uncover how the IC leverages commercial tech, the risks of AI "nudging" human analysts, and the complex dance of public-private partnerships.…
+
+### arxiv:2605.24782
+**The Perception-Physics Paradox: Probing Scientific Alignment with TC-Bench** (2026) — arXiv · cites 0 · score 4 (strong 1) · periphery/earth_observation · arXiv:2605.24782
+signals: automat\w+\s+(?:\w+\s+){0,2}(?:workflow|pipeline)\b
+While Vision Foundation Models (VFMs) excel at predictive tasks on satellite imagery, their performance can arise from visual correlations rather than underlying structural invariants, making even perception-based out-of-distribution accuracy a poor proxy for scientific utility. As a result, models may look correct without reasoning correctly, a discrepancy we term the Perception-Physics Paradox. To address this…
 
 ### doi:10.5281/zenodo.22231751
 **Recent Progress on the NSF Unidata Science Gateway: A Community research infrastructure for the Atmospheric Sciences** (2026) — Zenodo (CERN European Organization for Nuclear Research) · cites 0 · score 4 (strong 1) · periphery/climate_atmosphere · doi:10.5281/zenodo.22231751
@@ -2148,6 +2498,16 @@ This report proposes a robust method for classifying oceanic and atmospheric phe
 **TianJi:An autonomous AI meteorologist for discovering physical mechanisms in atmospheric science** (2026) — arXiv (Cornell University) · cites 0 · score 4 (strong 1) · periphery/climate_atmosphere · doi:10.48550/arxiv.2603.27738
 signals: multi[- ]?agent (?:system|framework|architecture|collaborat|approach)
 Artificial intelligence (AI) has achieved breakthroughs comparable to traditional numerical models in data-driven weather forecasting, yet it remains essentially statistical fitting and struggles to uncover the physical causal mechanisms of the atmosphere. Physics-oriented mechanism research still heavily relies on domain knowledge and cumbersome engineering operations of human scientists, becoming a bottleneck restricting the efficiency of…
+
+### doi:10.48550/arxiv.2607.01748
+**RTE-FM-Dehazer: Radiative Transfer Equation Inspired Flow Matching for Real-World Image Dehazing** (2026) — arXiv (Cornell University) · cites 0 · score 4 (strong 1) · periphery/climate_atmosphere · doi:10.48550/arxiv.2607.01748
+signals: automat\w+\s+(?:\w+\s+){0,2}(?:workflow|pipeline)\b
+Single-image dehazing aims to recover a clear scene from a hazy image and is generally formulated as an image-to-image translation task; however, it faces two limitations. Its performance depends heavily on the haze-formation priors embedded in the model. Prevailing methods adopt the Atmospheric Scattering Model (ASM), whose assumptions of single scattering and homogeneous media are…
+
+### title:interpretablealignmentoftextualweatherreportswithlocalsensortimeseriesforextremeweathereventvisualization
+**Interpretable Alignment of Textual Weather Reports With Local Sensor Time Series for Extreme Weather Event Visualization** (2025) — ScholarWorks @ UTRGV (The University of Texas Rio Grande Valley) · cites 0 · score 4 (strong 1) · periphery/climate_atmosphere · https://scholarworks.utrgv.edu/etd/1825
+signals: automat\w+\s+(?:\w+\s+){0,2}(?:workflow|pipeline)\b
+This thesis presents an automated and interpretable pipeline that links natural-language weather narratives with local meteorological sensor time series. Using large language models, NOAA-style event reports are transformed into structured records capturing event type, timing, descriptive context, and uncertainty. Each extracted event is aligned with harmonized temperature, precipitation, and wind measurements from nearby weather stations,…
 
 ### doi:10.5281/zenodo.21869193
 **Technology and the Reality of the Present-Centered Machine** (2026) — Zenodo (CERN European Organization for Nuclear Research) · cites 0 · score 4 (strong 1) · periphery/climate_atmosphere · doi:10.5281/zenodo.21869193
@@ -2173,6 +2533,11 @@ IntroductionThe question if life exists outside of Earth has been an important d
 **Nexus Ocean: Quantum Intelligence Architecture for Deep-Sea Monitoring and Predictive Analytics** (2026) — Zenodo (CERN European Organization for Nuclear Research) · cites 0 · score 4 (strong 1) · periphery/ocean · doi:10.5281/zenodo.18426244
 signals: multi[- ]?agent (?:system|framework|architecture|collaborat|approach)
 🌊 Nexus Ocean v3.1.0 - Quantum AI Marine Intelligence Next-Generation Deep Sea Monitoring & Intelligence System Transforming oceanographic monitoring through quantum-inspired artificial intelligence 📖 Overview Nexus Ocean is a revolutionary quantum-inspired oceanographic AI system that combines six-layer neural architecture with real-time deep-sea monitoring capabilities. The system leverages cutting-edge technologies including neuromorphic computing, quantum-inspired algorithms, and…
+
+### doi:10.3390/ijgi15060258
+**A Refined Span Classification Model for Recognizing Nested Named Entity in Marine Meteorological Disaster Texts** (2026) — ISPRS International Journal of Geo-Information · cites 0 · score 4 (strong 1) · periphery/climate_atmosphere · doi:10.3390/ijgi15060258
+signals: (?:LLM|large language model|GPT|foundation model|language model)[-\s](?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}(?:workflow|pipeline|automation|framework|system|assistant)
+Named entity recognition (NER) in marine meteorological disaster texts is essential for automated information extraction and disaster management. However, disaster-chain descriptions often contain nested entities that are difficult for conventional flat NER models to represent. This paper proposes PRSpan, a position-role-aware span classification model for nested NER. PRSpan incorporates Rotary Position Embedding (RoPE)-enhanced attention for…
 
 ### arxiv:2509.23141
 **Earth-Agent: Unlocking the Full Landscape of Earth Observation with Agents** (2025) — arXiv · cites 0 · score 4 (strong 1) · periphery/earth_observation · arXiv:2509.23141

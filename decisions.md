@@ -2,6 +2,30 @@
 
 Newest first. One entry per decision: what, why, what it rules out.
 
+## 2026-09-07 — v0.5 landscape run
+
+First full landscape under the v0.5 prompt. Harvest: 11,191 unique records (API plus 14
+grey extras). Shortlist after a mid-run triage refix: 712. Admitted: 155 (23 core
+full-text, 132 context). Grey pass used 11 of 40 web calls.
+
+Three method changes landed during the run, not before it:
+
+- **Paging caps raised** (`openalex_max_pages` 5 → 20, `arxiv_max_results` 200 → 1000).
+  The shipped caps truncated periphery queries; section 07 would have reported the cap as
+  the size of the neighbouring literature.
+- **OpenAlex key is required for a full harvest.** Keyless allowance is $0.10/day; a
+  spent budget now aborts instead of retrying into a quiet half-corpus. `n_available` is
+  logged so a cap is visible in `queries.csv`.
+- **Triage dropped a whole class of records.** Anything that said "geoscience" without a
+  named subfield got `scope none` and was discarded regardless of score (190 records).
+  MCP vocabulary was also missing. Patterns were widened, triage re-run with `--force`,
+  and the previous cut kept under `pre-refix/`. Shortlist 606 → 712; core tier 36 → 54
+  before paywall demotions.
+
+Rules out: treating `v0.4` as the landscape; running a full harvest without an OpenAlex
+key; lowering `--min-score` to recover the dropped class (the binding filter was
+structural, not the score knob).
+
 ## 2026-09-07 — bump to v0.5
 
 The smoke-test fixes ( `$OUT`, `--smoke`, triage refuse, grey extras, `08_papers` tag

@@ -37,15 +37,32 @@ AGENT_LLM = [
     r"agent[- ]based (?:LLM|large language)", r"tool[- ]calling", r"function[- ]calling",
     r"\bLangChain\b", r"\bAutoGen\b", r"\bLangGraph\b", r"\bCrewAI\b", r"\bAutoGPT\b",
     r"AI scientist", r"agent(?:ic)? workflows?",
+    # MCP is how most 2025-26 systems here expose tools to an LLM, and it was absent from
+    # this list entirely: open-darts-MCP, specfem-mcp, seismo-mcp and GeoMCP all scored
+    # below the cut on a corpus harvested to find exactly them. Bare "MCP" is not usable
+    # (monocyte chemoattractant protein), so it is only matched next to a system noun or
+    # as the tail of a hyphenated tool name.
+    r"model context protocol",
+    r"\bMCP[\s-]?(?:server|client|suite|framework|architecture|based|tool)",
+    r"[a-z]{3,}-mcp\b",
+    r"agent2agent|\bA2A protocol\b",
 ]
 # Weight 3, but only when LLM vocabulary is independently present. These terms all have
 # a large pre-LLM or unrelated literature: "multi-agent system" is 40 years old,
 # "copilot" is an aircraft, and "tool use" is primatology.
 AGENT_GENERIC = [
-    r"multi[- ]?agent (?:system|framework|architecture|collaborat|approach)",
+    # The head must tolerate a comma and an intervening modifier or two. "A Multi-Agent,
+    # Multi-Modal Large-Language-Model Framework" is the canonical title shape in this
+    # literature and the old fixed-adjacency pattern did not match it.
+    r"multi[- ]?agent[,\s]+(?:\w+[-\s]+){0,2}"
+    r"(?:system|framework|architecture|collaborat|approach|workflow|platform|pipeline)",
+    r"multi[- ]?agent (?:LLM|AI|artificial intelligence|large language)",
     r"autonomous agents?", r"\btool[- ]use\b", r"\btool[- ]using\b",
     r"agent orchestration", r"orchestrat\w+ agents?", r"self[- ]driving lab",
     r"autonomous experimentation", r"\bcopilots?\b", r"planning agents?",
+    # An agent named for the job it does rather than for being an agent.
+    r"\b(?:modell?ing|simulation|analysis|interpretation|advisory|research|smart|"
+    r"intelligent|expert|domain)\s+agents?\b",
 ]
 # Case-SENSITIVE. "ReAct" is a prompting pattern; "react" is what chemicals do. Matched
 # case-insensitively this single pattern produced 377 false positives in a 1795-record
@@ -58,9 +75,9 @@ AGENT_CASED = [r"\bReAct\b", r"\bMRKL\b", r"\bToT\b"]
 # and none could be recovered by lowering --min-score, because they scored on medium
 # signals alone with strong_hits at 0. Adding them costs ~15% more shortlist.
 AGENT_COMPOUND = [
-    r"(?:LLM|large language model|GPT|foundation model|language model)[-\s]"
+    r"(?:LLM|large[-\s]language[-\s]model|GPT|foundation model|language model)[-\s]"
     r"(?:powered|assisted|driven|augmented|based|enabled)\s+(?:\w+\s+){0,2}"
-    r"(?:workflow|pipeline|automation|framework|system|assistant)",
+    r"(?:workflow|pipeline|automation|framework|system|assistant|agents?|orchestrat\w+)",
     r"knowledge[-\s]based\s+(?:Q&A|question[-\s]answering)",
     r"\bQ&A system\b|question[-\s]answering system",
     r"knowledge graphs?\s+(?:construction|generation)|construct\w*\s+(?:\w+\s+){0,3}knowledge graphs?",
@@ -68,7 +85,7 @@ AGENT_COMPOUND = [
 ]
 # Weight 1: LLM-era vocabulary. Necessary but far from sufficient.
 MEDIUM = [
-    r"large language models?", r"\bLLMs?\b", r"\bGPT-?[345]\b", r"\bChatGPT\b",
+    r"large[-\s]language[-\s]models?", r"\bLLMs?\b", r"\bGPT-?[345]\b", r"\bChatGPT\b",
     r"foundation models?", r"retrieval[- ]augmented", r"\bRAG\b", r"chain[- ]of[- ]thought",
     r"prompt engineering", r"in[- ]context learning", r"vision[- ]language model",
     r"\bClaude\b", r"\bLlama\b", r"\bGemini\b", r"generative AI", r"transformer",
@@ -102,6 +119,15 @@ PERIPHERY = {
     "ocean": r"oceanograph|ocean model|marine science",
     "planetary": r"planetary geolog|lunar surface|martian",
 }
+# Last resort, checked only when no specific subfield and no periphery domain matched.
+# Without it, a record that says "geoscience" or "Earth science" but never names a
+# subfield gets scope "none" and is dropped by `above()` no matter how high it scores:
+# 190 records cleared score+strong+LLM in the v0.5 harvest and were discarded this way,
+# among them a multi-agent geoscience document-extraction system at score 12 and a
+# subsurface-hydrology agent workflow at 16. Shortlisting is not admission — these
+# belong in front of the screener, who decides the subfield.
+GENERAL = (r"geoscien|geolog|geophysic|earth science|subsurface|petrophysic|borehole|"
+           r"well[- ]log|mineralog|stratigraph|litholog|core sample")
 
 _C = re.IGNORECASE
 
@@ -114,6 +140,7 @@ AL_R, AG_R, AX_R, MEDIUM_R, NEG_R, PRE_R = map(
 AC_R = [re.compile(p) for p in AGENT_CASED]  # case-sensitive by design
 DOMAIN_R = {k: re.compile(v, _C) for k, v in DOMAIN.items()}
 PERIPH_R = {k: re.compile(v, _C) for k, v in PERIPHERY.items()}
+GENERAL_R = re.compile(GENERAL, _C)
 
 
 def score(row: dict) -> dict:
@@ -149,6 +176,8 @@ def score(row: dict) -> dict:
     elif per:
         group = max(per, key=per.get)
         scope = "periphery"
+    elif GENERAL_R.search(text):
+        group, scope = "geoscience_general", "core"
     else:
         group, scope = "", "none"
 

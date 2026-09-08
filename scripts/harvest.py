@@ -39,6 +39,11 @@ from datetime import datetime, timezone
 # OPENALEX_MAILTO in an untracked settings.local.json or the shell to opt in.
 MAILTO = os.environ.get("OPENALEX_MAILTO", "")
 USER_AGENT = "deep-research-agentic-geoscience" + (f" (mailto:{MAILTO})" if MAILTO else "")
+# OpenAlex meters the API against a daily USD budget: $0.10/day keyless, $1/day with a
+# free key. A full harvest is ~300 search calls at $0.001, so keyless it dies partway
+# through with HTTP 429 "Insufficient budget" and leaves a corpus that looks complete.
+# Set OPENALEX_API_KEY in the shell or an untracked settings.local.json.
+OPENALEX_API_KEY = os.environ.get("OPENALEX_API_KEY", "")
 # Optional. Without it Semantic Scholar returns 429 on nearly every call, which is why
 # --no-s2 is the documented default; with it, S2 becomes a usable third index.
 S2_API_KEY = os.environ.get("S2_API_KEY", "")
@@ -50,13 +55,17 @@ SCREENED_COLS = [
 ]
 QUERY_COLS = [
     "query_id", "api", "band", "scope", "domain_group", "query", "status",
-    "n_results", "n_new_unique", "elapsed_s", "note",
+    "n_available", "n_results", "n_new_unique", "elapsed_s", "note",
 ]
 
 csv.field_size_limit(10_000_000)
 
 
 # ---------------------------------------------------------------- http
+
+class BudgetExhausted(RuntimeError):
+    """OpenAlex daily budget spent. Fatal: the rest of the harvest would be empty."""
+
 
 def _get(url: str, params: dict, timeout: int = 60, retries: int = 3,
          headers: dict | None = None) -> str:
@@ -71,6 +80,13 @@ def _get(url: str, params: dict, timeout: int = 60, retries: int = 3,
                 return r.read().decode("utf-8", "replace")
         except urllib.error.HTTPError as e:
             last = f"HTTP {e.code}"
+            if e.code == 429:
+                # Two different failures share this code. A per-second throttle is worth
+                # retrying; an exhausted daily budget is not, and retrying it turns one
+                # loud failure into a quiet half-corpus that every later count trusts.
+                body = e.read().decode("utf-8", "replace")[:300]
+                if "budget" in body.lower():
+                    raise BudgetExhausted(body)
             if e.code in (429, 500, 502, 503, 504):
                 time.sleep(2 ** attempt * 3)
                 continue
@@ -141,7 +157,8 @@ def openalex(query: str, from_date: str, max_pages: int) -> tuple[list[dict], in
         }
         if MAILTO:
             params["mailto"] = MAILTO
-        data = json.loads(_get("https://api.openalex.org/works", params))
+        hdrs = {"Authorization": f"Bearer {OPENALEX_API_KEY}"} if OPENALEX_API_KEY else None
+        data = json.loads(_get("https://api.openalex.org/works", params, headers=hdrs))
         total = data.get("meta", {}).get("count", 0)
         for r in data.get("results", []):
             loc = r.get("primary_location") or {}
@@ -407,16 +424,27 @@ def main() -> int:
     qrows = []
     from_date = cfg["from_date"]
     for i, q in enumerate(plan, 1):
-        jobs = [("openalex", lambda: openalex(q["openalex"], from_date, cfg["openalex_max_pages"]))]
+        oa_cap = cfg["openalex_max_pages"] * 200
+        jobs = [("openalex", oa_cap, lambda: openalex(q["openalex"], from_date, cfg["openalex_max_pages"]))]
         if not args.no_arxiv:
-            jobs.append(("arxiv", lambda: arxiv(q["arxiv"], from_date, cfg["arxiv_max_results"])))
+            jobs.append(("arxiv", cfg["arxiv_max_results"],
+                         lambda: arxiv(q["arxiv"], from_date, cfg["arxiv_max_results"])))
         if not args.no_s2:
-            jobs.append(("s2", lambda: semanticscholar(q["s2"], from_date)))
-        for api, fn in jobs:
+            jobs.append(("s2", 100, lambda: semanticscholar(q["s2"], from_date)))
+        for api, cap, fn in jobs:
             t0 = time.time()
             try:
                 recs, total = fn()
                 status, note = "ok", ""
+            except BudgetExhausted as e:
+                write_csv(screened_path, SCREENED_COLS, list(store.values()))
+                write_csv(queries_path, QUERY_COLS, existing_queries + qrows)
+                raise SystemExit(
+                    f"\nOpenAlex daily budget exhausted at {q['query_id']} "
+                    f"({i}/{len(plan)} queries done). {e}\n"
+                    f"Partial corpus checkpointed to {screened_path} - it is NOT a full "
+                    f"harvest. Set OPENALEX_API_KEY (free key = $1/day, 10x keyless) or "
+                    f"wait for the midnight-UTC reset, then re-run to merge the rest.")
             except Exception as e:  # noqa: BLE001 - a dead API must not kill the run
                 recs, total, status, note = [], 0, "error", f"{type(e).__name__}: {e}"
             n_new = sum(merge(store, alias, r, q, run_id) for r in recs)
@@ -424,11 +452,19 @@ def main() -> int:
                 # Distinguishable only here: an empty cell is a finding, a malformed
                 # query is a bug, and both look identical downstream.
                 status, note = "zero", "ZERO RESULTS - verify the query is well formed"
+            # The API's own result count, kept alongside what we actually pulled. Without
+            # it a paging cap is invisible, and the periphery section reports the cap
+            # rather than the literature. Only a run that reached the cap is truncated:
+            # arXiv reports every match but the harvester drops anything before
+            # from_date, so got < total is routine there and means nothing was lost.
+            if status == "ok" and total > len(recs) >= cap:
+                note = (note + "; " if note else "") + f"TRUNCATED at paging cap ({total} available)"
             qrows.append({
                 "query_id": f"{q['query_id']}:{api}", "api": api, "band": q["band"],
                 "scope": q["scope"], "domain_group": q["domain_group"],
-                "query": q.get(api, ""), "status": status, "n_results": len(recs),
-                "n_new_unique": n_new, "elapsed_s": round(time.time() - t0, 1), "note": note,
+                "query": q.get(api, ""), "status": status, "n_available": total,
+                "n_results": len(recs), "n_new_unique": n_new,
+                "elapsed_s": round(time.time() - t0, 1), "note": note,
             })
             print(f"[{i}/{len(plan)}] {q['query_id']} {api:9s} {q['domain_group']:22s} "
                   f"total={total:<7} got={len(recs):<5} new={n_new:<5} {status} {note}",

@@ -4,8 +4,12 @@
 .venv/
 __pycache__/
 .claude/settings.local.json
+settings.local.json
 
 # Regenerable harvest artifacts: 22MB each, rebuilt from reference/queries.json in
 # minutes. The irreplaceable outputs (screening.csv, papers.csv, papers.md) stay tracked.
 outputs/**/screened.csv
 outputs/**/triage.csv
+
+# Scratch from delegated deep-read batches (fetched HTML, helper scripts, partial CSVs).
+outputs/**/.deepread/

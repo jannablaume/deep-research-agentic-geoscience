@@ -1,7 +1,18 @@
 # Deep Research: Agentic AI in Geoscience
 
-Prompts, scripts and outputs for the literature deep research on agentic AI in
-solid-earth and subsurface geoscience.
+Methods and outputs for a scoping review of **LLM-based agentic AI in solid-earth and
+subsurface geoscience**: what has been built, how it was evaluated, and how mature it is.
+Descriptive only — no gap analysis or research agenda.
+
+## Start here
+
+The current landscape is **v0.5**. Read in this order:
+
+1. [`outputs/01_landscape/v0.5/report/index.md`](outputs/01_landscape/v0.5/report/index.md) — the report
+2. [`outputs/01_landscape/v0.5/RUN.md`](outputs/01_landscape/v0.5/RUN.md) — how the run was done, counts, and limits
+3. [`reference/SCHEMA.md`](reference/SCHEMA.md) — columns, tiers, and the maturity rubric
+
+Earlier folders (`v0.2`, `v0.4`, `v0.4-test`) are method tests, not the landscape.
 
 ## Structure
 
@@ -28,7 +39,12 @@ they are scripts. Relevance, extraction and synthesis need judgment, so they are
 model's. The v0.1-v0.3 prompts asked the model to do all of it and spent most of their
 length trying to stop it drifting.
 
+OpenAlex meters a daily budget ($0.10 keyless, $1 with a free key). A full harvest needs
+the key; without it the run dies partway through and looks complete.
+
 ```bash
+export OPENALEX_API_KEY=...   # free key from https://openalex.org
+
 # mechanics test (3 queries, includes one periphery group)
 python3 scripts/harvest.py --out outputs/01_landscape/v0.5-test --no-s2 --smoke
 python3 scripts/triage.py  --out outputs/01_landscape/v0.5-test --min-score 3 --audit-n 40

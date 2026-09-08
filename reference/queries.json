@@ -2,8 +2,8 @@
   "_comment": "Query plan for harvest.py. Each band x domain group produces one query per API. Edit this file to widen or narrow coverage; never edit query strings inside the prompt.",
 
   "from_date": "2022-11-01",
-  "openalex_max_pages": 5,
-  "arxiv_max_results": 200,
+  "openalex_max_pages": 20,
+  "arxiv_max_results": 1000,
 
   "bands": {
     "A_agentic": {

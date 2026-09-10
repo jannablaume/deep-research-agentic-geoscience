@@ -3,8 +3,7 @@
 A scoping review of **LLM-based agentic AI in solid-earth and subsurface
 geoscience**: what has been built, how it was evaluated, and how mature it is.
 
-[![pipeline](https://gitlab.ethz.ch/jblaume/deep-research-agentic-geoscience/badges/main/pipeline.svg)](https://gitlab.ethz.ch/jblaume/deep-research-agentic-geoscience/-/pipelines)
-[![coverage](https://gitlab.ethz.ch/jblaume/deep-research-agentic-geoscience/badges/main/coverage.svg)](https://gitlab.ethz.ch/jblaume/deep-research-agentic-geoscience/-/pipelines)
+[![CI](https://github.com/jannamieke/deep-research-agentic-geoscience/actions/workflows/ci.yml/badge.svg)](https://github.com/jannamieke/deep-research-agentic-geoscience/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-MIT-0E0E10.svg)](./LICENSE)
 [![Python](https://img.shields.io/badge/python-3.11%2B-0E0E10.svg)](https://www.python.org/downloads/)
 [![deps](https://img.shields.io/badge/pipeline%20deps-none-0E0E10.svg)](./pyproject.toml)
@@ -315,7 +314,7 @@ you the source; one command gets you the page.
 ### See it, from a fresh clone
 
 ```bash
-git clone git@gitlab.ethz.ch:jblaume/deep-research-agentic-geoscience.git
+git clone git@github.com:jannamieke/deep-research-agentic-geoscience.git
 cd deep-research-agentic-geoscience
 
 make export        # the committed run → web/src/data/landscape.web.json
@@ -410,9 +409,8 @@ directory — which is what makes CI meaningful. 200 tests, `mypy --strict` over
 the command line (at the default precision, `--cov-fail-under` compares the
 *rounded* figure, so a run at 64.8% prints FAIL and then exits 0).
 
-Both [`.gitlab-ci.yml`](.gitlab-ci.yml) and
-[`.github/workflows/ci.yml`](.github/workflows/ci.yml) run the same gates across
-Python 3.11–3.13.
+[`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs the same gates
+across Python 3.11–3.13.
 
 A change to `triage.py`'s scoring is a **method change**: it alters what a re-run
 admits, so it belongs in a version bump with a re-triage and a `decisions.md`

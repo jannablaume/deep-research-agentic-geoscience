@@ -38,7 +38,7 @@ from pathlib import Path
 API = "https://api.openalex.org/works"
 BATCH = 50  # OpenAlex accepts an OR-joined filter; 50 keeps the URL sane.
 FIELDS = "doi,authorships,primary_location,type"
-UA = "deep-research-agentic-geoscience (https://gitlab.ethz.ch/jblaume/deep-research-agentic-geoscience)"
+UA = "deep-research-agentic-geoscience (https://github.com/jannamieke/deep-research-agentic-geoscience)"
 
 
 def doi_of(identity_key: str) -> str | None:

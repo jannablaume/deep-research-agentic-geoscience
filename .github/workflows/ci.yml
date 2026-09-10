@@ -1,6 +1,5 @@
 ---
-# Mirror of .gitlab-ci.yml, for a GitHub mirror of this repository. Both must
-# pass from a bare clone: no API keys, no network, no run directory.
+# Must pass from a bare clone: no API keys, no network, no run directory.
 name: CI
 
 on:

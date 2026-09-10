@@ -10,7 +10,7 @@ authors:
     family-names: Blaume
     affiliation: "Department of Earth and Planetary Sciences, ETH Zurich"
     email: jannamieke.blaume@eaps.ethz.ch
-repository-code: "https://gitlab.ethz.ch/jblaume/deep-research-agentic-geoscience"
+repository-code: "https://github.com/jannamieke/deep-research-agentic-geoscience"
 abstract: >-
   A scoping review of LLM-based agentic AI in solid-earth and subsurface
   geoscience: what has been built, how it was evaluated, and how mature it is.

@@ -40,7 +40,7 @@ classifiers = [
 dependencies = []
 
 [project.urls]
-Repository = "https://gitlab.ethz.ch/jblaume/deep-research-agentic-geoscience"
+Repository = "https://github.com/jannamieke/deep-research-agentic-geoscience"
 
 # Not an installable package: `scripts/` holds standalone entry points run as
 # `python3 scripts/harvest.py`, not a library anyone imports. uv still manages the

@@ -2,6 +2,149 @@
 
 Newest first. One entry per decision: what, why, what it rules out.
 
+## 2026-09-10 — every derived facet publishes its own denominator
+
+Two panels were answering a question with a number whose base was invisible, and
+both invited the same wrong reading.
+
+**The framework facet now leads with how many papers name anything.** Only 13 of
+the 23 core systems name an orchestration framework or harness at all; the other
+10 describe planners, role-specialised agents and tool loops without saying what
+they are built with, and on the 132 context rows — where `tools_used` comes from
+an abstract — 19 name any tool the keyword list looks for. That is why LangGraph
+sits at 5 against MCP at 12: MCP is in the paper *titles* (ESHM20-MCP,
+specfem-mcp, GeoMCP, petro-mcp, open-darts-MCP) because it is a selling point,
+while LangGraph is plumbing nobody advertises. The facet measures naming
+behaviour, and 4 of its 5 LangGraph mentions are core tier — naming your
+framework correlates with being readable at all. Rules out reading any framework
+count as adoption.
+
+**The fields section now shows the admission rate, which is what actually
+explains its distribution.** Reservoir engineering has 44% of the admitted
+literature not because its query returned more — seismology's returned more, 96
+shortlisted against 74 — but because 92% of what it returned was admitted,
+against 28% for seismology and 7% for CCS. What its query returns is the SPE,
+IPTC, OTC and IADC conference circuit: short papers that are agentic by their
+own account, correctly admitted, and unreadable in detail. 65 of those 68 rows
+are abstract-only and only 3 are core, so the field with the most literature
+supports 3 of the 23 characterisable systems. Rules out reading field size as
+research volume, and rules out reading it as evidence of where the readable work
+is.
+
+The denominator comes from `shortlist.md`, and finding it corrected something:
+**`RUN.md`'s per-group shortlist figures are stale.** They record the 606-record
+shortlist from before the mid-run triage refix, not the 712 the run finished
+with — seismology is 96 there, not 91. `shortlist.md` is the tracked artifact of
+the final cut and is now the only thing the page counts from. The two columns are
+also different taxonomies — the query family that *found* a record versus the
+subfield screening assigned it by where its evaluation is set — so the panel
+prints how many rows moved between them, and a rate at or above 100%
+(inversion 250%, geothermal 100%) is that mismatch rather than a perfect yield.
+
+## 2026-09-09 — dashboard: a summary table, filters first, and two counting fixes
+
+Five changes after reading the first build.
+
+**The page opens on a table, not on tiles.** Seven counted rows from 11,191
+harvested to 132 unreadable, each naming its own denominator. The six KPI tiles
+are gone: the table says strictly more and having both put the same numbers on
+screen twice. The funnel is deliberately not presented as nested — `screened`
+(1,028) exceeds `shortlisted` (712), because 150 records were screened from
+below the triage cut — so the share column names its denominator per row rather
+than being headed "of previous", which would have been wrong on exactly the row
+whose surprise it has to explain.
+
+**The paywall row states what is counted and no more.** `papers.csv` has no
+paywall column, and `access_status: abstract-only` covers paywalls, refused
+delivery on nominally open articles, software deposits and records with no
+abstract in any API. `unreachable.md` accounts for all of them but tabulates
+only two subsets (6 rows and 2 rows) and narrates the rest. So the row reports
+132 full text not obtained, cites those two counted subsets, and says the run
+cannot put a number on paywalls alone. Rules out a "paywalled: N" figure that
+would have been a guess.
+
+**The explorer moved to second.** Filtering is what most readers open the page
+to do, and it was the fifth section.
+
+**`model_family` became `model_families`.** It was single-valued and returned
+the first match from an ordered list with GPT first, so 11 of 23 core rows were
+attributed to GPT — and 7 of those 11 also name Claude, Gemini, Qwen or
+DeepSeek, several because comparing backbones *is* their method. The facet read
+as market share while measuring "GPT appears somewhere in the cell, and GPT
+sorts first". Multi-valued, its bars sum to more than 23 and the panel says so.
+Rules out reading the model chart as a share of systems.
+
+**`scripts/enrich.py` is new, and is the only optional script.** Author
+affiliation is in no tracked artifact, and the alternative to a network call was
+inferring nationality from author names, which the contract forbids. Three
+keyless OpenAlex calls give countries for 97 of 155 sources and a publication
+type for 140; the output is committed so `make export` still needs no network,
+and `export_web.py` omits the geography panel when the file is absent. The same
+call repaired `source_type`, which was blank on 108 of 155 rows — normalised,
+because the run's vocabulary and OpenAlex's collide (`article` and
+`journal-article` were the same kind on two bars). Rules out inferring country
+from names or venue, and rules out a geography chart drawn over an unstated
+subset: 97 is printed beside every bar.
+
+## 2026-09-09 — the run is readable as a static dashboard
+
+`scripts/export_web.py` turns one run directory into a single JSON document, and
+`web/` renders it as a static Astro site. `make export && make web` produces
+`web/dist/`, 472KB, which opens by double-clicking `index.html`.
+
+**Static, with the run compiled into the page.** The research direction is
+unpublished and lives on institutional GitLab, so the distribution method is
+handing somebody a folder. That rules out a server, a database and a runtime
+fetch — and it is why `web/scripts/relativise.mjs` exists: Astro emits
+`/assets/…` for every value of `base`, and an absolute path resolves against the
+filesystem root when a page is opened as a file, so the page loads unstyled and
+inert for the recipient while working perfectly over `http://localhost`. The
+built folder makes no network request of any kind, including for fonts.
+
+**The report is re-cut, not appended to.** Each thematic section renders beside
+the counts it describes; `export_web.py` assigns every section a `group` so the
+mapping lives in one place. Evidence tags become filters and citations become
+numbered markers that open a source's full record, including the verbatim
+`papers.md` quotes for the 23 core rows. Rules out a prose dump beside unrelated
+charts, and rules out any characterisation on the page that cannot be traced to
+the sentence it came from.
+
+**One derived facet, and it is labelled.** "Frameworks the agents call" is a
+keyword match over `tools_used` and `base_model` — not a `SCHEMA.md` column and
+not covered by any audit check. Everything else on the page is read from an
+artifact or counted from one. Method prints the whole keyword list *including
+the eight terms that matched nothing*, because a derived count is only checkable
+if the reader can see what was searched for; two of those greyed terms were how
+we found that `\bSPECFEM\b` cannot match `SPECFEM2D` and that the harness names
+sit in `base_model` rather than `tools_used`. Rules out presenting the facet as
+a census, and rules out a derived value sitting unmarked in a column of read
+ones.
+
+**Maturity is never a colour.** Six ordinal steps of one hue cannot hold a
+visible lightness gap against a white surface — the palette validator fails the
+ramp — so the level is carried by axis position and by filled pips, which
+survive grayscale, print and any colour vision. The distribution also plots the
+132 unratable rows as a bar of their own: a maturity chart drawn over 23 rows
+without it looks like a survey of the field. Rules out an M0–M5 colour scale,
+and rules out quoting the distribution as the field's operational maturity.
+
+Two data corrections fell out of building it, both the same word-boundary bug in
+different places: `MODEL_FAMILIES` matched Qwen as `\bQwen\b`, which cannot match
+`Qwen3-4B`, so both core Qwen systems were counted as `other named`; the fix is
+a `(?![a-z])` lookahead rather than dropping the boundary, which would have
+matched `Qwenzhou`. That was a `strict=True` xfail in `tests/test_export_web.py`
+and is now a passing parametrised test. `export_web.py` also printed its summary
+to stdout, which AGENTS.md B3 reserves for `audit.py`'s table; it goes to stderr.
+
+Also recorded: on v0.5, 0 of 155 annotated-list summaries differ from the row's
+own `task` cell, so `08_papers.md` adds no sentence the paper record did not
+already carry. The exporter reports that count on every run rather than leaving
+it to be inferred from an empty field.
+
+Rules out: a hosted or server-rendered front end for this repository; reading
+any number off the page that the run did not compute; and treating the framework
+facet as schema data.
+
 ## 2026-09-07 — v0.5 landscape run
 
 First full landscape under the v0.5 prompt. Harvest: 11,191 unique records (API plus 14
@@ -207,5 +350,5 @@ the existing wiki and object storage. Cost: no `gh`/agent PR tooling.
 
 ## 2026-09-01 — Run Test Run first and evaluate prompt
 
-The 01_landscape_neutral.md prompt is run first with max 20 web sources to check its result. 
-No pdfs are stored in GCP. 
+The 01_landscape_neutral.md prompt is run first with max 20 web sources to check its result.
+No pdfs are stored in GCP.

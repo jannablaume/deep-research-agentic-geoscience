@@ -1,0 +1,91 @@
+---
+# Mirror of .gitlab-ci.yml, for a GitHub mirror of this repository. Both must
+# pass from a bare clone: no API keys, no network, no run directory.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: test (py${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dev tooling
+        run: uv sync --frozen
+
+      - name: Lint
+        run: uv run ruff check --output-format=github .
+
+      - name: Format
+        run: uv run ruff format --check .
+
+      - name: Typecheck
+        run: uv run mypy
+
+      - name: Test
+        # The coverage floor lives in pyproject.toml, where its precision can be
+        # set: `--cov-fail-under` compares the rounded figure, so at the default
+        # precision of 0 a run at 64.8% prints FAIL and then exits 0.
+        run: uv run pytest -m "not network" --cov --cov-report=term-missing
+
+  hooks:
+    name: pre-commit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+          python-version: "3.12"
+      - run: uv sync --frozen
+      - run: uv run pre-commit run --all-files
+
+  hygiene:
+    name: repository hygiene
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Prompt slash-command symlinks are intact
+        # A tool that replaces one with a copy forks the prompt, and a run then
+        # records a prompt version that is not what was executed.
+        run: |
+          for link in .claude/skills/*/SKILL.md; do
+            [ -L "$link" ] || { echo "::error::$link is not a symlink into prompts/"; exit 1; }
+            [ -e "$link" ] || { echo "::error::$link is a broken symlink"; exit 1; }
+          done
+          echo "skill symlinks intact"
+
+      - name: No regenerable harvest artifact is tracked
+        run: |
+          if [ -n "$(git ls-files 'outputs/**/screened.csv' 'outputs/**/triage.csv')" ]; then
+            echo "::error::a regenerable harvest artifact is tracked by git"
+            git ls-files 'outputs/**/screened.csv' 'outputs/**/triage.csv'
+            exit 1
+          fi

@@ -1,10 +1,21 @@
+.DS_Store
 *.pdf
 *.zip
-.DS_Store
-.venv/
-__pycache__/
+
+# Secrets and local settings. Nothing here is ever committed.
+.env
 .claude/settings.local.json
 settings.local.json
+
+# Environments and tool caches
+.venv/
+__pycache__/
+.ruff_cache/
+.mypy_cache/
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
 
 # Regenerable harvest artifacts: 22MB each, rebuilt from reference/queries.json in
 # minutes. The irreplaceable outputs (screening.csv, papers.csv, papers.md) stay tracked.
@@ -13,3 +24,9 @@ outputs/**/triage.csv
 
 # Scratch from delegated deep-read batches (fetched HTML, helper scripts, partial CSVs).
 outputs/**/.deepread/
+
+# The web front end's build inputs and outputs. `landscape.web.json` is written by
+# scripts/export_web.py from a committed run, so it regenerates in seconds.
+web/node_modules/
+web/dist/
+web/src/data/

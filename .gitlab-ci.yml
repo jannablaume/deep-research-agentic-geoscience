@@ -1,0 +1,73 @@
+---
+# ETH GitLab CI. Mirrors .github/workflows/ci.yml — both run `make check`'s
+# constituent gates, and both must pass from a bare clone: no API keys, no
+# network, no run directory. That property is the whole reason CI is meaningful
+# here, so nothing in this file may require a secret.
+
+stages: [check]
+
+variables:
+  # uv resolves and caches into the project directory so GitLab can cache it.
+  UV_CACHE_DIR: .uv-cache
+  UV_PROJECT_ENVIRONMENT: .venv
+
+.python:
+  stage: check
+  image: ghcr.io/astral-sh/uv:python$PY_VERSION-bookworm-slim
+  cache:
+    key:
+      files: [uv.lock]
+    paths: [.uv-cache]
+  before_script:
+    - uv sync --frozen
+  after_script:
+    - uv cache prune --ci
+
+test:
+  extends: .python
+  parallel:
+    matrix:
+      - PY_VERSION: ["3.11", "3.12", "3.13"]
+  script:
+    - uv run ruff check --output-format=gitlab .
+    - uv run ruff format --check .
+    - uv run mypy
+    # The coverage floor lives in pyproject.toml, where its precision can be
+    # set: `--cov-fail-under` compares the rounded figure, so at the default
+    # precision of 0 a run at 64.8% prints FAIL and then exits 0.
+    - uv run pytest -m "not network" --cov --cov-report=term-missing --junitxml=report.xml
+  coverage: '/^TOTAL.*\s+(\d+\.\d+)%$/'
+  artifacts:
+    when: always
+    reports:
+      junit: report.xml
+
+hooks:
+  extends: .python
+  variables:
+    PY_VERSION: "3.12"
+  script:
+    - uv run pre-commit run --all-files
+
+hygiene:
+  stage: check
+  image: alpine:3.21
+  before_script:
+    - apk add --no-cache git
+  script:
+    # The prompts are exposed as slash commands by symlink. A tool that replaces
+    # one with a copy forks the prompt, and a run then records a prompt version
+    # that is not what was executed.
+    - |
+      for link in .claude/skills/*/SKILL.md; do
+        [ -L "$link" ] || { echo "$link is not a symlink into prompts/"; exit 1; }
+        [ -e "$link" ] || { echo "$link is a broken symlink"; exit 1; }
+      done
+      echo "skill symlinks intact"
+    # screened.csv and triage.csv are 22 MB each and regenerate in minutes.
+    - |
+      if [ -n "$(git ls-files 'outputs/**/screened.csv' 'outputs/**/triage.csv')" ]; then
+        echo "a regenerable harvest artifact is tracked by git"
+        git ls-files 'outputs/**/screened.csv' 'outputs/**/triage.csv'
+        exit 1
+      fi

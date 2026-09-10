@@ -1,0 +1,135 @@
+[project]
+name = "deep-research-agentic-geoscience"
+version = "0.5.0"
+description = "Methods and outputs for a scoping review of LLM-based agentic AI in solid-earth and subsurface geoscience."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Janna Blaume" }]
+keywords = [
+  "scoping-review",
+  "systematic-review",
+  "bibliometrics",
+  "openalex",
+  "arxiv",
+  "agentic-ai",
+  "llm",
+  "geoscience",
+  "research-tools",
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Environment :: Console",
+  "Intended Audience :: Science/Research",
+  "Natural Language :: English",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Scientific/Engineering :: Information Analysis",
+  "Typing :: Typed",
+]
+
+# Deliberately empty. The three pipeline scripts use the standard library only —
+# urllib, csv, xml.etree — so a `git clone` plus any Python 3.11+ reproduces a
+# harvest with nothing installed. That property is worth more here than the
+# convenience of `requests`: a reviewer who wants to re-run the corpus should not
+# have to resolve a dependency tree first.
+dependencies = []
+
+[project.urls]
+Repository = "https://gitlab.ethz.ch/jblaume/deep-research-agentic-geoscience"
+
+# Not an installable package: `scripts/` holds standalone entry points run as
+# `python3 scripts/harvest.py`, not a library anyone imports. uv still manages the
+# dev environment and the lockfile.
+[tool.uv]
+package = false
+
+[dependency-groups]
+dev = [
+  "pytest>=8",
+  "pytest-cov>=6",
+  "ruff>=0.9",
+  "mypy>=1.14",
+  "pre-commit>=4",
+]
+
+# ---------------------------------------------------------------------------- ruff
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["scripts", "tests"]
+# outputs/ is generated. A formatter must never touch a committed run: an output
+# directory is the record of what a run produced, and rewriting one silently
+# edits evidence.
+extend-exclude = ["outputs"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "C4", "PTH", "RUF", "T20", "S", "N", "W", "BLE"]
+ignore = [
+  # Ruff's formatter owns line wrapping; E501 fights it on long regex literals,
+  # of which triage.py is mostly made.
+  "E501",
+]
+
+[tool.ruff.lint.per-file-ignores]
+# The scripts are CLI entry points. Printing progress to stderr is their job, and
+# they read URLs assembled from a checked-in query plan rather than user input.
+"scripts/*" = ["T20"]
+# Tests assert, and hardcode throwaway values.
+"tests/*" = ["S101", "S105", "S106", "S311"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["harvest", "triage", "audit", "export_web", "enrich"]
+
+# ---------------------------------------------------------------------------- mypy
+
+[tool.mypy]
+strict = true
+files = ["scripts", "tests"]
+# scripts/ holds flat modules rather than a package, so it has to be on the path
+# for `import harvest` to resolve from tests.
+mypy_path = "scripts"
+python_version = "3.11"
+warn_unreachable = true
+warn_unused_ignores = true
+show_error_codes = true
+
+# ---------------------------------------------------------------------------- pytest
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["scripts"]
+addopts = "--strict-markers --strict-config"
+markers = [
+  "network: test performs live network I/O (deselect with -m 'not network')",
+]
+
+# ---------------------------------------------------------------------------- coverage
+
+[tool.coverage.run]
+source = ["scripts"]
+branch = true
+
+[tool.coverage.report]
+# Two decimals, and the floor lives here rather than on the command line. At the
+# default precision of 0, coverage compares the *rounded* figure: a run at 64.8%
+# prints "FAIL Required test coverage of 65% not reached" and then exits 0. A gate
+# that reports its own failure and passes anyway teaches you to read past the word
+# FAIL.
+precision = 2
+# The floor covers the parts worth testing: the scoring battery, the identity and
+# merge logic, and the contract checks. `main()` in each script is argument
+# parsing and file I/O around those, and network calls are not exercised at all —
+# so this is deliberately not 80%. Raise it when it is comfortably exceeded;
+# never lower it to make a run green.
+fail_under = 65
+exclude_also = [
+  "if TYPE_CHECKING:",
+  "raise NotImplementedError",
+  "if __name__ == .__main__.:",
+]

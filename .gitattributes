@@ -1,0 +1,11 @@
+* text=auto eol=lf
+
+uv.lock linguist-generated -diff
+
+# Run artefacts are evidence, not source. Excluding them from language stats stops
+# GitHub and GitLab reporting this as a Markdown-and-CSV repository, and marking
+# them -diff keeps a rerun's 11k-row churn out of review.
+outputs/** linguist-generated
+outputs/**/*.csv -diff
+outputs/**/shortlist.md -diff
+outputs/**/audit_sample.md -diff

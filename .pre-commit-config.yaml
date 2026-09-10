@@ -1,0 +1,98 @@
+---
+# Install with: uv run pre-commit install --install-hooks
+# Run over everything with: uv run pre-commit run --all-files
+#
+# `outputs/` is excluded from every hook that rewrites a file. A committed run is
+# the record of what that run produced; a formatter trimming whitespace inside one
+# silently edits evidence, and the diff looks like a method change.
+default_install_hook_types: [pre-commit]
+default_language_version:
+  python: python3.12
+
+exclude: '^(outputs/|\.claude/skills/)'
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-added-large-files
+        # 1 MB. shortlist.md runs to ~580 KB on a full harvest and is meant to be
+        # committed, so the guard sits above that rather than excluding outputs/
+        # wholesale — the point is to catch a 22 MB screened.csv added with -f.
+        args: [--maxkb=1024]
+      - id: check-json
+      - id: check-merge-conflict
+      - id: check-toml
+      - id: check-yaml
+      - id: destroyed-symlinks
+        # .claude/skills/*/SKILL.md are symlinks into prompts/, which is what makes
+        # each prompt a slash command. A tool that replaces one with a copy forks the
+        # prompt: the skill and prompts/ drift apart, and a run records a prompt
+        # version that no longer matches what was executed.
+        exclude: ''
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+        args: [--fix=lf]
+      - id: trailing-whitespace
+        # Markdown uses two trailing spaces as a hard line break, and the report
+        # prose relies on it.
+        args: [--markdown-linebreak-ext=md]
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.16.3
+    hooks:
+      - id: ruff-check
+        args: [--fix]
+      - id: ruff-format
+
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    rev: 0.9.28
+    hooks:
+      # Keeps uv.lock honest whenever pyproject.toml moves.
+      - id: uv-lock
+
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.1
+    hooks:
+      - id: gitleaks
+
+  - repo: local
+    hooks:
+      # The upstream mypy mirror runs in its own isolated environment and cannot see
+      # the project's config, which produces phantom import errors. Run the
+      # project's own mypy instead.
+      - id: mypy
+        name: mypy (strict)
+        entry: uv run --frozen mypy
+        language: system
+        types: [python]
+        pass_filenames: false
+        require_serial: true
+
+      - id: no-regenerable-artifacts
+        name: no regenerable harvest artifacts committed
+        language: fail
+        files: '^outputs/.*/(screened|triage)\.csv$'
+        exclude: ''
+        entry: >-
+          screened.csv and triage.csv are ~22 MB each and regenerate from
+          reference/queries.json in minutes. They are gitignored on purpose; this
+          catches a `git add -f`. The irreplaceable outputs are screening.csv,
+          papers.csv and papers.md.
+
+      - id: no-ds-store
+        name: no .DS_Store
+        language: fail
+        files: '(^|/)\.DS_Store$'
+        exclude: ''
+        entry: '.DS_Store is a Finder artefact and is gitignored.'
+
+      - id: no-api-keys
+        name: no API keys outside .env
+        language: pygrep
+        files: '\.(json|toml|ya?ml|md|py)$'
+        exclude: '^\.env\.example$'
+        # A value after the `=` or `:`. `.env.example` lists the names with nothing
+        # after them, which is the only place these should appear.
+        entry: >-
+          (OPENALEX_API_KEY|S2_API_KEY)\s*[=:]\s*["']?[A-Za-z0-9_-]{8,}

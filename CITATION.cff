@@ -1,0 +1,29 @@
+cff-version: 1.2.0
+title: "Deep Research: Agentic AI in Geoscience"
+message: >-
+  If you use this review, its corpus, or its method, please cite it. Cite the
+  version you used: each run under outputs/ is immutable and carries its own
+  RUN.md with the prompt commit it was produced under.
+type: software
+authors:
+  - given-names: Janna
+    family-names: Blaume
+    affiliation: "Department of Earth and Planetary Sciences, ETH Zurich"
+    email: jannamieke.blaume@eaps.ethz.ch
+repository-code: "https://gitlab.ethz.ch/jblaume/deep-research-agentic-geoscience"
+abstract: >-
+  A scoping review of LLM-based agentic AI in solid-earth and subsurface
+  geoscience: what has been built, how it was evaluated, and how mature it is.
+  Descriptive only. The repository holds the versioned research prompts, the
+  deterministic harvest and triage scripts, and one immutable output directory
+  per run.
+keywords:
+  - scoping review
+  - agentic AI
+  - large language models
+  - solid-earth geoscience
+  - subsurface
+  - research software
+license: MIT
+version: "0.5.0"
+date-released: "2026-09-07"

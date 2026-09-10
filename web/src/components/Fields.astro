@@ -1,0 +1,210 @@
+---
+/**
+ * The ten research fields, and how much of each one anybody could read.
+ *
+ * The bar is a field's admitted literature; the blue part is the slice with a
+ * readable evaluation section. That split is the chart, not a footnote to it,
+ * because it is the single most misleading thing about this dataset if left
+ * out: reservoir engineering has by far the most admitted sources and three of
+ * them are readable, so a plain count of admitted sources per field would rank
+ * the field the review can say least about at the top.
+ *
+ * Three fields have no readable core source at all. They are called out above
+ * the chart rather than left to be noticed as a missing blue tip, and the
+ * wording is the report's: those fields are not empty of literature, they are
+ * empty of readable evaluation sections.
+ */
+import type { Field, ReportSection } from '../lib/types';
+import ReportPanel from './ReportPanel.astro';
+
+interface Props {
+  fields: Field[];
+  total: number;
+  sections: ReportSection[];
+}
+const { fields, total, sections } = Astro.props;
+
+const max = Math.max(1, ...fields.map((f) => f.n));
+const pretty = (s: string) => s.replace(/_/g, ' ');
+const noCore = fields.filter((f) => f.core === 0);
+const readable = fields.reduce((n, f) => n + f.core, 0);
+
+// Both panels use one order — admitted count, descending — so their rows line
+// up and the chart on the left can be read against the rate on the right.
+//
+// Sorting the table by rate was tried and is worse: it puts inversion (250%)
+// and geothermal (100%) on top, which are taxonomy artifacts the footnote has
+// to explain, and buries the actual contrast the section is about — reservoir
+// engineering at 92% against seismology at 28%.
+const ranked = [...fields].sort((a, b) => b.n - a.n);
+const reassigned = fields.reduce((n, f) => n + (f.n - f.from_own_query), 0);
+const pct = (v: number | null) => (v === null ? '—' : `${(v * 100).toFixed(0)}%`);
+---
+
+<div class="section-head">
+  <h2>Research fields</h2>
+  <p>
+    Every admitted source sits in exactly one of ten fields, assigned by where its
+    <em>evaluation</em> is set rather than by what its introduction invokes. The blue
+    length is the part of each field that was read in full; the orange length is the part
+    known only from an abstract.
+  </p>
+</div>
+
+<div class="two-up">
+  <div class="panel">
+    <div class="head">
+      <h3>Admitted sources by field</h3>
+      <span class="muted">{readable} of {total} readable</span>
+    </div>
+    <div class="body">
+      <div class="legend">
+        <span class="key">core — full text read</span>
+        <span class="key context">context — abstract only</span>
+      </div>
+
+      <div class="bars">
+        {
+          ranked.map((f) => (
+            <div
+              class="bar split"
+              title={`${pretty(f.label)}: ${f.n} admitted — ${f.core} core, ${f.context} context`}
+            >
+              <span class="name">{pretty(f.label)}</span>
+              <span class="track" style={`width:${(f.n / max) * 100}%`}>
+                {f.core > 0 && (
+                  <span class="seg core" style={`width:${(f.core / f.n) * 100}%`} />
+                )}
+                {f.context > 0 && (
+                  <span class="seg context" style={`width:${(f.context / f.n) * 100}%`} />
+                )}
+              </span>
+              <span class="n">{f.n}</span>
+            </div>
+          ))
+        }
+      </div>
+
+      <p class="muted" style="margin:.9rem 0 0">
+        {total} admitted sources. Bar length is the field's admitted total; the split is
+        access, not quality.
+      </p>
+    </div>
+  </div>
+
+  <div>
+    <div class="panel">
+      <div class="head">
+        <h3>What each query family yielded</h3>
+        <span class="muted">shortlist → admitted</span>
+      </div>
+      <div class="body">
+        <p class="muted" style="margin:0 0 1.25rem">
+          Field size is not a function of how much each query returned — it is a function
+          of how much of it survived screening. Reservoir engineering does not dominate
+          because its query found more; seismology's found more. It dominates because
+          almost everything its query found was admitted, most of it as short conference
+          papers that are agentic by their own account and unreadable in detail.
+        </p>
+        <div class="scroll-x">
+          <table class="grid">
+            <thead>
+              <tr>
+                <th>Query family</th>
+                <th class="num">Shortlisted</th>
+                <th class="num">Admitted</th>
+                <th class="num">Rate</th>
+                <th class="num">Core</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                ranked.map((f) => (
+                  <tr>
+                    <td>{pretty(f.label)}</td>
+                    <td class="num">{f.shortlisted || '—'}</td>
+                    <td class="num">{f.n}</td>
+                    <td class="num" style="font-weight:600">{pct(f.admitted_share)}</td>
+                    <td class="num" style={f.core === 0 ? 'color:var(--faint)' : undefined}>
+                      {f.core}
+                    </td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+        <p class="muted" style="margin:.9rem 0 0">
+          The two counts are different taxonomies and the rate is a ratio between them:
+          <em>shortlisted</em> is the query family that <em>found</em> a record, assigned by
+          <code>triage.py</code> from title and abstract; <em>admitted</em> is where
+          screening put it, by where its evaluation is set. {reassigned} of the {total}
+          admitted rows moved between the two, so a rate near or above 100% — inversion,
+          geothermal — is that mismatch rather than a perfect yield. Counts come from
+          <code>shortlist.md</code>; the per-group figures in <code>RUN.md</code> predate
+          the mid-run triage refix and are lower.
+        </p>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:1rem">
+      <div class="head">
+        <h3>Readable systems, by field</h3>
+        <span class="muted">{readable} systems</span>
+      </div>
+      <div class="body">
+        {
+          noCore.length > 0 && (
+            <p class="claim" style="margin-bottom:1.25rem">
+              <span class="tag absent" title="Nothing found, with the queries that looked for it named">
+                Absent-searched
+              </span>
+              {noCore.map((f) => pretty(f.label)).join(', ')}
+              {noCore.length === 1 ? ' has' : ' have'} no core-tier source in this run. Those
+              fields are not empty of admitted literature — they are empty of readable
+              evaluation sections.
+            </p>
+          )
+        }
+
+        <div class="scroll-x">
+          <table class="grid">
+            <thead>
+              <tr>
+                <th>Field</th>
+                <th>Systems read in full</th>
+                <th class="num">Core</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                ranked
+                  .filter((f) => f.core > 0)
+                  .map((f) => (
+                    <tr>
+                      <td>{pretty(f.label)}</td>
+                      <td>
+                        <span class="chips">
+                          {f.systems.map((s) => (
+                            <button type="button" class="chip" data-system={s}>
+                              {s}
+                            </button>
+                          ))}
+                        </span>
+                      </td>
+                      <td class="num">{f.core}</td>
+                    </tr>
+                  ))
+              }
+            </tbody>
+          </table>
+        </div>
+        <p class="muted" style="margin:.9rem 0 0">
+          One row per field with a readable system. Click a system to open its record.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ReportPanel sections={sections} />

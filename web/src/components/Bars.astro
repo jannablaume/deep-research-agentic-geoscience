@@ -1,0 +1,104 @@
+---
+/**
+ * One distribution, one series, capped so a long tail cannot stretch a panel.
+ *
+ * A single series carries no legend: the panel heading above it names what is
+ * plotted, and a legend box with one swatch restates the heading and costs a
+ * row. The value rides the tip of each bar, so the mark and its number are
+ * read together and no axis is needed.
+ *
+ * The tail is disclosed rather than dropped. "18 more not shown" tells you
+ * something is missing and gives you no way to see it, which is the worst of
+ * the three options.
+ *
+ * A zero-count row is kept when the facet's vocabulary is a rubric, because
+ * there the zero is the measurement — `instrument-control: 0` is the report's
+ * one `[Absent-searched]` claim about techniques, and a facet that drops it
+ * turns a stated absence into a silence.
+ */
+import type { Facet } from '../lib/types';
+
+interface Props {
+  items: Facet[];
+  /** The population counted over. Multi-valued facets do not sum to it. */
+  total: number;
+  limit?: number;
+  note?: string;
+  /** What one count is, for the hover title: "sources", "core sources". */
+  unit?: string;
+  /**
+   * Let long labels wrap onto a second line instead of being ellipsised.
+   * On for facets where the label *is* the content — a journal name cut to
+   * "Journal of Petroleum Techn…" identifies nothing, whereas a technique name
+   * is short enough that ellipsis never fires.
+   */
+  wrap?: boolean;
+  /**
+   * Rank by count, zeros last. On by default, because every facet drawn here
+   * answers "what is most common" and the schema order it arrives in answers
+   * nothing. Turn it off only where the order is itself the data — an ordinal
+   * scale, or a series in time.
+   */
+  sort?: boolean;
+}
+const { items, total, limit = 10, note, unit = 'sources', sort = true, wrap = false } = Astro.props;
+
+// The export keeps its controlled-vocabulary order so that two runs can be
+// compared row for row; the view ranks. Zeros sort to the end rather than out:
+// they are kept deliberately (see the exporter's `keep_zeros`) and a zero at
+// the foot of a ranking still reads as "none of these".
+const ranked = sort ? [...items].sort((a, b) => b.n - a.n || a.label.localeCompare(b.label)) : items;
+
+const head = ranked.slice(0, limit);
+const tail = ranked.slice(limit);
+const max = Math.max(1, ...ranked.map((i) => i.n));
+
+const pretty = (s: string) => s.replace(/_/g, ' ');
+const pct = (n: number) => (total ? `${((n / total) * 100).toFixed(0)}%` : '');
+// The hover layer carries what the row does not already show: the share. A
+// tooltip that repeats the visible value is noise, so this one doesn't.
+const hover = (i: Facet) => `${i.label}: ${i.n} of ${total} ${unit} (${pct(i.n)})`;
+---
+
+{
+  items.length === 0 ? (
+    <p class="muted">Nothing recorded.</p>
+  ) : (
+    <>
+      <div class={`bars${wrap ? ' wrap' : ''}`}>
+        {head.map((i) => (
+          <div class={`bar${i.n === 0 ? ' zero' : ''}`} title={hover(i)}>
+            <span class="name">{pretty(i.label)}</span>
+            <span class="track">
+              <span class="fill" style={`width:${(i.n / max) * 100}%`} />
+            </span>
+            <span class="n">{i.n.toLocaleString('en-GB')}</span>
+          </div>
+        ))}
+      </div>
+
+      {tail.length > 0 && (
+        <details class="tail">
+          <summary>{tail.length} more</summary>
+          <div class={`bars${wrap ? ' wrap' : ''}`}>
+            {tail.map((i) => (
+              <div class={`bar${i.n === 0 ? ' zero' : ''}`} title={hover(i)}>
+                <span class="name">{pretty(i.label)}</span>
+                <span class="track">
+                  <span class="fill" style={`width:${(i.n / max) * 100}%`} />
+                </span>
+                <span class="n">{i.n.toLocaleString('en-GB')}</span>
+              </div>
+            ))}
+          </div>
+        </details>
+      )}
+
+      {note && (
+        <p class="muted" style="margin:.9rem 0 0">
+          {note}
+        </p>
+      )}
+    </>
+  )
+}

@@ -1,0 +1,117 @@
+---
+/**
+ * The neighbouring literature the harvest retrieved and screening did not admit.
+ *
+ * This section exists so that "no agentic work in X" and "we never looked at
+ * X" cannot be confused, which is the failure mode of every scoping review
+ * that reports only what it admitted. Both columns are measurements: what the
+ * APIs said was available on the periphery queries, and how many screened
+ * records were cut as periphery.
+ *
+ * The two columns are shown side by side and are deliberately not plotted
+ * against each other. `available` is query-hit volume, counted before any
+ * judgement; `screened` is records a person put a reason against. They differ
+ * by three orders of magnitude and dividing one by the other would produce a
+ * rate that means nothing.
+ */
+import type { Facet, PeripheryGroup, ReportSection, Run } from '../lib/types';
+import Bars from './Bars.astro';
+import ReportPanel from './ReportPanel.astro';
+
+interface Props {
+  periphery: PeripheryGroup[];
+  cuts: Facet[];
+  run: Run;
+  sections: ReportSection[];
+}
+const { periphery, cuts, run, sections } = Astro.props;
+
+const pretty = (s: string) => s.replace(/_/g, ' ');
+const maxAvailable = Math.max(1, ...periphery.map((p) => p.available));
+const maxScreened = Math.max(1, ...periphery.map((p) => p.screened));
+const totalCut = cuts.reduce((n, c) => n + c.n, 0);
+---
+
+<div class="section-head">
+  <h2>The periphery, and what was cut</h2>
+  <p>
+    The neighbouring domains were harvested and counted, never deep-read. Reporting them
+    is what separates "nothing agentic exists in earth observation" from "this review did
+    not look there" — and on query volume alone the periphery is not a thin halo around
+    the core.
+  </p>
+</div>
+
+<div class="two-up">
+  <div class="panel">
+    <div class="head">
+      <h3>Neighbouring domains</h3>
+      <span class="muted">{run.queries_periphery} periphery calls</span>
+    </div>
+    <div class="body">
+      <div class="scroll-x">
+        <table class="grid">
+          <thead>
+            <tr>
+              <th>Domain</th>
+              <th>Query hits available</th>
+              <th>Screened and cut as periphery</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              periphery.map((p) => (
+                <tr>
+                  <td>{pretty(p.label)}</td>
+                  <td>
+                    <span
+                      class="meter"
+                      title={`${pretty(p.label)}: ${p.available.toLocaleString('en-GB')} hits reported available by the APIs`}
+                    >
+                      <span class="rail">
+                        <span style={`width:${(p.available / maxAvailable) * 100}%`} />
+                      </span>
+                      <span class="n">{p.available.toLocaleString('en-GB')}</span>
+                    </span>
+                  </td>
+                  <td>
+                    <span
+                      class="meter alt"
+                      title={`${pretty(p.label)}: ${p.screened} records screened and cut as periphery`}
+                    >
+                      <span class="rail">
+                        <span style={`width:${(p.screened / maxScreened) * 100}%`} />
+                      </span>
+                      <span class="n">{p.screened}</span>
+                    </span>
+                  </td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+      <p class="muted" style="margin:.9rem 0 0">
+        The two columns are scaled separately and are not a ratio. Hits available is
+        counted before any judgement; the cut column is records a person gave a reason to.
+      </p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="head">
+      <h3>Why records were cut</h3>
+      <span class="muted">{totalCut.toLocaleString('en-GB')} of {run.screened.toLocaleString('en-GB')}</span>
+    </div>
+    <div class="body">
+      <Bars
+        items={cuts}
+        total={run.screened}
+        unit="screening decisions"
+        note="One reason per excluded record, from a fixed list. not-agentic is the one judgement call the schema says matters most: a prompt-in, text-out use of an LLM is not agentic no matter what it is applied to."
+      />
+    </div>
+  </div>
+</div>
+
+<ReportPanel sections={sections} />

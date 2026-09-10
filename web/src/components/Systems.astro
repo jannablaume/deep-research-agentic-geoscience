@@ -1,0 +1,228 @@
+---
+/**
+ * How the systems are built: techniques, frameworks, architectures, models.
+ *
+ * Three of these four facets come from `papers.csv` columns with controlled
+ * vocabularies, so they group cleanly and their zeros mean something. The
+ * fourth — frameworks — does not exist as a column at all. It is a keyword
+ * match over the free-text `tools_used` and `base_model` cells, and it is the
+ * facet a reader is
+ * most likely to want, because "which agent frameworks does this field
+ * actually build on" is not answerable from any controlled column.
+ *
+ * So it is here, and it is labelled `derived` every time it appears. The
+ * output contract's rule is never to infer a value into a cell; showing a
+ * reading of a cell is allowed, provided the page says that is what it is.
+ * Method carries the full keyword list.
+ *
+ * Every facet is shown over the 23 readable core systems rather than all 155
+ * admitted sources. A technique or architecture read off an abstract is the
+ * abstract's word for itself; on the core tier it was checked against the
+ * paper. The all-155 counts are one disclosure away, and say so.
+ */
+import type { Facet, FrameworkCoverage, FrameworkKind, ReportSection } from '../lib/types';
+import Bars from './Bars.astro';
+import ReportPanel from './ReportPanel.astro';
+
+interface Props {
+  techniques: Facet[];
+  techniquesAll: Facet[];
+  frameworks: FrameworkKind[];
+  coverage: FrameworkCoverage;
+  architectures: Facet[];
+  architecturesAll: Facet[];
+  models: Facet[];
+  modelsMulti: number;
+  core: number;
+  total: number;
+  sections: ReportSection[];
+}
+const {
+  techniques,
+  techniquesAll,
+  frameworks,
+  coverage,
+  architectures,
+  architecturesAll,
+  models,
+  modelsMulti,
+  core,
+  total,
+  sections,
+} = Astro.props;
+
+const derivedTotal = frameworks.reduce((n, k) => n + k.items.length, 0);
+
+// Two views, because the facet answers two questions and one chart cannot.
+//
+// What *recurs* is the finding, and it is a short list: one tool is named by
+// twelve sources and most are named by exactly one. So the chart is a single
+// ranked series across every kind, cut at the point where a count stops
+// distinguishing anything — a bar of length 1 repeated thirty times is a
+// texture, not a comparison.
+//
+// The full inventory is then set as text, grouped by kind. Six kinds of bar
+// chart side by side put every track in a 15rem column, which squeezed the
+// bars to about thirty pixels and made the shortest and longest look alike.
+//
+// The threshold is three, not two. At two the chart was twenty rows of which
+// seventeen were the same length, which is the failure it exists to avoid in
+// the other direction: a column of identical bars compares nothing. At three
+// it is the handful of tools this literature actually shares.
+const RECUR_AT = 3;
+const recurring = frameworks
+  .flatMap((k) => k.items.map((i) => ({ ...i, kind: k.kind })))
+  .filter((i) => i.n >= RECUR_AT)
+  .sort((a, b) => b.n - a.n || a.label.localeCompare(b.label));
+const recurringMax = Math.max(1, ...recurring.map((i) => i.n));
+const onceOnly = derivedTotal - recurring.length;
+---
+
+<div class="section-head">
+  <h2>How the systems are built</h2>
+  <p>
+    Counts over the {core} core systems — the ones whose full text was read, and so the
+    only ones whose techniques and architecture were checked against the paper rather than
+    taken from its abstract. Techniques are multi-valued, so they do not sum to {core}.
+  </p>
+</div>
+
+<div class="two-up">
+  <div class="panel">
+    <div class="head">
+      <h3>Agentic techniques</h3>
+      <span class="muted">of {core} core systems</span>
+    </div>
+    <div class="body">
+      <Bars items={techniques} total={core} limit={16} unit="core systems" />
+      <details class="tail">
+        <summary>the same facet across all {total} admitted sources</summary>
+        <div style="margin-top:.75rem">
+          <Bars items={techniquesAll} total={total} limit={16} unit="sources" />
+          <p class="muted" style="margin:.75rem 0 0">
+            On the {total - core} context rows this is the abstract's account of itself,
+            unchecked against a paper.
+          </p>
+        </div>
+      </details>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="head">
+      <h3>Architectures</h3>
+      <span class="muted">of {core} core systems</span>
+    </div>
+    <div class="body">
+      <Bars items={architectures} total={core} limit={9} unit="core systems" />
+      <details class="tail">
+        <summary>the same facet across all {total} admitted sources</summary>
+        <div style="margin-top:.75rem">
+          <Bars items={architecturesAll} total={total} limit={9} unit="sources" />
+        </div>
+      </details>
+    </div>
+  </div>
+</div>
+
+<div class="panel" style="margin-top:1rem">
+  <div class="head">
+    <h3>Frameworks, solvers and stores the agents call</h3>
+    <span class="muted">derived from <code>tools_used</code> + <code>base_model</code></span>
+  </div>
+  <div class="body">
+    <p class="claim" style="margin-bottom:1.5rem">
+      <span class="tag likely" title="The run's own reading of the evidence, not a source's claim">
+        Derived
+      </span>
+      {derivedTotal} named tools, matched by keyword over the free-text
+      <code>tools_used</code> and <code>base_model</code> cells. Neither is a controlled
+      column and no audit check covers this facet.
+      <strong>
+        Only {coverage.core_named} of the {coverage.core_total} core systems name an
+        orchestration framework or harness at all
+      </strong>
+      — the other {coverage.core_total - coverage.core_named} describe planners,
+      role-specialised agents and tool loops without ever saying what they are built
+      with. On the {coverage.context_total} context rows, where
+      <code>tools_used</code> comes from an abstract, {coverage.context_any_tool} name any
+      tool this list looks for. So every count below is a floor on what was
+      <em>said</em>, not an estimate of what is used: a framework that nobody advertises
+      is systematically undercounted against one that appears in paper titles. The full
+      keyword list — including the terms that matched nothing — is in
+      <a href="#method">Method</a>.
+    </p>
+
+    <div class="two-up">
+      <div>
+        <h4 class="eyebrow" style="margin-bottom:1rem">Named by three or more sources</h4>
+        <div class="bars">
+          {
+            recurring.map((i) => (
+              <div
+                class="bar"
+                title={`${i.label} (${i.kind}): named by ${i.n} of ${total} admitted sources, ${i.core} of them core`}
+              >
+                <span class="name">{i.label}</span>
+                <span class="track">
+                  <span class="fill" style={`width:${(i.n / recurringMax) * 100}%`} />
+                </span>
+                <span class="n">{i.n}</span>
+              </div>
+            ))
+          }
+        </div>
+        <p class="muted" style="margin:.9rem 0 0">
+          {onceOnly} further tools are named by one or two sources each, and are listed
+          opposite with their counts. Counts are sources, not systems.
+        </p>
+      </div>
+
+      <div>
+        <h4 class="eyebrow" style="margin-bottom:1rem">The full inventory, by kind</h4>
+        <div style="display:grid;gap:1.25rem">
+          {
+            frameworks.map((group) => (
+              <div>
+                <div class="muted" style="margin-bottom:.4rem">
+                  {group.kind}
+                </div>
+                <div class="chips">
+                  {group.items.map((i) => (
+                    <span
+                      class="chip"
+                      title={`${i.label}: named by ${i.n} of ${total} admitted sources, ${i.core} of them core`}
+                    >
+                      {i.label}
+                      <span class="tabular" style="color:var(--faint)">
+                        {i.n}
+                      </span>
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="panel" style="margin-top:1rem">
+  <div class="head">
+    <h3>Generator model, by family</h3>
+    <span class="muted">multi-valued · {core} core systems</span>
+  </div>
+  <div class="body">
+    <Bars
+      items={models}
+      total={core}
+      limit={9}
+      unit="core systems"
+      note={`A paper counts under every family its base_model names, so these bars sum to more than ${core}: ${modelsMulti} of the ${core} core systems name more than one backbone, several because comparing backbones is their method. SCHEMA.md calls base_model the field most often silently omitted, and the one that decides reproducibility.`}
+    />
+  </div>
+</div>
+
+<ReportPanel sections={sections} />

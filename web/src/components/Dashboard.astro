@@ -1,0 +1,119 @@
+---
+/**
+ * The whole page body, given a dataset that definitely exists.
+ *
+ * Split out of `index.astro` for one concrete reason: the page finds its data
+ * with a glob that may return nothing, so `data` is nullable, and every
+ * reference to it inside the template would need narrowing. Astro's checker
+ * loses that narrowing across a fragment boundary and reports the failure as a
+ * syntax error at the closing tag, a long way from the cause. A component with
+ * a required prop cannot have the problem: the null check happens once, at the
+ * boundary, and nothing below it is optional.
+ *
+ * The section order is the report re-cut. Each thematic block of prose sits in
+ * the section holding the counts it describes, rather than in a prose dump at
+ * the foot of the page beside charts it never mentions. `export_web.py` assigns
+ * every section a `group` for exactly this, so the mapping lives in one place
+ * and a new report section lands in a known slot instead of vanishing.
+ */
+import type { Dataset } from '../lib/types';
+import Summary from './Summary.astro';
+import Metrics from './Metrics.astro';
+import Publication from './Publication.astro';
+import ReportPanel from './ReportPanel.astro';
+import Fields from './Fields.astro';
+import Systems from './Systems.astro';
+import Evidence from './Evidence.astro';
+import Periphery from './Periphery.astro';
+import Explorer from './Explorer.astro';
+import Method from './Method.astro';
+
+interface Props {
+  data: Dataset;
+}
+const { data } = Astro.props;
+
+const group = (name: string) => data.report.filter((s) => s.group === name);
+const overview = group('overview');
+---
+
+<section class="band" style="padding-top:0" id="overview">
+  <Metrics run={data.run} />
+
+  <Summary funnel={data.funnel} />
+
+  <div style="margin-top:1rem">
+    <ReportPanel sections={overview} />
+  </div>
+</section>
+
+<section class="band" id="papers">
+  <Explorer data={data} />
+
+  <div style="margin-top:2rem">
+    <Publication
+      types={data.types}
+      journals={data.journals}
+      countries={data.countries}
+      coverage={data.countries_coverage}
+      total={data.run.admitted}
+    />
+  </div>
+</section>
+
+<section class="band" id="fields">
+  <Fields fields={data.fields} total={data.run.admitted} sections={group('fields')} />
+</section>
+
+<section class="band" id="systems">
+  <Systems
+    techniques={data.techniques_core}
+    techniquesAll={data.techniques}
+    frameworks={data.frameworks}
+    coverage={data.frameworks_coverage}
+    architectures={data.architectures_core}
+    architecturesAll={data.architectures}
+    models={data.models_core}
+    modelsMulti={data.models_multi}
+    core={data.run.core}
+    total={data.run.admitted}
+    sections={group('systems')}
+  />
+</section>
+
+<section class="band" id="evidence">
+  <Evidence
+    maturity={data.maturity}
+    dataTypes={data.data_types}
+    heldOut={data.held_out}
+    rubric={data.rubric}
+    run={data.run}
+    sections={group('evidence')}
+  />
+</section>
+
+<section class="band" id="periphery">
+  <Periphery
+    periphery={data.periphery}
+    cuts={data.cuts}
+    run={data.run}
+    sections={group('periphery')}
+  />
+</section>
+
+<section class="band" id="method">
+  <Method data={data} />
+</section>
+
+<footer class="foot">
+  <p class="muted">
+    Nothing on this page is a summary of a summary. Every characterisation of a core
+    source resolves to the sentence it came from, in the authors' own words, on that
+    source's record — and every count is either read from a run artifact or computed from
+    one, with the single exception of the derived framework facet, which says so
+    everywhere it appears. The {data.run.context} context-tier sources are known only
+    from their abstracts and carry no maturity rating; reading this run's maturity
+    distribution as the field's operational maturity over-weights the readable slice,
+    which is the report's own caution and not a hedge added here.
+  </p>
+</footer>

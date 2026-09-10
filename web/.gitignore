@@ -1,0 +1,6 @@
+dist/
+node_modules/
+.astro/
+# Generated from a run by `python3 scripts/export_web.py --out <run>`.
+# Regenerable in a second from artifacts that are tracked, and 480KB of it.
+src/data/*.json

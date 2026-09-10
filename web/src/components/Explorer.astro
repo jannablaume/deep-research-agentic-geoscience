@@ -1,0 +1,185 @@
+---
+/**
+ * The 155 admitted sources, filterable.
+ *
+ * The report's annotated paper list is 92KB of markdown that can only be read
+ * in the order it was written. The same content as a filtered list answers the
+ * questions people actually bring to it — which hierarchical multi-agent
+ * systems were evaluated on a named site, which of these name their model —
+ * none of which a linear list answers at all.
+ *
+ * The filter options are built here, from the data, rather than hardcoded, so
+ * a schema change shows up as a new option instead of a silently missing one.
+ * The rows themselves are drawn by `lib/app.ts`: 155 rows re-rendered on every
+ * keystroke is a client-side job, and server-rendering them as well would put
+ * two copies of the list in the page.
+ *
+ * The tier default is deliberate. The list opens on everything, because the
+ * 132 context sources are the bulk of the admitted literature and hiding them
+ * by default would make the corpus look like 23 papers. The tier chip on every
+ * row and the filter above it are what keep the distinction visible.
+ */
+import type { Dataset } from '../lib/types';
+
+interface Props {
+  data: Dataset;
+}
+const { data } = Astro.props;
+
+const pretty = (s: string) => s.replace(/_/g, ' ');
+
+// ISO alpha-2 is what the data carries; a filter list has to be readable.
+const COUNTRY_NAMES: Record<string, string> = {
+  AE: 'United Arab Emirates', AR: 'Argentina', AT: 'Austria', AU: 'Australia',
+  BD: 'Bangladesh', BE: 'Belgium', BR: 'Brazil', CA: 'Canada', CH: 'Switzerland',
+  CL: 'Chile', CN: 'China', CO: 'Colombia', DE: 'Germany', DK: 'Denmark',
+  DZ: 'Algeria', EG: 'Egypt', ES: 'Spain', FI: 'Finland', FR: 'France',
+  GB: 'United Kingdom', GR: 'Greece', HK: 'Hong Kong', ID: 'Indonesia',
+  IE: 'Ireland', IN: 'India', IQ: 'Iraq', IR: 'Iran', IT: 'Italy', JP: 'Japan',
+  KR: 'South Korea', KW: 'Kuwait', MX: 'Mexico', MY: 'Malaysia', NG: 'Nigeria',
+  NL: 'Netherlands', NO: 'Norway', NZ: 'New Zealand', OM: 'Oman', PK: 'Pakistan',
+  PL: 'Poland', PT: 'Portugal', QA: 'Qatar', RO: 'Romania', RU: 'Russia',
+  SA: 'Saudi Arabia', SE: 'Sweden', SG: 'Singapore', TH: 'Thailand',
+  TR: 'Turkey', TW: 'Taiwan', UA: 'Ukraine', US: 'United States',
+  VN: 'Vietnam', ZA: 'South Africa',
+};
+const values = (pick: (p: Dataset['papers'][number]) => string[]) =>
+  [...new Set(data.papers.flatMap(pick))].filter(Boolean).sort();
+
+const fields = values((p) => [p.subfield]);
+const architectures = values((p) => [p.architecture]);
+const techniques = values((p) => p.techniques).filter((t) => t !== 'not stated');
+const frameworks = values((p) => p.frameworks);
+const models = values((p) => p.model_families);
+const types = values((p) => [p.source_type]);
+const journals = values((p) => [p.journal]).filter(Boolean);
+const countries = values((p) => p.countries);
+const years = [...new Set(data.papers.map((p) => p.year).filter(Boolean))].sort().reverse();
+---
+
+<div class="section-head">
+  <h2>Every admitted source</h2>
+  <p>
+    All {data.run.admitted} sources, {data.run.core} of them read in full. Each row opens the
+    complete comparison-grid record; for a core source that record includes the verbatim
+    sentences the characterisation rests on, so any line on this page can be checked
+    against the authors' own words without leaving it.
+  </p>
+</div>
+
+<div class="filters">
+  <label class="find">
+    search
+    <input
+      id="f-q"
+      type="search"
+      placeholder="title, system, task, tool, model, result…"
+      autocomplete="off"
+    />
+  </label>
+  <label>
+    tier
+    <select id="f-tier">
+      <option value="">all tiers</option>
+      <option value="core">core — full text read</option>
+      <option value="context">context — abstract only</option>
+    </select>
+  </label>
+  <label>
+    field
+    <select id="f-field">
+      <option value="">any field</option>
+      {fields.map((f) => <option value={f}>{pretty(f)}</option>)}
+    </select>
+  </label>
+  <label>
+    architecture
+    <select id="f-arch">
+      <option value="">any</option>
+      {architectures.map((a) => <option value={a}>{a}</option>)}
+    </select>
+  </label>
+  <label>
+    technique
+    <select id="f-tech">
+      <option value="">any</option>
+      {techniques.map((t) => <option value={t}>{t}</option>)}
+    </select>
+  </label>
+  <label>
+    framework
+    <select id="f-framework">
+      <option value="">any</option>
+      {frameworks.map((f) => <option value={f}>{f}</option>)}
+    </select>
+  </label>
+  <label>
+    maturity
+    <select id="f-maturity">
+      <option value="">any</option>
+      <option value="rated">rated (core only)</option>
+      {
+        ['M0', 'M1', 'M2', 'M3', 'M4', 'M5'].map((m) => (
+          <option value={m}>
+            {m} — {data.rubric[m]?.split(';')[0].slice(0, 42)}
+          </option>
+        ))
+      }
+      <option value="unrated">not rated — abstract only</option>
+    </select>
+  </label>
+  <label>
+    model
+    <select id="f-model">
+      <option value="">any</option>
+      {models.map((m) => <option value={m}>{m}</option>)}
+    </select>
+  </label>
+  <label>
+    type
+    <select id="f-type">
+      <option value="">any</option>
+      {types.map((t) => <option value={t}>{t}</option>)}
+    </select>
+  </label>
+  <label>
+    journal
+    <select id="f-journal">
+      <option value="">any</option>
+      {journals.map((j) => <option value={j}>{j}</option>)}
+    </select>
+  </label>
+  <label>
+    country
+    <select id="f-country">
+      <option value="">any</option>
+      {countries.map((c) => <option value={c}>{COUNTRY_NAMES[c] ?? c}</option>)}
+    </select>
+  </label>
+  <label>
+    year
+    <select id="f-year">
+      <option value="">any</option>
+      {years.map((y) => <option value={String(y)}>{y}</option>)}
+    </select>
+  </label>
+  <label>
+    sort
+    <select id="f-sort">
+      <option value="tier">tier, then maturity</option>
+      <option value="maturity">demonstrated maturity</option>
+      <option value="year">year, newest first</option>
+      <option value="field">field</option>
+      <option value="title">title</option>
+    </select>
+  </label>
+  <button type="button" id="f-reset">reset</button>
+  <button type="button" id="f-csv">download CSV</button>
+</div>
+
+<div class="count">
+  <span><strong id="count-n">{data.run.admitted}</strong> sources shown</span>
+  <span id="count-split" class="muted"></span>
+</div>
+
+<div class="list" id="list"></div>

@@ -1,0 +1,38 @@
+---
+/**
+ * A demonstrated maturity level, as a count of filled pips.
+ *
+ * Maturity is ordinal with six levels, and an ordinal colour ramp cannot hold
+ * six visibly separated steps of one hue against a white surface — the
+ * lightness gaps come out under the threshold where adjacent levels stop
+ * reading as different. So the level is encoded as a count instead: it reads
+ * under any colour vision, in grayscale, in print, and at a glance down a
+ * list of 155 rows.
+ *
+ * `not stated (abstract only)` is not a low level, it is the absence of a
+ * rating, and 132 of 155 rows carry it. Hollow pips say that, where an empty
+ * ramp step would have said M0.
+ */
+interface Props {
+  /** The `maturity_demonstrated` cell, verbatim. */
+  value: string;
+  levels?: number;
+}
+const { value, levels = 5 } = Astro.props;
+
+const m = /^M([0-5])$/.exec(value.trim());
+const rated = m !== null;
+const level = rated ? Number(m[1]) : 0;
+
+const label = rated
+  ? `Demonstrated maturity ${value.trim()} of M5`
+  : 'No demonstrated maturity: abstract only, so no evaluation section was readable';
+---
+
+<span class={`pips${rated ? '' : ' unrated'}`} role="img" aria-label={label} title={label}>
+  {
+    Array.from({ length: levels }, (_, i) => (
+      <span class={`pip${rated && i < level ? ' on' : ''}`} />
+    ))
+  }
+</span>

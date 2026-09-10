@@ -1,0 +1,20 @@
+---
+/**
+ * The project's name, set rather than written.
+ *
+ * Two weights of one family with no space between them and the accent carried
+ * by a single dot. The compound reads as one word at a glance and resolves
+ * into two on a second look, and it holds at 15px in a header, which a mark
+ * with any fine detail would not.
+ */
+interface Props {
+  size?: string;
+}
+const { size = '1rem' } = Astro.props;
+---
+
+<span class="wordmark" style={`font-size:${size}`} aria-label="agentic geoscience">
+  <span class="a">agentic</span><span class="b">geoscience</span><span
+    class="dot"
+    aria-hidden="true"></span>
+</span>

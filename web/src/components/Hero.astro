@@ -1,0 +1,55 @@
+---
+/**
+ * What you are looking at, before any of the numbers.
+ *
+ * A page of aggregates is uninterpretable without the definition behind them.
+ * The headline is the subject, the sentence under it is the scope in the
+ * prompt's own terms — including what the review deliberately does not do —
+ * and the line below that says which run produced everything on the page.
+ *
+ * The run line is not provenance trivia. Every count here is one run under one
+ * prompt version, and two of the numbers moved during that run; a page that
+ * did not say which run it was would invite being read as the field's state
+ * rather than one measurement of it.
+ */
+import type { Run } from '../lib/types';
+
+interface Props {
+  run: Run;
+  generated: string;
+}
+const { run, generated } = Astro.props;
+
+const day = (iso: string) => (iso ? iso.slice(0, 10) : '');
+---
+
+<section class="hero">
+  <div class="wrap">
+    <p class="eyebrow">
+      <span class="live" aria-hidden="true"></span>
+      Scoping review · landscape {run.version}
+    </p>
+
+    <h1>
+      LLM-based agentic AI in<br />
+      <span style="color:var(--muted)">solid-earth and subsurface geoscience</span>
+    </h1>
+
+    <p class="lede">
+      What has been built, how it was evaluated, and how mature it is — as harvested and
+      screened in one run. Descriptive only: no gap analysis, and no research agenda.
+    </p>
+
+    <p class="meta">
+      run <code>{run.path}</code>
+      <span class="sep">·</span>
+      prompt {run.prompt || 'not stated'}
+      <span class="sep">·</span>
+      {run.model || 'model not stated'}
+      <span class="sep">·</span>
+      searched {day(run.date)}
+      <span class="sep">·</span>
+      page built {day(generated)}
+    </p>
+  </div>
+</section>

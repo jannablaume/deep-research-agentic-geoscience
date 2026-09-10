@@ -1,0 +1,118 @@
+---
+/**
+ * A report section's prose, with its evidence tags and citations made usable.
+ *
+ * The report's central discipline is that every claim carries an evidential
+ * status and resolves to a source. On paper both are punctuation the eye skips
+ * — `[Certain]` at the head of a paragraph, `[[doi:10.…]]` in the middle of a
+ * sentence. Here the tag becomes the block's own property, so a reader can ask
+ * for the certain claims only; and the citation becomes a button that opens
+ * that paper's record, where the quote the claim rests on is readable without
+ * leaving the page.
+ *
+ * That is the difference between showing the discipline and letting somebody
+ * test it, and it is the reason this component exists rather than a markdown
+ * renderer.
+ */
+import type { Block, ReportSection, Span } from '../lib/types';
+import Cite from './Cite.astro';
+
+interface Props {
+  section: ReportSection;
+  /** Tag filter chips. Off for a section whose blocks are all one tag. */
+  filter?: boolean;
+}
+const { section, filter = true } = Astro.props;
+
+const TAG_CLASS: Record<string, string> = {
+  Certain: 'certain',
+  Likely: 'likely',
+  'Absent-searched': 'absent',
+};
+
+// What each tag means, on the chip that filters by it. The rubric is in
+// SCHEMA.md and nobody reading a dashboard is going to open it.
+const TAG_TITLE: Record<string, string> = {
+  Certain: 'Stated by a source or counted from an artifact',
+  Likely: "The run's own reading of the evidence, not a source's claim",
+  'Absent-searched': 'Nothing found, with the queries that looked for it named',
+};
+
+// How many claims wear each tag, in the order the tags first appear. The count
+// goes on the chip: "Likely 2" says up front that the speculative half of a
+// section is two sentences out of fourteen, which is the proportion a reader
+// is really asking about when they reach for the filter.
+const counts = new Map<string, number>();
+for (const b of section.blocks as Block[]) {
+  if (b.kind === 'para' && b.tag) counts.set(b.tag, (counts.get(b.tag) ?? 0) + 1);
+}
+const showFilter = filter && counts.size > 1;
+const spansOf = (s: Span[]) => s;
+---
+
+<div class="prose" data-prose>
+  {
+    showFilter && (
+      <div class="tagfilter">
+        <span>Show</span>
+        {[...counts].map(([tag, n]) => (
+          <button type="button" data-tag={tag} aria-pressed="true" title={TAG_TITLE[tag]}>
+            {tag}
+            <span class="muted" style="margin-left:.35rem">
+              {n}
+            </span>
+          </button>
+        ))}
+      </div>
+    )
+  }
+
+  {
+    section.blocks.map((block) => {
+      if (block.kind === 'heading') {
+        return block.level === 2 ? <h3>{block.text.replace(/_/g, ' ')}</h3> : <h4>{block.text}</h4>;
+      }
+      if (block.kind === 'list') {
+        return (
+          <ul>
+            {block.items.map((item) => (
+              <li>
+                {spansOf(item).map((s) =>
+                  s.t === 'text' ? (
+                    s.v
+                  ) : s.t === 'code' ? (
+                    <code>{s.v}</code>
+                  ) : s.t === 'strong' ? (
+                    <strong>{s.v}</strong>
+                  ) : (
+                    <Cite span={s} />
+                  ),
+                )}
+              </li>
+            ))}
+          </ul>
+        );
+      }
+      return (
+        <p class="claim" data-claim-tag={block.tag ?? ''}>
+          {block.tag && (
+            <span class={`tag ${TAG_CLASS[block.tag]}`} title={TAG_TITLE[block.tag]}>
+              {block.tag}
+            </span>
+          )}
+          {spansOf(block.spans).map((s) =>
+            s.t === 'text' ? (
+              s.v
+            ) : s.t === 'code' ? (
+              <code>{s.v}</code>
+            ) : s.t === 'strong' ? (
+              <strong>{s.v}</strong>
+            ) : (
+              <Cite span={s} />
+            ),
+          )}
+        </p>
+      );
+    })
+  }
+</div>

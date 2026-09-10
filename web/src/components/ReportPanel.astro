@@ -1,0 +1,35 @@
+---
+/**
+ * One report section, in a panel, beside the counts it describes.
+ *
+ * The same six lines appeared in five section components. Extracting them is
+ * not only deduplication: `article` narrows the panel to the prose measure,
+ * and a class that has to be remembered in five places is a class that will be
+ * forgotten in one — which shows up as a single section whose text runs to
+ * 76rem while its neighbours sit at 50rem.
+ */
+import type { ReportSection } from '../lib/types';
+import Prose from './Prose.astro';
+
+interface Props {
+  sections: ReportSection[];
+}
+const { sections } = Astro.props;
+---
+
+{
+  sections.map((s) => (
+    <div class="panel article" style="margin-top:1rem">
+      <div class="head">
+        {/* One template expression, not two with a space between them: Astro
+            drops literal whitespace separating adjacent expressions on their
+            own line, and this heading rendered as "01Techniques". */}
+        <h3>{`${s.number} ${s.title}`}</h3>
+        <span class="muted">from the report</span>
+      </div>
+      <div class="body">
+        <Prose section={s} />
+      </div>
+    </div>
+  ))
+}

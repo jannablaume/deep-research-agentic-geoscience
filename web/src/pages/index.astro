@@ -1,0 +1,106 @@
+---
+/**
+ * One page.
+ *
+ * Its only jobs are to find the exported run, set the document head, and hand
+ * the data to `Dashboard`.
+ *
+ * The data is a glob rather than a named import so that pointing the front end
+ * at a different run means running the exporter with a different `--out`, not
+ * editing this file. `import.meta.glob` resolves at build time, so the
+ * document is compiled into the page and nothing is fetched at runtime — which
+ * is what lets the built folder open from the filesystem.
+ */
+import '../styles/tokens.css';
+import Wordmark from '../components/Wordmark.astro';
+import Hero from '../components/Hero.astro';
+import Dashboard from '../components/Dashboard.astro';
+import type { Dataset } from '../lib/types';
+
+const exported = import.meta.glob<{ default: Dataset }>('../data/*.web.json', { eager: true });
+const found = Object.entries(exported).sort(([a], [b]) => a.localeCompare(b));
+
+// With several exports present, LANDSCAPE_RUN picks one by filename; otherwise
+// the first by name. Building each run as its own page is the better answer if
+// that ever matters.
+const wanted = import.meta.env.LANDSCAPE_RUN;
+const chosen =
+  (wanted && found.find(([path]) => path.endsWith(`/${wanted}.web.json`))) ?? found.at(0);
+
+const data: Dataset | null = chosen ? chosen[1].default : null;
+const loadError = data
+  ? ''
+  : 'No exported run found. Generate one with `python3 scripts/export_web.py --out outputs/01_landscape/v0.5` from the repository root.';
+
+// One place naming every section, so the nav, the anchors and the order can
+// never drift apart.
+const SECTIONS = [
+  { id: 'overview', label: 'Overview' },
+  { id: 'papers', label: 'Papers' },
+  { id: 'fields', label: 'Fields' },
+  { id: 'systems', label: 'Systems' },
+  { id: 'evidence', label: 'Evidence' },
+  { id: 'periphery', label: 'Periphery' },
+  { id: 'method', label: 'Method' },
+];
+
+const version = data?.run.version ?? '';
+const papers = data?.papers ?? [];
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- The run is compiled into this file, so a cached copy is stale data
+         rather than a stale wrapper. Assets are content-hashed and can cache
+         forever; the page itself must not. -->
+    <meta http-equiv="cache-control" content="no-cache" />
+    <title>{version ? `Landscape ${version} · agentic geoscience` : 'agentic geoscience'}</title>
+    <meta
+      name="description"
+      content="A scoping review of LLM-based agentic AI in solid-earth and subsurface geoscience: what has been built, how it was evaluated, and how mature it is. Descriptive only."
+    />
+    <!-- Applied before first paint, so a reader who chose light does not get a
+         dark flash on every load. Inline and tiny for that reason. The `catch`
+         is not optional: a browser set to block site data throws on the
+         accessor itself rather than returning null. -->
+    <script is:inline>
+      try {
+        const t = localStorage.getItem('theme');
+        if (t === 'dark' || t === 'light') document.documentElement.dataset.theme = t;
+      } catch {}
+    </script>
+  </head>
+  <body>
+    <header class="top" id="top">
+      <div class="wrap">
+        <a href="#top" aria-label="agentic geoscience, back to top"><Wordmark /></a>
+        <nav aria-label="Sections">
+          {SECTIONS.map((s) => <a href={`#${s.id}`} data-nav={s.id}>{s.label}</a>)}
+        </nav>
+        <button id="theme" class="theme" type="button" aria-label="Switch between light and dark">
+          <span aria-hidden="true"></span>
+        </button>
+      </div>
+    </header>
+
+    {data && <Hero run={data.run} generated={data.generated_at} />}
+
+    <main class="wrap">
+      {loadError && <p class="muted" style="padding:4rem 0">{loadError}</p>}
+
+      {data && <Dashboard data={data} />}
+    </main>
+
+    <dialog id="detail" aria-label="Source record">
+      <button class="close" id="detail-close" aria-label="Close">&times;</button>
+      <div class="sheet" id="detail-body"></div>
+    </dialog>
+
+    <script is:inline define:vars={{ papers }}>
+      window.__PAPERS__ = papers;
+    </script>
+    <script src="../lib/app.ts"></script>
+  </body>
+</html>

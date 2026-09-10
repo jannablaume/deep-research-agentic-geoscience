@@ -1,0 +1,147 @@
+---
+/**
+ * What was actually shown: maturity, evaluation data, and where sources disagree.
+ *
+ * Maturity is the number most likely to be quoted out of this run and the one
+ * most easily misread, so this section is built to make misreading it hard.
+ * Three things do that work:
+ *
+ * - The rubric sits beside the distribution. `M3` means "named site,
+ *   retrospective"; without the definition on screen a reader supplies their
+ *   own, and every plausible guess is more flattering than the rubric.
+ * - The unrated count is a bar in the same chart. 132 of 155 admitted sources
+ *   cannot be rated at all, and a maturity chart drawn over 23 rows without
+ *   that bar looks like a survey of the field.
+ * - The level is never a colour. Position on the axis and filled pips carry
+ *   it, so it survives grayscale, print and any colour vision.
+ *
+ * Rigour is deliberately kept in separate panels from maturity. The rubric
+ * rates what the evaluation data was and whether the output touched reality,
+ * not how carefully it was tested — so a careful synthetic study sits at M1
+ * and a sloppy field trial at M3, and `held_out` and `data_type` are where the
+ * care shows up. Merging them into one score would invent a ranking the
+ * schema refuses to make.
+ */
+import type { Facet, ReportSection, Run } from '../lib/types';
+import Bars from './Bars.astro';
+import ReportPanel from './ReportPanel.astro';
+
+interface Props {
+  maturity: Facet[];
+  dataTypes: Facet[];
+  heldOut: Facet[];
+  rubric: Record<string, string>;
+  run: Run;
+  sections: ReportSection[];
+}
+const { maturity, dataTypes, heldOut, rubric, run, sections } = Astro.props;
+
+const max = Math.max(1, run.context, ...maturity.map((m) => m.n));
+const levels = maturity.filter((m) => /^M\d$/.test(m.label));
+---
+
+<div class="section-head">
+  <h2>What was demonstrated</h2>
+  <p>
+    Demonstrated maturity is rated from each paper's evaluation section only — never from
+    its abstract or introduction — and the axis is what the evaluation data was and
+    whether the output touched reality, not how rigorous the test was. Rigour is recorded
+    separately, in the two panels to the right.
+  </p>
+</div>
+
+<div class="two-up">
+  <div class="panel">
+    <div class="head">
+      <h3>Demonstrated maturity</h3>
+      <span class="muted">{run.core} rated · {run.context} unratable</span>
+    </div>
+    <div class="body">
+      <div class="bars">
+        {
+          levels.map((m) => (
+            <div
+              class={`bar${m.n === 0 ? ' zero' : ''}`}
+              title={`${m.label} — ${rubric[m.label]}: ${m.n} of ${run.core} core systems`}
+            >
+              <span class="name" style="display:flex;align-items:center;gap:.45rem">
+                <span>{m.label}</span>
+              </span>
+              <span class="track">
+                <span class="fill" style={`width:${(m.n / max) * 100}%`} />
+              </span>
+              <span class="n">{m.n}</span>
+            </div>
+          ))
+        }
+        <div
+          class="bar"
+          title={`Not rated: ${run.context} admitted sources are abstract-only, so no evaluation section was readable`}
+        >
+          <span class="name" style="color:var(--faint)">not rated</span>
+          <span class="track">
+            <span
+              class="fill"
+              style={`width:${(run.context / max) * 100}%;background:var(--data-2)`}></span>
+          </span>
+          <span class="n">{run.context}</span>
+        </div>
+      </div>
+
+      <p class="muted" style="margin:.9rem 0 0">
+        The orange bar is not a maturity level. It is the {run.context} admitted sources
+        with no readable evaluation section, which the rubric refuses to rate rather than
+        rating low.
+      </p>
+
+      <div class="scroll-x" style="margin-top:1.5rem">
+        <table class="grid">
+          <tbody>
+            {
+              Object.entries(rubric).map(([level, text]) => (
+                <tr>
+                  <td style="white-space:nowrap;font-weight:600">{level}</td>
+                  <td style="color:var(--muted)">{text}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="panel">
+      <div class="head">
+        <h3>Evaluation data</h3>
+        <span class="muted">of {run.core} core systems</span>
+      </div>
+      <div class="body">
+        <Bars
+          items={dataTypes}
+          total={run.core}
+          unit="core systems"
+          note="M2 versus M3 is benchmark versus named site, not synthetic versus real — so this facet and the maturity axis are not the same question."
+        />
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:1rem">
+      <div class="head">
+        <h3>Held-out test set</h3>
+        <span class="muted">of {run.core} core systems</span>
+      </div>
+      <div class="body">
+        <Bars
+          items={heldOut}
+          total={run.core}
+          unit="core systems"
+          note="`not stated` means the paper is silent, which is recorded rather than read as a no."
+        />
+      </div>
+    </div>
+  </div>
+</div>
+
+<ReportPanel sections={sections} />

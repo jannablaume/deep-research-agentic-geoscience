@@ -1,0 +1,33 @@
+---
+/**
+ * One number, and the sentence that makes it mean something.
+ *
+ * This used to be a hero figure plus six tiles. The tiles are gone: the summary
+ * table above now carries the whole funnel, one counted row at a time, and it
+ * says strictly more than the tiles did — with the denominator of each stage
+ * beside it, which the tiles never had. Keeping both put the same six numbers
+ * on screen twice, forty pixels apart, and invited the reader to check whether
+ * they agreed.
+ *
+ * What survives is the single display figure. Exactly one per view: a dashboard
+ * with six numbers at display size has no headline, and the headline here is
+ * what came out of eleven thousand records.
+ */
+import type { Run } from '../lib/types';
+
+interface Props {
+  run: Run;
+}
+const { run } = Astro.props;
+
+const num = (n: number | null) => (n === null ? '—' : n.toLocaleString('en-GB'));
+---
+
+<div class="figure">
+  <div class="value tabular">{num(run.admitted)}</div>
+  <p class="label">
+    sources admitted to the landscape, from {num(run.harvested)} harvested records across
+    {run.api_calls} API and web calls — of which {run.core} could be read in full, and are
+    therefore the only ones this review characterises or rates.
+  </p>
+</div>

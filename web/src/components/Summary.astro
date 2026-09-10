@@ -1,0 +1,129 @@
+---
+/**
+ * The executive summary, as a table: the funnel from records to findings.
+ *
+ * This is the first thing on the page because it is the only thing most readers
+ * need. Eleven thousand records became 155 admitted sources became 23 readable
+ * ones, and every step of that narrowing is a decision somebody made for a
+ * stated reason. A dashboard that opens on charts asks the reader to reconstruct
+ * that shape from six tiles; a table states it.
+ *
+ * Every row is counted from an artifact — none is lifted out of prose — and the
+ * `of` column makes each row a share of the one above it, so the attrition is
+ * readable without arithmetic.
+ *
+ * The last row is the one that needed care. "How much was lost to a paywall" is
+ * the question everybody asks, and this run cannot answer it: `papers.csv` has
+ * no paywall column, and `access_status: abstract-only` covers paywalls,
+ * bot-protected nominal open access, software deposits and records with no
+ * abstract in any API alike. So the row reports what is counted — full text not
+ * obtained — and its note gives the two subsets `unreachable.md` does tabulate
+ * and says the rest is narrated rather than tallied.
+ */
+import type { FunnelRow } from '../lib/types';
+
+interface Props {
+  funnel: FunnelRow[];
+}
+const { funnel } = Astro.props;
+
+const num = (n: number | null) => (n === null ? '—' : n.toLocaleString('en-GB'));
+const share = (row: FunnelRow) =>
+  row.n === null || row.of === null || row.of === 0
+    ? ''
+    : `${((row.n / row.of) * 100).toFixed(row.n / row.of < 0.1 ? 1 : 0)}%`;
+
+// The denominator, named. The funnel is not strictly nested — `Screened with a
+// reason` exceeds the shortlist above it, because 150 records were drawn from
+// below the triage cut — so a column headed "of previous" would be wrong on
+// exactly the row whose surprise it needs to explain.
+const denominator = (row: FunnelRow) =>
+  row.of === null ? '' : `of ${row.of.toLocaleString('en-GB')}`;
+---
+
+<div class="panel summary">
+  <div class="head">
+    <h3>What this run found</h3>
+    <span class="muted">every figure counted from a run artifact</span>
+  </div>
+  <div class="body">
+    <div class="scroll-x">
+      <table class="grid funnel">
+        <thead>
+          <tr>
+            <th>Stage</th>
+            <th class="num">Records</th>
+            <th class="num">Share</th>
+            <th>What it counts</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            funnel.map((row) => (
+              <tr class={row.emphasis ? 'emphasis' : undefined}>
+                <td class="stage">{row.label}</td>
+                <td class="num big">{num(row.n)}</td>
+                <td class="num muted-cell">
+                  {share(row)}
+                  {row.of !== null && <span class="denom">{denominator(row)}</span>}
+                </td>
+                <td class="what">
+                  {row.what}
+                  {row.note && <span class="caveat">{row.note}</span>}
+                </td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* The funnel is the one table on the page that is read as a headline, so its
+     figures are set at reading size rather than table size. */
+  .summary {
+    margin-bottom: 1rem;
+  }
+  table.funnel td.stage {
+    font-weight: 500;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+  table.funnel td.big {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+  table.funnel td.muted-cell {
+    color: var(--muted);
+  }
+  table.funnel td.what {
+    color: var(--muted);
+    max-width: 30rem;
+  }
+  /* The admitted row is where the review's subject actually begins. */
+  table.funnel tr.emphasis td {
+    background: var(--accent-wash);
+  }
+  table.funnel tr.emphasis td.stage,
+  table.funnel tr.emphasis td.big {
+    color: var(--accent-ink);
+  }
+  .denom {
+    display: block;
+    font-size: var(--t-micro);
+    color: var(--faint);
+  }
+  .caveat {
+    display: block;
+    margin-top: 0.4rem;
+    padding-left: 0.6rem;
+    border-left: 2px solid var(--absent);
+    color: var(--faint);
+    font-size: var(--t-micro);
+    line-height: 1.5;
+  }
+</style>

@@ -1,0 +1,115 @@
+---
+/**
+ * Where this literature was published, and from where.
+ *
+ * Three bibliographic facets that say something the systems charts cannot: what
+ * kind of venue this field publishes in, which venues recur, and which
+ * countries the work comes out of.
+ *
+ * The publication-type panel is also the explanation for the journal panel's
+ * coverage. Sixty-four of the 155 admitted sources are conference papers — SPE,
+ * EAGE, IPTC — and OpenAlex holds no journal-level record for those at all, so
+ * the journal facet covers 101 of 155 and no amount of fetching improves it.
+ * Saying that beside the chart is cheaper than letting a reader wonder whether
+ * 54 sources were dropped.
+ *
+ * Country is the only facet on this page produced by a network call
+ * (`scripts/enrich.py`), and the only one whose denominator is not the whole
+ * corpus: it counts author-institution countries as recorded by OpenAlex, which
+ * takes them from publisher metadata that preprint servers largely do not
+ * supply. The panel leads with that denominator rather than closing with it.
+ */
+import type { CountryCoverage, Facet } from '../lib/types';
+import Bars from './Bars.astro';
+
+interface Props {
+  types: Facet[];
+  journals: Facet[];
+  countries: Facet[];
+  coverage: CountryCoverage;
+  total: number;
+}
+const { types, journals, countries, coverage, total } = Astro.props;
+
+// ISO alpha-2 is compact enough for an axis but not readable, so the codes the
+// corpus actually contains are named. Anything unmapped falls back to its code
+// rather than being dropped or guessed at.
+const COUNTRY_NAMES: Record<string, string> = {
+  AE: 'United Arab Emirates', AR: 'Argentina', AT: 'Austria', AU: 'Australia',
+  BD: 'Bangladesh', BE: 'Belgium', BR: 'Brazil', CA: 'Canada', CH: 'Switzerland',
+  CL: 'Chile', CN: 'China', CO: 'Colombia', DE: 'Germany', DK: 'Denmark',
+  DZ: 'Algeria', EG: 'Egypt', ES: 'Spain', FI: 'Finland', FR: 'France',
+  GB: 'United Kingdom', GR: 'Greece', HK: 'Hong Kong', ID: 'Indonesia',
+  IE: 'Ireland', IN: 'India', IQ: 'Iraq', IR: 'Iran', IT: 'Italy', JP: 'Japan',
+  KR: 'South Korea', KW: 'Kuwait', MX: 'Mexico', MY: 'Malaysia', NG: 'Nigeria',
+  NL: 'Netherlands', NO: 'Norway', NZ: 'New Zealand', OM: 'Oman', PK: 'Pakistan',
+  PL: 'Poland', PT: 'Portugal', QA: 'Qatar', RO: 'Romania', RU: 'Russia',
+  SA: 'Saudi Arabia', SE: 'Sweden', SG: 'Singapore', TH: 'Thailand',
+  TR: 'Turkey', TW: 'Taiwan', UA: 'Ukraine', US: 'United States',
+  VN: 'Vietnam', ZA: 'South Africa',
+};
+
+const named = countries.map((c) => ({ ...c, label: COUNTRY_NAMES[c.label] ?? c.label }));
+const uncovered = coverage.total - coverage.with_country;
+---
+
+<div class="three-up">
+  <div class="panel">
+    <div class="head">
+      <h3>Publication type</h3>
+      <span class="muted">of {total} sources</span>
+    </div>
+    <div class="body">
+      <Bars
+        items={types}
+        total={total}
+        unit="sources"
+        note="The run's own source_type where it has one, OpenAlex's where the column was blank — it was blank on 108 of 155 rows. Normalised to one label per kind."
+      />
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="head">
+      <h3>Journal or venue</h3>
+      <span class="muted">{journals.length} distinct</span>
+    </div>
+    <div class="body">
+      <Bars
+        items={journals}
+        total={total}
+        limit={10}
+        wrap
+        unit="sources"
+        note="Covers 101 of 155 sources. The gap is not missing data: the conference papers above have no journal-level record in OpenAlex, and the run's own venue column is blank for them."
+      />
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="head">
+      <h3>Country of author institution</h3>
+      <span class="muted">{coverage.with_country} of {coverage.total} sources</span>
+    </div>
+    <div class="body">
+      <p class="claim" style="margin-bottom:1.25rem">
+        <span class="tag likely" title="Fetched from OpenAlex, not read from a run artifact">
+          Fetched
+        </span>
+        {coverage.distinct} countries across {coverage.with_country} sources.
+        The other {uncovered} record no institution — OpenAlex takes affiliations from
+        publisher metadata and preprint servers largely do not supply them, and 16 of the 23
+        core sources are arXiv preprints. {coverage.multi_country} sources are
+        multi-country and count once under each, so the bars sum to more than
+        {coverage.with_country}.
+      </p>
+      <Bars
+        items={named}
+        total={coverage.with_country}
+        limit={10}
+        unit="sources reporting a country"
+        note="Counted once per country per paper, never per author: three co-authors in one country are one paper from it."
+      />
+    </div>
+  </div>
+</div>

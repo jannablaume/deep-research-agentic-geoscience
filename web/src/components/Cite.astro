@@ -1,0 +1,30 @@
+---
+/**
+ * One reference marker, and the punctuation that must stay attached to it.
+ *
+ * A component rather than inline markup for a reason that is easy to lose: in
+ * an Astro template, the newline and indentation between `</button>` and the
+ * punctuation after it become a real whitespace text node in the output. Set
+ * that way, every citation in the report rendered as "Santorini-Kolumbo 97 ),"
+ * — a marker holding its full stop at arm's length. Written on one line it is
+ * correct and unreadable; written here it is both correct and legible, and the
+ * single-line root below is the whole trick.
+ */
+import type { Span } from '../lib/types';
+
+interface Props {
+  /** The `cite` variant of Span. Narrowed by the caller. */
+  span: Extract<Span, { t: 'cite' }>;
+}
+const { span } = Astro.props;
+
+const cls = `cite${span.resolved ? '' : ' unresolved'}`;
+const title = span.resolved
+  ? `${span.label}. ${span.name} — ${span.key}`
+  : `${span.key} — not in papers.csv`;
+const aria = span.resolved
+  ? `Reference ${span.label}, ${span.name}`
+  : `Unresolved citation ${span.key}`;
+---
+
+<span style="white-space:nowrap"><button type="button" class={cls} aria-label={aria} data-cite={span.resolved ? span.key : undefined} title={title}>{span.label}</button>{span.tail}</span>

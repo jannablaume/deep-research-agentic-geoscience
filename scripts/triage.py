@@ -22,21 +22,36 @@ from __future__ import annotations
 
 import argparse
 import csv
-import os
 import random
 import re
 import sys
 from collections import Counter
+from pathlib import Path
+from typing import Any
+
+# One row of screened.csv with the scores from `score()` merged in. Values are a mix
+# of str and int, so `Any` is the honest annotation.
+Row = dict[str, Any]
 
 csv.field_size_limit(10_000_000)
 
 # Weight 3, and self-sufficient: vocabulary that only appears in LLM-agent work. A hit
 # here is on its own evidence that the record is LLM-era.
 AGENT_LLM = [
-    r"agentic", r"\bLLM[- ]?agents?\b", r"\bAI agents?\b", r"language model agents?",
-    r"agent[- ]based (?:LLM|large language)", r"tool[- ]calling", r"function[- ]calling",
-    r"\bLangChain\b", r"\bAutoGen\b", r"\bLangGraph\b", r"\bCrewAI\b", r"\bAutoGPT\b",
-    r"AI scientist", r"agent(?:ic)? workflows?",
+    r"agentic",
+    r"\bLLM[- ]?agents?\b",
+    r"\bAI agents?\b",
+    r"language model agents?",
+    r"agent[- ]based (?:LLM|large language)",
+    r"tool[- ]calling",
+    r"function[- ]calling",
+    r"\bLangChain\b",
+    r"\bAutoGen\b",
+    r"\bLangGraph\b",
+    r"\bCrewAI\b",
+    r"\bAutoGPT\b",
+    r"AI scientist",
+    r"agent(?:ic)? workflows?",
     # MCP is how most 2025-26 systems here expose tools to an LLM, and it was absent from
     # this list entirely: open-darts-MCP, specfem-mcp, seismo-mcp and GeoMCP all scored
     # below the cut on a corpus harvested to find exactly them. Bare "MCP" is not usable
@@ -57,9 +72,15 @@ AGENT_GENERIC = [
     r"multi[- ]?agent[,\s]+(?:\w+[-\s]+){0,2}"
     r"(?:system|framework|architecture|collaborat|approach|workflow|platform|pipeline)",
     r"multi[- ]?agent (?:LLM|AI|artificial intelligence|large language)",
-    r"autonomous agents?", r"\btool[- ]use\b", r"\btool[- ]using\b",
-    r"agent orchestration", r"orchestrat\w+ agents?", r"self[- ]driving lab",
-    r"autonomous experimentation", r"\bcopilots?\b", r"planning agents?",
+    r"autonomous agents?",
+    r"\btool[- ]use\b",
+    r"\btool[- ]using\b",
+    r"agent orchestration",
+    r"orchestrat\w+ agents?",
+    r"self[- ]driving lab",
+    r"autonomous experimentation",
+    r"\bcopilots?\b",
+    r"planning agents?",
     # An agent named for the job it does rather than for being an agent.
     r"\b(?:modell?ing|simulation|analysis|interpretation|advisory|research|smart|"
     r"intelligent|expert|domain)\s+agents?\b",
@@ -85,10 +106,22 @@ AGENT_COMPOUND = [
 ]
 # Weight 1: LLM-era vocabulary. Necessary but far from sufficient.
 MEDIUM = [
-    r"large[-\s]language[-\s]models?", r"\bLLMs?\b", r"\bGPT-?[345]\b", r"\bChatGPT\b",
-    r"foundation models?", r"retrieval[- ]augmented", r"\bRAG\b", r"chain[- ]of[- ]thought",
-    r"prompt engineering", r"in[- ]context learning", r"vision[- ]language model",
-    r"\bClaude\b", r"\bLlama\b", r"\bGemini\b", r"generative AI", r"transformer",
+    r"large[-\s]language[-\s]models?",
+    r"\bLLMs?\b",
+    r"\bGPT-?[345]\b",
+    r"\bChatGPT\b",
+    r"foundation models?",
+    r"retrieval[- ]augmented",
+    r"\bRAG\b",
+    r"chain[- ]of[- ]thought",
+    r"prompt engineering",
+    r"in[- ]context learning",
+    r"vision[- ]language model",
+    r"\bClaude\b",
+    r"\bLlama\b",
+    r"\bGemini\b",
+    r"generative AI",
+    r"transformer",
 ]
 # The 'agent' that is not an agent. Without these, chemistry and medicine flood the top.
 NEGATIVE = [
@@ -98,8 +131,14 @@ NEGATIVE = [
 ]
 # Pre-LLM agent work: out of scope after v0.4, but flagged rather than silently dropped
 # so the exclusion stays visible and reversible.
-PRE_LLM = [r"agent[- ]based model", r"\bABM\b", r"blackboard architecture",
-           r"expert system", r"reinforcement learning", r"swarm intelligence"]
+PRE_LLM = [
+    r"agent[- ]based model",
+    r"\bABM\b",
+    r"blackboard architecture",
+    r"expert system",
+    r"reinforcement learning",
+    r"swarm intelligence",
+]
 
 DOMAIN = {
     "geomechanics": r"rock mechanic|geomechanic|rock mass|fault slip|hydraulic fractur|in[- ]situ stress",
@@ -126,30 +165,37 @@ PERIPHERY = {
 # among them a multi-agent geoscience document-extraction system at score 12 and a
 # subsurface-hydrology agent workflow at 16. Shortlisting is not admission — these
 # belong in front of the screener, who decides the subfield.
-GENERAL = (r"geoscien|geolog|geophysic|earth science|subsurface|petrophysic|borehole|"
-           r"well[- ]log|mineralog|stratigraph|litholog|core sample")
+GENERAL = (
+    r"geoscien|geolog|geophysic|earth science|subsurface|petrophysic|borehole|"
+    r"well[- ]log|mineralog|stratigraph|litholog|core sample"
+)
 
 _C = re.IGNORECASE
 
 
-def compile_all(pats): return [re.compile(p, _C) for p in pats]
+def compile_all(pats: list[str]) -> list[re.Pattern[str]]:
+    return [re.compile(p, _C) for p in pats]
 
 
-AL_R, AG_R, AX_R, MEDIUM_R, NEG_R, PRE_R = map(
-    compile_all, (AGENT_LLM, AGENT_GENERIC, AGENT_COMPOUND, MEDIUM, NEGATIVE, PRE_LLM))
+AL_R = compile_all(AGENT_LLM)
+AG_R = compile_all(AGENT_GENERIC)
+AX_R = compile_all(AGENT_COMPOUND)
+MEDIUM_R = compile_all(MEDIUM)
+NEG_R = compile_all(NEGATIVE)
+PRE_R = compile_all(PRE_LLM)
 AC_R = [re.compile(p) for p in AGENT_CASED]  # case-sensitive by design
 DOMAIN_R = {k: re.compile(v, _C) for k, v in DOMAIN.items()}
 PERIPH_R = {k: re.compile(v, _C) for k, v in PERIPHERY.items()}
 GENERAL_R = re.compile(GENERAL, _C)
 
 
-def score(row: dict) -> dict:
+def score(row: Row) -> Row:
     title, abst = row.get("title", ""), row.get("abstract", "")
     text = f"{title} . {abst}"
     neg_spans = [m.span() for r in NEG_R for m in r.finditer(text)]
 
-    def hits(regexes):
-        found = set()
+    def hits(regexes: list[re.Pattern[str]]) -> set[str]:
+        found: set[str] = set()
         for r in regexes:
             for m in r.finditer(text):
                 if any(s <= m.start() < e for s, e in neg_spans):
@@ -171,10 +217,10 @@ def score(row: dict) -> dict:
     per = {k: len(r.findall(text)) for k, r in PERIPH_R.items() if r.search(text)}
 
     if dom:
-        group = max(dom, key=dom.get)
+        group = max(dom, key=lambda k: dom[k])
         scope = "core"
     elif per:
-        group = max(per, key=per.get)
+        group = max(per, key=lambda k: per[k])
         scope = "periphery"
     elif GENERAL_R.search(text):
         group, scope = "geoscience_general", "core"
@@ -193,103 +239,144 @@ def score(row: dict) -> dict:
     }
 
 
-def digest(r: dict, words: int = 55) -> str:
+def digest(r: Row, words: int = 55) -> str:
     a = " ".join((r.get("abstract") or "").split()[:words])
-    ident = r.get("doi") and f"doi:{r['doi']}" or r.get("arxiv_id") and f"arXiv:{r['arxiv_id']}" or r.get("url", "")
-    return (f"### {r['identity_key']}\n"
-            f"**{r.get('title', '')}** ({r.get('year', '')}) — {r.get('venue', '') or 'n/a'} · "
-            f"cites {r.get('cited_by', '') or '0'} · score {r['agentic_score']} "
-            f"(strong {r['strong_hits']}) · {r['scope_computed']}/{r['group_computed']} · {ident}\n"
-            f"signals: {r['signals'] or 'none'}\n"
-            f"{a}{'…' if a else '(no abstract)'}\n")
+    if r.get("doi"):
+        ident = f"doi:{r['doi']}"
+    elif r.get("arxiv_id"):
+        ident = f"arXiv:{r['arxiv_id']}"
+    else:
+        ident = r.get("url", "")
+    return (
+        f"### {r['identity_key']}\n"
+        f"**{r.get('title', '')}** ({r.get('year', '')}) — {r.get('venue', '') or 'n/a'} · "
+        f"cites {r.get('cited_by', '') or '0'} · score {r['agentic_score']} "
+        f"(strong {r['strong_hits']}) · {r['scope_computed']}/{r['group_computed']} · {ident}\n"
+        f"signals: {r['signals'] or 'none'}\n"
+        f"{a}{'…' if a else '(no abstract)'}\n"
+    )
 
 
-def main() -> int:
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", required=True)
     ap.add_argument("--min-score", type=int, default=3)
-    ap.add_argument("--min-strong", type=int, default=1,
-                    help="require at least this many weight-3 signals")
-    ap.add_argument("--audit-n", type=int, default=150,
-                    help="below-cut records to sample. 60 was too few in v0.4: "
-                         "4 false negatives gave 6.7%% with a confidence interval "
-                         "wide enough to straddle the 5%% action threshold")
+    ap.add_argument(
+        "--min-strong", type=int, default=1, help="require at least this many weight-3 signals"
+    )
+    ap.add_argument(
+        "--audit-n",
+        type=int,
+        default=150,
+        help="below-cut records to sample. 60 was too few in v0.4: "
+        "4 false negatives gave 6.7%% with a confidence interval "
+        "wide enough to straddle the 5%% action threshold",
+    )
     ap.add_argument("--seed", type=int, default=20260903)
-    ap.add_argument("--force", action="store_true",
-                    help="overwrite shortlist.md and audit_sample.md even if screening.csv exists")
-    args = ap.parse_args()
+    ap.add_argument(
+        "--force",
+        action="store_true",
+        help="overwrite shortlist.md and audit_sample.md even if screening.csv exists",
+    )
+    return ap.parse_args(argv)
 
-    screening_path = os.path.join(args.out, "screening.csv")
-    if os.path.exists(screening_path) and not args.force:
+
+def main(argv: list[str] | None = None) -> int:
+    args = parse_args(argv)
+
+    out_dir = Path(args.out)
+    screening_path = out_dir / "screening.csv"
+    if screening_path.exists() and not args.force:
         raise SystemExit(
             f"{screening_path} exists. Re-running triage.py would regenerate shortlist.md "
             "and audit_sample.md underneath screening already written. Pass --force only "
-            "if you will re-screen both files from scratch.")
+            "if you will re-screen both files from scratch."
+        )
 
-    src = os.path.join(args.out, "screened.csv")
-    if not os.path.exists(src):
+    src = out_dir / "screened.csv"
+    if not src.exists():
         raise SystemExit(f"{src} not found - run harvest.py first")
-    rows = list(csv.DictReader(open(src, newline="", encoding="utf-8")))
+    with src.open(newline="", encoding="utf-8") as f:
+        rows: list[Row] = list(csv.DictReader(f))
     for r in rows:
         r.update(score(r))
 
     rows.sort(key=lambda r: (-r["agentic_score"], -int(r.get("cited_by") or 0)))
     cols = list(rows[0].keys())
-    with open(os.path.join(args.out, "triage.csv"), "w", newline="", encoding="utf-8") as f:
+    with (out_dir / "triage.csv").open("w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=cols, quoting=csv.QUOTE_ALL)
         w.writeheader()
         w.writerows(rows)
 
-    def above(r):
-        return (r["agentic_score"] >= args.min_score
-                and r["strong_hits"] >= args.min_strong
-                and r["llm_present"] == "yes"
-                and r["scope_computed"] != "none")
+    def above(r: Row) -> bool:
+        return bool(
+            r["agentic_score"] >= args.min_score
+            and r["strong_hits"] >= args.min_strong
+            and r["llm_present"] == "yes"
+            and r["scope_computed"] != "none"
+        )
 
     short = [r for r in rows if above(r)]
     below = [r for r in rows if not above(r)]
     core = [r for r in short if r["scope_computed"] == "core"]
     peri = [r for r in short if r["scope_computed"] == "periphery"]
 
-    with open(os.path.join(args.out, "shortlist.md"), "w", encoding="utf-8") as f:
-        f.write(f"# Shortlist — {len(short)} of {len(rows)} harvested records\n\n"
-                f"Cut: agentic_score >= {args.min_score}, strong_hits >= {args.min_strong}, "
-                f"LLM vocabulary present, a domain group identified. Ranked by score then citations.\n"
-                f"Scores and groups are computed by `scripts/triage.py` from title+abstract; "
-                f"they are a sorting aid and carry no authority. Screen every record below.\n\n")
-        for label, group in (("Core (solid-earth / subsurface)", core),
-                             ("Periphery (counted, not deep-read)", peri)):
+    with (out_dir / "shortlist.md").open("w", encoding="utf-8") as f:
+        f.write(
+            f"# Shortlist — {len(short)} of {len(rows)} harvested records\n\n"
+            f"Cut: agentic_score >= {args.min_score}, strong_hits >= {args.min_strong}, "
+            f"LLM vocabulary present, a domain group identified. Ranked by score then citations.\n"
+            f"Scores and groups are computed by `scripts/triage.py` from title+abstract; "
+            f"they are a sorting aid and carry no authority. Screen every record below.\n\n"
+        )
+        for label, group in (
+            ("Core (solid-earth / subsurface)", core),
+            ("Periphery (counted, not deep-read)", peri),
+        ):
             f.write(f"\n## {label} — {len(group)}\n\n")
             for r in group:
                 f.write(digest(r) + "\n")
 
-    rng = random.Random(args.seed)
+    # Seeded and reproducible on purpose: the audit sample has to be the same 150
+    # records on a re-run, or the false-negative rate is measured against a sample
+    # that no longer exists. Not a cryptographic use.
+    rng = random.Random(args.seed)  # noqa: S311 - reproducibility, not secrecy
     sample = rng.sample(below, min(args.audit_n, len(below)))
-    with open(os.path.join(args.out, "audit_sample.md"), "w", encoding="utf-8") as f:
-        f.write(f"# Recall audit — {len(sample)} records drawn at random from the "
-                f"{len(below)} below the cut\n\n"
-                "Screen these exactly as the shortlist. Any that should have been admitted is a "
-                "false negative: report the rate in RUN.md and, if it exceeds 5%, diagnose "
-                "which cut is binding (min-score vs min-strong; see triage_stats.md) before "
-                "widening. This is what makes the cut a measurement rather than an assumption.\n\n")
+    with (out_dir / "audit_sample.md").open("w", encoding="utf-8") as f:
+        f.write(
+            f"# Recall audit — {len(sample)} records drawn at random from the "
+            f"{len(below)} below the cut\n\n"
+            "Screen these exactly as the shortlist. Any that should have been admitted is a "
+            "false negative: report the rate in RUN.md and, if it exceeds 5%, diagnose "
+            "which cut is binding (min-score vs min-strong; see triage_stats.md) before "
+            "widening. This is what makes the cut a measurement rather than an assumption.\n\n"
+        )
         for r in sample:
             f.write(digest(r) + "\n")
 
     dist = Counter(min(r["agentic_score"], 20) for r in rows)
-    with open(os.path.join(args.out, "triage_stats.md"), "w", encoding="utf-8") as f:
-        f.write(f"# Triage statistics\n\nHarvested: {len(rows)}  ·  Shortlisted: {len(short)} "
-                f"({100 * len(short) // max(len(rows), 1)}%)  ·  Core: {len(core)}  ·  "
-                f"Periphery: {len(peri)}  ·  Below cut: {len(below)}\n\n"
-                f"Cut applied: min-score {args.min_score}, min-strong {args.min_strong}\n\n"
-                "## Shortlist size at other thresholds\n\n"
-                "Both knobs, because the cut is an AND of the two and varying only one hides\n"
-                "which is binding. If a row is flat across `min-score`, the score is not what\n"
-                "is cutting - `min-strong` is, and lowering `--min-score` will change nothing.\n\n"
-                "| min-score | strong>=0 | strong>=1 | strong>=2 |\n|---|---|---|---|\n")
+    with (out_dir / "triage_stats.md").open("w", encoding="utf-8") as f:
+        f.write(
+            f"# Triage statistics\n\nHarvested: {len(rows)}  ·  Shortlisted: {len(short)} "
+            f"({100 * len(short) // max(len(rows), 1)}%)  ·  Core: {len(core)}  ·  "
+            f"Periphery: {len(peri)}  ·  Below cut: {len(below)}\n\n"
+            f"Cut applied: min-score {args.min_score}, min-strong {args.min_strong}\n\n"
+            "## Shortlist size at other thresholds\n\n"
+            "Both knobs, because the cut is an AND of the two and varying only one hides\n"
+            "which is binding. If a row is flat across `min-score`, the score is not what\n"
+            "is cutting - `min-strong` is, and lowering `--min-score` will change nothing.\n\n"
+            "| min-score | strong>=0 | strong>=1 | strong>=2 |\n|---|---|---|---|\n"
+        )
 
-        def count(sc, st):
-            return sum(1 for r in rows if r["agentic_score"] >= sc and r["strong_hits"] >= st
-                       and r["llm_present"] == "yes" and r["scope_computed"] != "none")
+        def count(sc: int, st: int) -> int:
+            return sum(
+                1
+                for r in rows
+                if r["agentic_score"] >= sc
+                and r["strong_hits"] >= st
+                and r["llm_present"] == "yes"
+                and r["scope_computed"] != "none"
+            )
 
         for t in (1, 2, 3, 4, 6, 8, 10, 12):
             f.write(f"| {t} | " + " | ".join(str(count(t, s)) for s in (0, 1, 2)) + " |\n")
@@ -301,11 +388,16 @@ def main() -> int:
             f.write(f"| {g} | {n} |\n")
         f.write("\n## Records with no abstract\n\n")
         na = sum(1 for r in rows if not r.get("abstract"))
-        f.write(f"{na} of {len(rows)} ({100 * na // max(len(rows), 1)}%). These are screened on "
-                "title alone and are the weakest part of the corpus; report the count in RUN.md.\n")
+        f.write(
+            f"{na} of {len(rows)} ({100 * na // max(len(rows), 1)}%). These are screened on "
+            "title alone and are the weakest part of the corpus; report the count in RUN.md.\n"
+        )
 
-    print(f"shortlist {len(short)} (core {len(core)}, periphery {len(peri)}) "
-          f"of {len(rows)}; audit sample {len(sample)}", file=sys.stderr)
+    print(
+        f"shortlist {len(short)} (core {len(core)}, periphery {len(peri)}) "
+        f"of {len(rows)}; audit sample {len(sample)}",
+        file=sys.stderr,
+    )
     return 0
 
 

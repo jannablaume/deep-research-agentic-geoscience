@@ -14,12 +14,15 @@ from __future__ import annotations
 
 import argparse
 import csv
-import os
 import re
 import sys
+from pathlib import Path
+
+Row = dict[str, str]
 
 csv.field_size_limit(10_000_000)
 
+# fmt: off
 REQUIRED = ["RUN.md", "screened.csv", "queries.csv", "triage.csv", "shortlist.md",
             "audit_sample.md", "triage_stats.md", "screening.csv", "papers.csv",
             "papers.md", "report/00_executive_summary.md", "unreachable.md"]
@@ -32,121 +35,166 @@ PAPERS_COLS = [
     "maturity_demonstrated", "author_stated_limitations", "code_availability",
     "access_status", "found_via",
 ]
+# fmt: on
 MATURITY = {"M0", "M1", "M2", "M3", "M4", "M5", "not stated (abstract only)", "not stated"}
 TAGS = ("[Certain]", "[Likely]", "[Absent-searched]")
 
 
-def load(path):
-    if not os.path.exists(path):
+def load(path: Path) -> list[Row] | None:
+    if not path.exists():
         return None
-    with open(path, newline="", encoding="utf-8") as f:
+    with path.open(newline="", encoding="utf-8") as f:
         return list(csv.DictReader(f))
 
 
-def main() -> int:
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", required=True)
-    args = ap.parse_args()
-    out = args.out
+    return ap.parse_args(argv)
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = parse_args(argv)
+    out = Path(args.out)
     checks: list[tuple[str, bool, str]] = []
 
-    def chk(name, ok, detail=""):
+    def chk(name: str, ok: object, detail: str = "") -> None:
         checks.append((name, bool(ok), detail))
 
     # --- files present
-    missing = [f for f in REQUIRED if not os.path.exists(os.path.join(out, f))]
-    chk("Required files present", not missing, "missing: " + ", ".join(missing) if missing else "all present")
+    missing = [f for f in REQUIRED if not (out / f).exists()]
+    chk(
+        "Required files present",
+        not missing,
+        "missing: " + ", ".join(missing) if missing else "all present",
+    )
 
-    screened = load(os.path.join(out, "screened.csv")) or []
-    triage = load(os.path.join(out, "triage.csv")) or []
-    screening = load(os.path.join(out, "screening.csv")) or []
-    papers = load(os.path.join(out, "papers.csv")) or []
-    queries = load(os.path.join(out, "queries.csv")) or []
+    screened = load(out / "screened.csv") or []
+    triage = load(out / "triage.csv") or []
+    screening = load(out / "screening.csv") or []
+    papers = load(out / "papers.csv") or []
+    queries = load(out / "queries.csv") or []
 
     chk("screened.csv parses and is non-empty", bool(screened), f"{len(screened)} rows")
     tkeys = {r["identity_key"] for r in triage}
     skey_map = {r["identity_key"]: r for r in screened}
     missing_from_screened = tkeys - set(skey_map)
 
-    def _greyish(r):
+    def _greyish(r: Row) -> bool:
         apis = r.get("source_apis") or ""
         qids = r.get("query_ids") or ""
         return "web" in apis or bool(re.search(r"\bw\d+", qids)) or "snowball" in qids
 
     extras = [r for k, r in skey_map.items() if k not in tkeys]
     bad_extra = [r["identity_key"] for r in extras if not _greyish(r)]
-    chk("triage.csv covers the API corpus", not missing_from_screened and not bad_extra,
+    chk(
+        "triage.csv covers the API corpus",
+        not missing_from_screened and not bad_extra,
         f"triage {len(triage)} vs screened {len(screened)}; "
         f"{len(extras)} grey/snowball extras; "
         f"missing from screened: {len(missing_from_screened)}; "
         f"untriaged non-grey extras: {len(bad_extra)}"
-        if (extras or missing_from_screened or bad_extra) else
-        f"triage {len(triage)} vs screened {len(screened)}")
+        if (extras or missing_from_screened or bad_extra)
+        else f"triage {len(triage)} vs screened {len(screened)}",
+    )
 
     # --- harvest health
     zero = [q for q in queries if q.get("status") == "zero"]
     err = [q for q in queries if q.get("status") == "error"]
-    chk("No silently-empty queries", not zero,
-        "zero-result queries: " + ", ".join(q["query_id"] for q in zero[:8]) if zero else
-        f"{len(queries)} api calls, none empty")
-    chk("API errors within tolerance", len(err) <= max(2, len(queries) // 10),
-        f"{len(err)} of {len(queries)} calls errored")
+    chk(
+        "No silently-empty queries",
+        not zero,
+        "zero-result queries: " + ", ".join(q["query_id"] for q in zero[:8])
+        if zero
+        else f"{len(queries)} api calls, none empty",
+    )
+    chk(
+        "API errors within tolerance",
+        len(err) <= max(2, len(queries) // 10),
+        f"{len(err)} of {len(queries)} calls errored",
+    )
     no_abs = sum(1 for r in screened if not r.get("abstract"))
     pct = 100 * no_abs // max(len(screened), 1)
-    chk("Corpus carries abstracts", pct <= 30,
-        f"{no_abs} of {len(screened)} ({pct}%) have no abstract; these were screened on title alone")
+    chk(
+        "Corpus carries abstracts",
+        pct <= 30,
+        f"{no_abs} of {len(screened)} ({pct}%) have no abstract; "
+        "these were screened on title alone",
+    )
 
     # --- screening integrity
     skeys = {r["identity_key"] for r in screened}
     orphan = [r["identity_key"] for r in screening if r["identity_key"] not in skeys]
-    chk("Every screening decision traces to a harvested record", not orphan,
-        f"{len(orphan)} orphans" + (f", e.g. {orphan[0]}" if orphan else ""))
-    bad_dec = [r["identity_key"] for r in screening
-               if r.get("decision") not in {"in", "out"}]
+    chk(
+        "Every screening decision traces to a harvested record",
+        not orphan,
+        f"{len(orphan)} orphans" + (f", e.g. {orphan[0]}" if orphan else ""),
+    )
+    bad_dec = [r["identity_key"] for r in screening if r.get("decision") not in {"in", "out"}]
     chk("Screening decisions are in/out", not bad_dec, f"{len(bad_dec)} invalid")
 
     # Re-running triage.py after screening regenerates shortlist.md and audit_sample.md
     # underneath a screening.csv built against the previous pair. These two checks catch
     # that: without them the run looks finished and the false-negative rate is measured
     # against a sample file no longer on disk.
-    def md_keys(name):
-        path = os.path.join(out, name)
-        if not os.path.exists(path):
+    def md_keys(name: str) -> set[str]:
+        path = out / name
+        if not path.exists():
             return set()
-        with open(path, encoding="utf-8") as fh:
-            return set(re.findall(r"^### (\S+)", fh.read(), re.M))
+        return set(re.findall(r"^### (\S+)", path.read_text(encoding="utf-8"), re.M))
 
     shortlist_keys = md_keys("shortlist.md")
     sample_keys = md_keys("audit_sample.md")
     screened_keys = {r["identity_key"] for r in screening}
     unscreened = shortlist_keys - screened_keys
-    chk("Every shortlist record was screened", not unscreened,
+    chk(
+        "Every shortlist record was screened",
+        not unscreened,
         f"{len(unscreened)} of {len(shortlist_keys)} shortlisted records have no screening "
         "row - triage.py was probably re-run after screening"
-        if unscreened else f"all {len(shortlist_keys)} shortlisted records screened")
+        if unscreened
+        else f"all {len(shortlist_keys)} shortlisted records screened",
+    )
 
     audited = [r for r in screening if r.get("from_audit_sample") == "yes"]
     stale = [r["identity_key"] for r in audited if r["identity_key"] not in sample_keys]
-    chk("Audit sample matches the screened audit rows", not stale,
+    chk(
+        "Audit sample matches the screened audit rows",
+        not stale,
         f"{len(stale)} of {len(audited)} screened audit-sample rows are absent from the "
         "current audit_sample.md - the false-negative rate below is measured against a "
         "sample that has since been regenerated"
-        if stale else f"all {len(audited)} audit rows present")
+        if stale
+        else f"all {len(audited)} audit rows present",
+    )
 
     fn = [r for r in audited if r.get("decision") == "in"]
     rate = 100 * len(fn) / len(audited) if audited else 0
-    chk("Recall audit performed", len(audited) >= 40,
-        f"{len(audited)} below-cut records screened, {len(fn)} false negatives ({rate:.0f}%)")
-    chk("False-negative rate acceptable", rate <= 5 or not audited,
+    chk(
+        "Recall audit performed",
+        len(audited) >= 40,
+        f"{len(audited)} below-cut records screened, {len(fn)} false negatives ({rate:.0f}%)",
+    )
+    chk(
+        "False-negative rate acceptable",
+        rate <= 5 or not audited,
         f"{rate:.0f}% - above 5% means diagnose which cut is binding "
-        "(min-score vs min-strong / AGENT_COMPOUND) before widening")
+        "(min-score vs min-strong / AGENT_COMPOUND) before widening",
+    )
 
     # --- papers grid
     if papers:
         cols = list(papers[0].keys())
-        chk("papers.csv columns match SCHEMA", cols == PAPERS_COLS,
-            "extra: " + str(set(cols) - set(PAPERS_COLS)) + " missing: " + str(set(PAPERS_COLS) - set(cols))
-            if cols != PAPERS_COLS else f"{len(cols)} columns")
+        chk(
+            "papers.csv columns match SCHEMA",
+            cols == PAPERS_COLS,
+            "extra: "
+            + str(set(cols) - set(PAPERS_COLS))
+            + " missing: "
+            + str(set(PAPERS_COLS) - set(cols))
+            if cols != PAPERS_COLS
+            else f"{len(cols)} columns",
+        )
     else:
         chk("papers.csv columns match SCHEMA", False, "papers.csv empty or absent")
 
@@ -157,11 +205,18 @@ def main() -> int:
 
     in_keys = {r["identity_key"] for r in screening if r.get("decision") == "in"}
     pkeys = [r["identity_key"] for r in papers]
-    chk("Admitted set matches screening", set(pkeys) == in_keys,
+    chk(
+        "Admitted set matches screening",
+        set(pkeys) == in_keys,
         f"papers {len(set(pkeys))} vs screened-in {len(in_keys)}; "
-        f"only in papers: {len(set(pkeys) - in_keys)}, only in screening: {len(in_keys - set(pkeys))}")
-    chk("No duplicate rows in papers.csv", len(pkeys) == len(set(pkeys)),
-        f"{len(pkeys) - len(set(pkeys))} duplicates")
+        f"only in papers: {len(set(pkeys) - in_keys)}, only in screening: "
+        f"{len(in_keys - set(pkeys))}",
+    )
+    chk(
+        "No duplicate rows in papers.csv",
+        len(pkeys) == len(set(pkeys)),
+        f"{len(pkeys) - len(set(pkeys))} duplicates",
+    )
 
     bad_mat = [r["identity_key"] for r in papers if r.get("maturity_demonstrated") not in MATURITY]
     chk("Maturity values are from the rubric", not bad_mat, f"{len(bad_mat)} invalid")
@@ -169,56 +224,81 @@ def main() -> int:
     chk("Tier values valid", not bad_tier, f"{len(bad_tier)} invalid")
     core = [r for r in papers if r.get("tier") == "core"]
     abs_only_core = [r for r in core if r.get("access_status") == "abstract-only"]
-    chk("Core tier was actually deep-read", len(abs_only_core) <= len(core) // 5,
-        f"{len(abs_only_core)} of {len(core)} core papers are abstract-only")
+    chk(
+        "Core tier was actually deep-read",
+        len(abs_only_core) <= len(core) // 5,
+        f"{len(abs_only_core)} of {len(core)} core papers are abstract-only",
+    )
 
     # --- extracts
-    pmd = ""
-    for cand in ("papers.md",):
-        p = os.path.join(out, cand)
-        if os.path.exists(p):
-            pmd = open(p, encoding="utf-8").read()
+    papers_md = out / "papers.md"
+    pmd = papers_md.read_text(encoding="utf-8") if papers_md.exists() else ""
     heads = set(re.findall(r"^##\s+(\S+)", pmd, re.M))
     missing_ext = [k for k in {r["identity_key"] for r in core} if k not in heads]
-    chk("Every core paper has an extract block", not missing_ext,
-        f"{len(missing_ext)} missing" + (f", e.g. {missing_ext[0]}" if missing_ext else ""))
+    chk(
+        "Every core paper has an extract block",
+        not missing_ext,
+        f"{len(missing_ext)} missing" + (f", e.g. {missing_ext[0]}" if missing_ext else ""),
+    )
 
     # --- report
-    rdir = os.path.join(out, "report")
-    rfiles = sorted(f for f in os.listdir(rdir) if f.endswith(".md")) if os.path.isdir(rdir) else []
+    rdir = out / "report"
+    rfiles = sorted(p.name for p in rdir.iterdir() if p.suffix == ".md") if rdir.is_dir() else []
     # 08_papers.md is the annotated list: citations are the evidence, not [Certain] tags.
     # Scoring it as untagged prose fails every complete run.
     tagged_files = [f for f in rfiles if f not in {"08_papers.md", "index.md"}]
-    text = "\n".join(open(os.path.join(rdir, f), encoding="utf-8").read() for f in tagged_files)
-    all_text = "\n".join(open(os.path.join(rdir, f), encoding="utf-8").read() for f in rfiles)
-    chk("Report sections present", len(rfiles) >= 5, f"{len(rfiles)} section files: {', '.join(rfiles)}")
+    text = "\n".join((rdir / f).read_text(encoding="utf-8") for f in tagged_files)
+    all_text = "\n".join((rdir / f).read_text(encoding="utf-8") for f in rfiles)
+    chk(
+        "Report sections present",
+        len(rfiles) >= 5,
+        f"{len(rfiles)} section files: {', '.join(rfiles)}",
+    )
 
     # Strip heading, table, list and code lines from each block rather than discarding any
     # block that starts with one: a heading with no blank line after it would otherwise
     # exempt the prose beneath it from the tag check entirely.
     def prose_of(block: str) -> str:
-        return "\n".join(ln for ln in block.splitlines()
-                         if not ln.lstrip().startswith(("#", "|", "```", ">", "---", "- ", "* ")))
+        return "\n".join(
+            ln
+            for ln in block.splitlines()
+            if not ln.lstrip().startswith(("#", "|", "```", ">", "---", "- ", "* "))
+        )
 
-    paras = [p for p in (prose_of(b) for b in re.split(r"\n\s*\n", text))
-             if len(p.split()) > 25]
+    paras = [p for p in (prose_of(b) for b in re.split(r"\n\s*\n", text)) if len(p.split()) > 25]
     untagged = [p.strip() for p in paras if not any(t in p for t in TAGS)]
-    chk("Substantive paragraphs carry an evidence tag", not untagged,
-        f"{len(untagged)} of {len(paras)} untagged" +
-        (f'; first: "{untagged[0][:70]}…"' if untagged else ""))
+    chk(
+        "Substantive paragraphs carry an evidence tag",
+        not untagged,
+        f"{len(untagged)} of {len(paras)} untagged"
+        + (f'; first: "{untagged[0][:70]}…"' if untagged else ""),
+    )
 
     cited = set(re.findall(r"\[\[([^\]]+)\]\]", all_text))
     unknown = sorted(c for c in cited if c not in set(pkeys))
-    chk("Every citation resolves to papers.csv", not unknown,
-        f"{len(unknown)} unknown, e.g. {unknown[0]}" if unknown else f"{len(cited)} citations, all resolve")
+    chk(
+        "Every citation resolves to papers.csv",
+        not unknown,
+        f"{len(unknown)} unknown, e.g. {unknown[0]}"
+        if unknown
+        else f"{len(cited)} citations, all resolve",
+    )
 
     absent = re.findall(r"\[Absent-searched\][^\n]*", all_text)
     unbacked = [a for a in absent if not re.search(r"q\d{3}", a)]
     chk("Absence claims cite query ids", not unbacked, f"{len(unbacked)} of {len(absent)} unbacked")
 
-    banned = re.findall(r"\b(promising|great potential|revolutionar|revolutioni[sz]|game[- ]chang|paradigm shift|cutting[- ]edge|state of the art\b)\w*",
-                        all_text, re.I)
-    chk("No promotional framing", not banned, f"found: {', '.join(sorted(set(banned))[:5])}" if banned else "clean")
+    banned = re.findall(
+        r"\b(promising|great potential|revolutionar|revolutioni[sz]|game[- ]chang|"
+        r"paradigm shift|cutting[- ]edge|state of the art\b)\w*",
+        all_text,
+        re.I,
+    )
+    chk(
+        "No promotional framing",
+        not banned,
+        f"found: {', '.join(sorted(set(banned))[:5])}" if banned else "clean",
+    )
 
     # --- report
     lines = ["| Check | Result | Detail |", "|---|---|---|"]
@@ -227,11 +307,15 @@ def main() -> int:
     table = "\n".join(lines)
     print(table)
     failed = [n for n, ok, _ in checks if not ok]
-    print(f"\n{len(checks) - len(failed)}/{len(checks)} passed."
-          + (f" FAILED: {', '.join(failed)}" if failed else ""), file=sys.stderr)
-    with open(os.path.join(out, "audit.md"), "w", encoding="utf-8") as f:
-        f.write("# Self-audit\n\nGenerated by `scripts/audit.py` from the output files.\n\n"
-                + table + "\n")
+    print(
+        f"\n{len(checks) - len(failed)}/{len(checks)} passed."
+        + (f" FAILED: {', '.join(failed)}" if failed else ""),
+        file=sys.stderr,
+    )
+    (out / "audit.md").write_text(
+        "# Self-audit\n\nGenerated by `scripts/audit.py` from the output files.\n\n" + table + "\n",
+        encoding="utf-8",
+    )
     return 1 if failed else 0
 
 

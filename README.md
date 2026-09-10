@@ -3,7 +3,7 @@
 A scoping review of **LLM-based agentic AI in solid-earth and subsurface
 geoscience**: what has been built, how it was evaluated, and how mature it is.
 
-[![CI](https://github.com/jannamieke/deep-research-agentic-geoscience/actions/workflows/ci.yml/badge.svg)](https://github.com/jannamieke/deep-research-agentic-geoscience/actions/workflows/ci.yml)
+[![CI](https://github.com/jannablaume/deep-research-agentic-geoscience/actions/workflows/ci.yml/badge.svg)](https://github.com/jannablaume/deep-research-agentic-geoscience/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-MIT-0E0E10.svg)](./LICENSE)
 [![Python](https://img.shields.io/badge/python-3.11%2B-0E0E10.svg)](https://www.python.org/downloads/)
 [![deps](https://img.shields.io/badge/pipeline%20deps-none-0E0E10.svg)](./pyproject.toml)
@@ -314,7 +314,7 @@ you the source; one command gets you the page.
 ### See it, from a fresh clone
 
 ```bash
-git clone git@github.com:jannamieke/deep-research-agentic-geoscience.git
+git clone git@github.com:jannablaume/deep-research-agentic-geoscience.git
 cd deep-research-agentic-geoscience
 
 make export        # the committed run → web/src/data/landscape.web.json

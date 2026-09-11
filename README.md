@@ -33,7 +33,7 @@ The current landscape is **v0.5**. Read in this order:
 which opens by double-clicking `index.html` — no server, nothing fetched, and
 the folder is sendable as-is. It is the same report with each section beside the
 counts it describes, its evidence tags as filters, its citations as links into a
-filterable list of all 155 sources, and the verbatim quote behind every
+filterable list of all 151 sources, and the verbatim quote behind every
 characterisation one click away. The built page is **not** committed — see
 [Reading it as a dashboard](#reading-it-as-a-dashboard) for the two commands and
 what you need installed.
@@ -49,7 +49,7 @@ because their numbers mean anything.
 | **11,191** | unique records harvested from OpenAlex and arXiv |
 | **712** | shortlisted by `triage.py` — 6% of the corpus |
 | **10,465** | below the cut, of the 11,177 the cut was applied to<sup>1</sup> |
-| **155** | admitted after screening: **23 core**, 132 context |
+| **151** | admitted after screening: **38 core**, 113 context |
 | **150** | records screened from *below* the cut, to measure what the cut cost |
 | **0** | false negatives found in that sample |
 | **26/26** | contract checks passed, executed against the artifacts |
@@ -361,7 +361,7 @@ bug you cannot see from the machine that built it.
 
 ### What the dashboard adds over the markdown
 
-- **A summary table first.** The funnel from 11,191 harvested records to the 23
+- **A summary table first.** The funnel from 11,191 harvested records to the 38
   with a readable evaluation section, one counted row at a time, each naming its
   denominator and what it counts. The last row is the one that needed care: this
   run cannot say how many sources a paywall cost, because `papers.csv` has no
@@ -369,12 +369,12 @@ bug you cannot see from the machine that built it.
   bot-protected nominal open access, software deposits and records with no
   abstract in any API alike — so the row reports what *is* counted and says the
   rest is narrated in `unreachable.md` rather than tallied.
-- **Filters second.** The 155-source explorer is the second section, not the
+- **Filters second.** The 151-source explorer is the second section, not the
   fifth, because filtering is what most readers came to do.
 - **Bibliographic facets** — publication type, journal or venue, and country of
   author institution. Country is the one figure on the page that needs a network
   call (`make enrich`), and the one whose denominator is not the whole corpus:
-  97 of 155 sources report an affiliation, because OpenAlex takes them from
+  94 of 151 sources report an affiliation, because OpenAlex takes them from
   publisher metadata that preprint servers largely do not supply. The panel
   leads with that denominator.
 - **The report, re-cut.** Each thematic section sits beside the counts it
@@ -383,9 +383,9 @@ bug you cannot see from the machine that built it.
   become chips, so "show me only what a source actually stated" is one click.
 - **Citations that resolve on the page.** Every `[[doi:…]]` is a numbered
   reference marker; clicking it opens that source's full comparison-grid record,
-  including — for the 23 core sources — the verbatim sentences from `papers.md`
+  including — for the 38 core sources — the verbatim sentences from `papers.md`
   that the characterisation rests on.
-- **All 155 sources, filterable** by tier, field, architecture, technique,
+- **All 151 sources, filterable** by tier, field, architecture, technique,
   framework, maturity, model family and year, with the filtered set
   downloadable as RFC 4180 CSV.
 - **One derived facet, labelled as such.** "Frameworks the agents call" is a

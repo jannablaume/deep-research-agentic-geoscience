@@ -1,13 +1,13 @@
 # 01 Techniques
 
-Technique counts below are source counts among the 23 full-text core rows.
+Technique counts below are source counts among the 38 full-text core rows.
 
 [Certain] The most frequent controlled terms on the core tier are `guardrails-validation`
-(19 of 23 sources), `planning` (18), `tool-calling` (14), `task-decomposition` (14),
-`retrieval` (12) and `role-specialisation` (12). Next are `memory` (11), `self-reflection`
-(10), `code-execution` (8) and `human-in-the-loop` (7). `simulator-in-the-loop` appears
-on four sources, `physics-solver-in-the-loop` on three, `knowledge-graph` and
-`multi-agent-debate` and `fine-tuning` on two each.
+(33 of 38 sources), `planning` (29), `tool-calling` (27), `task-decomposition` (25),
+`retrieval` (22) and `role-specialisation` (22). Next are `self-reflection` (21), `memory`
+(17), `human-in-the-loop` (16) and `code-execution` (14). `physics-solver-in-the-loop`
+appears on eight sources, `simulator-in-the-loop` and `knowledge-graph` on five each,
+`fine-tuning` on three and `multi-agent-debate` on two.
 
 [Absent-searched] `instrument-control` does not appear on any core row (`q001`–`q020`).
 
@@ -23,18 +23,30 @@ AutoSurrogate's agents issue structured tool calls for profiling, memory estimat
 and training, while GEOS itself is used only to build the dataset
 [[doi:10.1016/j.aei.2026.105058]].
 
-[Certain] Physics-solver-in-the-loop and simulator-in-the-loop remain the minority (3 and 4
-core sources). PetroGraph history-matches through OPM Flow [[arxiv:2605.15028]].
-Agents4GEOS runs GEOS via `geos:run` [[arxiv:2607.18557]]. Sim2Schedule never lets the LLM
-call the mine simulator: the model returns a JSON action tuple that the simulator executes
-[[doi:10.48550/arxiv.2606.10286]].
+[Certain] Physics-solver-in-the-loop (8 core sources) and simulator-in-the-loop (5) remain
+a minority. PetroGraph history-matches through OPM Flow [[arxiv:2605.15028]]. Agents4GEOS
+runs GEOS via `geos:run` [[arxiv:2607.18557]]. Sim2Schedule never lets the LLM call the
+mine simulator: the model returns a JSON action tuple that the simulator executes
+[[doi:10.48550/arxiv.2606.10286]]. Hydro-Agent's two agents write and self-debug MODFLOW
+and TOUGHREACT calibration scripts, dynamically switching between a differential-evolution
+global search and an L-BFGS-B/TNC local solver as the run progresses
+[[doi:10.1016/j.watres.2026.125886]]. The SRAB tunnelling MAS invokes KALA, a discretized
+kinematical-analysis solver, for tunnel-face stability risk assessment
+[[doi:10.1016/j.cacaie.2026.100079]], and the slope-reliability framework's Sub-Agent 2
+trains against an in-house NS-FEM finite-element solver, auto-debugging its own generated
+training scripts when the solver run fails [[doi:10.1016/j.aei.2026.105065]].
 
 [Certain] Retrieval is used both as RAG over manuals and as catalog or literature search.
 PetroGraph retrieves from the OPM Flow Reference Manual [[arxiv:2605.15028]]. GAIA retrieves
 over a LanceDB of more than 5,000 geothermal papers [[doi:10.48550/arxiv.2511.03852]].
 HERMES hybrid-retrieves BM25 plus dense vectors from ultra-long documents
 [[doi:10.48550/arxiv.2608.14055]]. The GraphRAG catalog paper retrieves over a constructed
-earthquake-event graph [[doi:10.48550/arxiv.2607.24984]].
+earthquake-event graph [[doi:10.48550/arxiv.2607.24984]]. `knowledge-graph` recurs in three
+of the newly-recovered core sources: the tunnel geological-forecasting agent's Cypher
+retrieval over a Neo4j graph [[doi:10.1016/j.autcon.2026.107055]], InsightsAI's
+ontology-driven graph linking WITSML entities to daily drilling reports
+[[doi:10.2118/229435-ms]], and OntoGRC's OWL 2 DL ore-forming ontology used as a semantic
+anchor for its generate-reflect-correct extraction loop [[doi:10.1016/j.oregeorev.2026.107411]].
 
 [Certain] Role-specialisation and task-decomposition co-occur in the hierarchical
 multi-agent papers: HERMES (Parser, Entity Recognizer, Annotator, Validator, Tracer)
@@ -65,10 +77,13 @@ Validator on nomenclature, units and chronostratigraphy [[doi:10.48550/arxiv.260
 AutoSurrogate treats non-finite losses and exploding gradients as failure criteria that
 trigger a recovery policy [[doi:10.1016/j.aei.2026.105058]].
 
-[Certain] Fine-tuning is named on two core sources: GeoMind (Qwen3-4B SFT then MAPO)
-[[arxiv:2604.21501]] and LandslideAgent (LoRA on Qwen3-VL-8B)
-[[doi:10.48550/arxiv.2606.18661]]. The rest of the core tier uses prompted, tool-calling
-or RAG-augmented models without reporting a training run on the agent itself.
+[Certain] Fine-tuning is named on three core sources: GeoMind (Qwen3-4B SFT then MAPO)
+[[arxiv:2604.21501]], LandslideAgent (LoRA on Qwen3-VL-8B)
+[[doi:10.48550/arxiv.2606.18661]], and the landslide-reconstruction agent's fine-tuned
+YOLOv8-seg segmentation model, used alongside a prompted multimodal LLM rather than a
+fine-tuned one [[doi:10.1016/j.sandf.2026.101789]]. The rest of the core tier uses
+prompted, tool-calling or RAG-augmented models without reporting a training run on the
+agent itself.
 
 [Likely] The technique profile of the readable core is therefore orchestration plus
 validation. What the agent can call is more often a Python library, a catalog API, a

@@ -2,13 +2,17 @@
 
 Shared-benchmark status is a count of named public datasets, not a judgement of quality.
 
-[Certain] Eight core sources have `data_type: benchmark`, seven `synthetic`, seven
-`real-field`, and one `not stated` (TREMORS [[doi:10.48550/arxiv.2609.01777]]). Held-out
-status is `not stated` for 15 of 23, `yes` for seven, and `no` for one.
+[Certain] Nine core sources have `data_type: benchmark`, nine `synthetic`, seventeen
+`real-field`, and three `not stated` (TREMORS [[doi:10.48550/arxiv.2609.01777]], the
+Geo-Resource Agent [[doi:10.56952/igs-2025-0391]], and the Leading Edge seismic-processing
+assistant [[doi:10.1190/tle44020142.1]]). Held-out status is `not stated` for 26 of 38,
+`yes` for eleven, and `no` for one.
 
 [Certain] No single evaluation protocol is reused across subfields. Named public artefacts
-that do recur inside one subfield are Norne and Volve in reservoir engineering
-([[arxiv:2605.15028]], [[doi:10.48550/arxiv.2605.00060]]), Ridgecrest in seismology
+that do recur inside one subfield are Norne in reservoir engineering
+[[arxiv:2605.15028]], Volve in reservoir engineering (used separately by TADI
+[[doi:10.48550/arxiv.2605.00060]] and InsightsAI [[doi:10.2118/229435-ms]]), Ridgecrest in
+seismology
 ([[doi:10.48550/arxiv.2603.21152]], [[doi:10.48550/arxiv.2607.24984]]), ESHM20 as a
 hazard reference [[doi:10.1038/s44304-026-00262-z]], PUNQ-S3 in CCS
 [[arxiv:2607.18557]], Marvin/Minelib in mine planning [[doi:10.3390/mining6020026]],
@@ -39,17 +43,22 @@ vanilla vector-RAG and a rule-based reference graph [[doi:10.48550/arxiv.2607.24
 The Thebe NAS work retrains every baseline under an identical protocol
 [[doi:10.48550/arxiv.2608.13889]].
 
-[Certain] Two core papers report no quantitative headline result: TREMORS (two
-illustrative FDSN workflows) [[doi:10.48550/arxiv.2609.01777]] and specfem-mcp (five
+[Certain] Three core papers report no quantitative headline result: TREMORS (two
+illustrative FDSN workflows) [[doi:10.48550/arxiv.2609.01777]], specfem-mcp (five
 qualitative SPECFEM case studies, "high-fidelity results consistent with standard
-baselines" with no number) [[doi:10.48550/arxiv.2512.14429]]. TADI executes a
-130-question taxonomy and 95 pytest tests but does not score Evidence Grounding
+baselines" with no number) [[doi:10.48550/arxiv.2512.14429]], and the Leading Edge
+seismic-processing assistant (qualitative chatbot-transcript demonstrations only, with two
+documented failure cases) [[doi:10.1190/tle44020142.1]]. TADI executes a 130-question
+taxonomy and 95 pytest tests but does not score Evidence Grounding
 [[doi:10.48550/arxiv.2605.00060]].
 
-[Certain] Six of 23 core sources do not name the generator model, including Agents4GEOS
+[Certain] Nine of 38 core sources do not name the generator model, including Agents4GEOS
 [[arxiv:2607.18557]], GeoMCP [[doi:10.48550/arxiv.2603.01022]], SeisEvo
-[[doi:10.48550/arxiv.2608.18272]] and AutoSurrogate [[doi:10.1016/j.aei.2026.105058]].
-A code URL is present on 8 of 23 core rows.
+[[doi:10.48550/arxiv.2608.18272]], AutoSurrogate [[doi:10.1016/j.aei.2026.105058]],
+InsightsAI [[doi:10.2118/229435-ms]] and the Geo-Resource Agent
+[[doi:10.56952/igs-2025-0391]] — the same nine as before the second recovery pass; every
+newly-recovered core source names a specific model. A code URL is present on 14 of 38 core
+rows.
 
 [Likely] Evaluation in the readable core is therefore local: each system defines a task,
 a dataset and a metric. Where a public Earth-science artefact is used, it is used as that

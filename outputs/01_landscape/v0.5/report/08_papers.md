@@ -6,17 +6,16 @@ and their demonstrated maturity is `not stated (abstract only)`.
 
 ## geomechanics
 
-0 core, 1 context.
+0 core, 0 context.
 
-No core-tier sources in this subfield.
-
-### Context
-
-- [context] Geo-Resource Agent: Geo-Resource Agent for Automated Reservoir and Mechanical Earth Model Characterization By Integrating Large-Language Models and Domain Specialized Toolbox (2025). LangGraph-based agent framework automating reservoir and mechanical earth model characterization by coupling LLM reasoning to deterministic computational tools. [[doi:10.56952/igs-2025-0391]]
+No sources in this subfield. The Geo-Resource Agent (formerly listed here) was reclassified to
+`reservoir_engineering` on full-text review, since its evaluated tasks are reservoir
+characterisation and decline-curve forecasting, not mechanical-earth-model work; see its entry
+there. [[doi:10.56952/igs-2025-0391]]
 
 ## seismology
 
-8 core, 19 context.
+10 core, 17 context.
 
 ### Core
 
@@ -76,6 +75,20 @@ No core-tier sources in this subfield.
   Reported: not stated (the only claim is qualitative - 'yielding high-fidelity results consistent with standard baselines' - with no number and no quantitative comparison). Demonstrated maturity `M1` (claimed: the first application of MCP technology to computational seismology, significantly lowering the entry barrier and enhancing reproducibility).
   Authors' stated limitation: none stated - the Conclusion and Outlook contains only forward-looking statements about future capability (expanding MCP coverage to preprocessing, postprocessing, imaging, inversion and interpretation tools, deeper integration with inversion workflows, and enhancing error correction and experience summarization), and no shortcoming of the present system is acknowledged
 
+- **EQSIM Agent.** A Conversational AI for Interactive Exploration of Large-scale Earthquake Simulation Data (2025, SC Workshops '25 / ACM). [[doi:10.1145/3731599.3767402]]
+  Built for interactive natural-language querying, visualization, and analysis of a large-scale earthquake ground-motion simulation database. Architecture `multi-agent-hierarchical`; techniques: tool-calling; code-execution; planning; task-decomposition; self-reflection; memory; retrieval; role-specialisation; guardrails-validation. Base model: OpenAI o3-mini (primary), Meta Llama 4 (vision/RAG sub-agents); benchmarked against ~20 other LLMs.
+  Calls: the SGMD metadata interface (Pandas); geopy/pyproj geospatial tools; Plotly waveform plots; folium interactive maps; a vision-enabled waveform-similarity sub-agent; a FAISS vector database plus RAG sub-agent over SGMD publications; a SQLite3 interaction-memory store.
+  Evaluated by 27 hand-designed data-exploration tasks run against roughly 20 candidate LLMs on the named Simulated Ground Motion Database (SGMD, 2270 stations), scored by human-verified task completion, response time and per-session API cost. Baseline: cross-model comparison only. Data: benchmark.
+  Reported: top models (o3/o4/GPT-5/Sonnet/Opus/Gemini Pro/Grok 3) complete at least 25 of 27 tasks; o3-mini gives the best cost/performance balance, with a 30-minute/15-request session costing under $0.50. Demonstrated maturity `M2` (claimed: "we demonstrated that the EQSIM Agent... can effectively remove such barriers" to exploring large simulation datasets).
+  Authors' stated limitation: models cannot always self-correct malformed tool calls after several attempts; only one user request is supported at a time; non-vectorizable multi-step tasks show degraded accuracy; the LLM may misrepresent a tool's correct output when summarizing.
+
+- **Seismic processing assistant.** Intelligent seismic workflows: The power of generative AI and language models (2025, The Leading Edge). [[doi:10.1190/tle44020142.1]]
+  Built for automating full-waveform sonic seismic data processing workflows from natural-language queries. Architecture `single-agent`; techniques: tool-calling; planning; task-decomposition; retrieval; memory; human-in-the-loop; guardrails-validation. Base model: LLaMA-3 8B.
+  Calls: the Madagascar open-source seismic processing suite (sfsegyread, sfbandpass, sfgrey, sfwindow, sfffft, output_dataset_statistics), selected via embedding similarity against a tool dictionary; NVIDIA NeMo Guardrails.
+  Evaluated by qualitative worked-example chatbot demonstrations of tool selection and execution on unidentified confidential seismic files, including documented successes and failures (Appendix A); no held-out test set or quantitative benchmark. Baseline: none. Data: not stated.
+  Reported: correct SEG-Y-to-RSF conversion, bandpass parameter setting and spectrum generation demonstrated; documented failures include an inability to chain three tasks correctly and a guardrail that failed to block an out-of-scope query. Demonstrated maturity `M1` (claimed: "the AI assistant... demonstrates the practical application of LLMs in automating seismic data processing workflows").
+  Authors' stated limitation: dependency on predefined tools/workflows limits handling of novel or highly specialized tasks; the agent is likely to hallucinate when multiple requests are given in a single query; a guardrail bypass and a three-task chaining failure are both documented in the paper's own appendix.
+
 ### Context
 
 - [context] Geoscience AI Agents: Scaling Geoscience with Modern AI: Synthetic Data and Agentic Workflows (2025). automating multi-step subsurface interpretation workflows including 3D geological modeling, alongside generative synthetic geophysical data. [[doi:10.3997/2214-4609.202576039]]
@@ -83,9 +96,7 @@ No core-tier sources in this subfield.
 - [context] ChenSi Big Model: ChenSi Big Model: LLM Intelligent Emergency Assistance Decision System Based on LangChain Framework (2024). earthquake emergency question answering and rescue plan formulation. [[doi:10.1109/acait63902.2024.11022201]]
 - [context] BRISA: Seismic Data Analysis with AI Agents and Large Language Models (2025). natural-language inspection and visualisation of SEG-Y seismic files without programming. [[doi:10.22564/19cisbgf2025.335]]
 - [context] ESHM20-MCP: ESHM20-MCP: an LLM-agent interface to the 2020 European Seismic Hazard and Risk Models (2026). MCP server exposing ESHM20 and ESRM20 through 24 typed OpenQuake-backed endpoints. [[doi:10.5281/zenodo.21768634]]
-- [context] Intelligent seismic workflows: The power of generative AI and language models (2025). LLM-based autonomous agent executing seismic data processing tasks on full-waveform sonic data from natural-language queries. [[doi:10.1190/tle44020142.1]]
 - [context] A Self-Adaptive LLM-Based Framework for Automated Extraction and Structuring of Earthquake Information from Heterogeneous Web Sources (2026). automated extraction and structuring of earthquake information from heterogeneous web sources. [[doi:10.3390/computers15050294]]
-- [context] EQSIM Agent: EQSIM Agent: A Conversational AI for Interactive Exploration of Large-scale Earthquake Simulations (2025). natural-language exploration of large-scale earthquake simulation datasets. [[doi:10.1145/3731599.3767402]]
 - [context] Harnessing Generative and Agentic AI to Facilitate Seismic Processing and Imaging (2026). AI assistant giving contextual guidance for seismic processing and imaging workflows. [[doi:10.3997/2214-4609.202639107]]
 - [context] Agentic AI for Seismic Data Processing: Automating Outcomes, Not Workflows (2026). autonomous seismic noise attenuation with diagnostics remediation and quality control. [[doi:10.3997/2214-4609.202639016]]
 - [context] From Metadata to Embeddings: Enabling Agentic AI for Subsurface Intelligence (2026). agent-based access retrieval and metadata reconstruction for subsurface seismic archives. [[doi:10.3997/1365-2397.fb2026015]]
@@ -100,20 +111,33 @@ No core-tier sources in this subfield.
 
 ## hydrogeology
 
-0 core, 4 context.
+2 core, 3 context.
 
-No core-tier sources in this subfield.
+### Core
+
+- **Hydro-Agent.** Autonomous inverse modeling of complex groundwater systems via a physics-integrated large language model multi-agent framework (2026, Water Research). [[doi:10.1016/j.watres.2026.125886]]
+  Built for autonomous inverse modeling/calibration of groundwater flow and multicomponent reactive-transport parameters via LLM-generated and self-debugged simulation code. Architecture `multi-agent-flat`; techniques: tool-calling; code-execution; planning; self-reflection; memory; role-specialisation; human-in-the-loop; simulator-in-the-loop; physics-solver-in-the-loop; guardrails-validation. Base model: DeepSeek-V3.
+  Calls: MODFLOW-2005 groundwater flow simulator (via flopy); TOUGHREACT multicomponent reactive-transport solver; Python code execution; differential evolution, L-BFGS-B and TNC optimizers dynamically configured by the agent as it iterates.
+  Evaluated by three case studies against ground truth: Case I synthetic steady-state flow (7-zone hydraulic conductivity field); Case II synthetic 1D reactive transport under 1/5/10% noise; Case III real-field 18-parameter calibration at the Aquia Aquifer, Maryland, against a baseline of the identical optimizer without LLM mediation. Baseline: directly coupled (non-LLM) optimizer; qualitative comparison to Dai and Samper (2006) GNLM and Chen et al. (2021) TNNA-AUS. Data: synthetic (Cases I-II); real-field (Case III).
+  Reported: Case I RMSE 0.625 m to 0.0342 m; Case II final RMSE 1.296e-5/2.865e-5/5.630e-5 mol/L at 1/5/10% noise; Case III residuals driven below the 5e-5 precision threshold across 18 simultaneously calibrated parameters. Demonstrated maturity `M3` (claimed: operational capabilities analogous to a senior research engineer, autonomously formulating production-ready deployment protocols and rigorous error-handling mechanisms for real-time monitoring).
+  Authors' stated limitation: the current implementation operates within a predefined conceptual model and does not independently revise stratigraphic interpretations, modify facies distributions, or adjust boundary conditions based on site-history information; the coupled hydrogeochemical models assumed spatially homogeneous reaction parameters and did not invert spatially distributed geochemical reaction fields; LLMs cannot yet substitute for the diagnostic capacity of a hydrogeologist in interpreting the mechanistic implications of modeling discrepancies.
+
+- **GAGAW.** A generalizable automated geophysical agent workflow for accessible subsurface hydrology analysis (2026, Big Data and Earth System). [[doi:10.1016/j.bdes.2026.100042]]
+  Built for translating plain-language user requests into automated multi-agent geophysical pipelines (ERT/seismic processing, time-lapse and structure-constrained inversion, petrophysical conversion) to estimate subsurface water content. Architecture `multi-agent-hierarchical`; techniques: tool-calling; code-execution; planning; task-decomposition; role-specialisation; self-reflection; human-in-the-loop; physics-solver-in-the-loop; guardrails-validation. Base model: GPT-4o-mini. This is the peer-reviewed journal publication of the same system already in this corpus as an ESSOAr preprint [[doi:10.22541/essoar.176336946.65126612/v1]], kept as a separate record per this review's identity-key rules.
+  Calls: pyGIMLi; SimPEG; ResIPy; PyHydroGeophysX (the author's own package); HyRiver/PyDaymet for climate data; a Streamlit front-end (AQUAH).
+  Evaluated by three retrospective real-field case studies on named US sites: direct water-content estimation at the No-Name Experimental Watershed, Wyoming; time-lapse inversion at the Mt. Snodgrass hillslope, Colorado; structure-constrained seismic+ERT data fusion at the Dry Creek Experimental Watershed, Idaho. Baseline: field-measured water content from a prior published study, for the first case only. Data: real-field.
+  Reported: mean water content 0.205, matching published field values; precipitation-resistivity correlation r=-0.763; fused water content 0.115-0.375 m3/m3 across two layers. Demonstrated maturity `M3` (claimed: "GAGAW establishes a practical pattern for accessible, cross-modal geophysical analysis [...] from LLM-assisted scripting to LLM-orchestrated, tool-centric workflows").
+  Authors' stated limitation: geophysics coverage is narrow (ERT, seismic refraction, basic climate linkage only); uncertainty quantification propagates only petrophysical parameter uncertainty, not survey/electrode/temperature-drift errors; LLM hallucination and malformed-JSON failures were documented during development.
 
 ### Context
 
-- [context] Hydro-Agent: Autonomous inverse modeling of complex groundwater systems via a physics-integrated large language model multi-agent framework (2026). multi-agent framework autonomously performing inverse modeling of groundwater flow and transport by generating and configuring code for process-based simulators. [[doi:10.1016/j.watres.2026.125886]]
 - [context] GWFlowAI: GWFlowAI: A One-Step, Location-Based Artificial Intelligence (AI) Framework for Exploring Public Groundwater Datasets in India (2026). exploratory groundwater analysis of public Indian datasets from a single location input. [[doi:10.5194/egusphere-egu26-20010]]
 - [context] GAGAW: A Generalizable Automated Geophysical Agent Workflow in Subsurface Hydrology (2025). LLM-based automation of open-source hydrogeophysical workflows via a natural-language interface. [[doi:10.22541/essoar.176336946.65126612/v1]]
 - [context] RaKsh: A Multi-Agent Artificial Intelligence Framework for Sustainable Groundwater Governance and Precision Borewell Management (2026). predict borewell feasibility and screen drilling decisions for groundwater governance. [[doi:10.5281/zenodo.20342672]]
 
 ## reservoir_engineering
 
-3 core, 65 context.
+7 core, 62 context.
 
 ### Core
 
@@ -137,6 +161,34 @@ No core-tier sources in this subfield.
   Evaluated by four evaluation axes (evidence grounding, reasoning quality, domain correctness, coverage); a proposed Evidence Grounding Score compliance proxy; a 130-question stress taxonomy across six categories; three case studies with live agent execution traces; 95 automated pytest tests; five ablation scenarios and two baseline configurations described as qualitative expectations only. Baseline: none executed (Direct LLM without tools and Simple RAG top-k=20 defined as qualitative expectation baselines rather than executed benchmarks). Data: real-field.
   Reported: no accuracy or Evidence Grounding Score is measured; the system 'parses all 1,759 DDR XML files with zero errors' across 65,447 rows and 36,709 embedded documents; case studies report 119 of 493 activities (24.1%) flagged as problem/NPT for well 15/9-F-11 T2 and ROP of 14.4 m/hr on equipment-repair days against a 22.1 m/hr well average. Demonstrated maturity `M3` (claimed: the first system to integrate the operational Volve modalities used in this study into a unified, LLM-queryable analytical framework).
   Authors' stated limitation: Section 6.3 lists: sparse-data wells 'produce lower-quality answers'; the agent does not ask clarifying questions when scope is ambiguous; recommendation and hypothetical answers rest on LLM reasoning that 'is not formally validated'; field-wide rankings outside the five implemented benchmark modes 'may produce incomplete answers'; tool-selection errors and the 10-round limit create 'planning pressure that the agent occasionally fails to navigate optimally'; heuristic keyword issue labels 'can produce lexical false positives in drilling jargon'; multi-step arithmetic across tool results 'may accumulate errors'. The author states the ablation and baseline analyses are 'qualitative expectations rather than executed benchmark results' and the output checks are 'intentionally lightweight compliance heuristics rather than semantic verification'.
+
+- **InsightsAI.** A Unified Agentic and Generative AI Framework for Enhancing Drilling Intelligence Through WITSML and Unstructured Data (pdfs) Interaction (2025, ADIPEC/SPE-229435-MS). [[doi:10.2118/229435-ms]]
+  Built for natural-language querying that correlates structured WITSML drilling logs with unstructured daily drilling reports for drilling-event root-cause investigation. Architecture `multi-agent-flat`; techniques: tool-calling; task-decomposition; planning; retrieval; knowledge-graph; role-specialisation. Base model: not stated.
+  Calls: WITSML log servers; PDF/Excel document repositories (daily drilling reports); an ontology-driven domain knowledge graph; a data virtualization/federation layer presenting a unified schema for SQL-like and semantic queries.
+  Evaluated by a qualitative proof-of-concept on the publicly available Volve field dataset, with domain-expert-validated query-response accuracy and task-completion time measured against a manual/traditional workflow. Baseline: manual/traditional workflow. Data: real-field.
+  Reported: tight-pull-event identification, manual 2-3 hours vs PoC 7 minutes at 95% expert-validated accuracy; mud-weight-adjustment summarization, manual 1.5 hours vs PoC 4 minutes at 92% accuracy. Demonstrated maturity `M3` (claimed: rapid, reliable discovery of key operational events, immediate access to supporting evidence, and transparent traceability, outperforming traditional manual methods on both speed and completeness).
+  Authors' stated limitation: not stated as explicit limitations; future scope named instead - a hybrid ML+GenAI workflow for auto-calibration of torque/drag friction factors, RAG-based ingestion of legacy systems into OSDU, and reading PDFs containing trajectories, motor specifications, ladder plots and spider diagrams.
+
+- **Geo-Resource Agent.** Geo-Resource Agent for Automated Reservoir and Mechanical Earth Model Characterization By Integrating Large-Language Models and Domain Specialized Toolbox (2025, International Geomechanics Conference/ARMA-IGS-2025-0391). [[doi:10.56952/igs-2025-0391]]
+  Built for an LLM-orchestrated agent that decomposes natural-language requests into tool calls for reservoir characterization (well-log/geostatistical interpolation) and production decline-curve forecasting; the title's "mechanical earth model" scope is invoked but never evaluated. Architecture `single-agent`; techniques: tool-calling; planning; task-decomposition; retrieval; guardrails-validation; human-in-the-loop. Base model: not stated.
+  Calls: CSV/well-log parsers; database query tools (table_quick_peek, table_deep_query, SQL translation); a geostatistics/kriging interpolation module; a decline curve analysis (DCA) module; a visualization tool; a SQLite/Postgres plus HDF5/NumPy state store.
+  Evaluated by two illustrative case-study walkthroughs (qualitative natural-language-query-to-output traces); no quantitative benchmark, scoring metric or baseline comparison. Baseline: none. Data: not stated.
+  Reported: DCA hyperbolic decline fit on one gas well (initial decline rate Di = 1.83, b-factor b = 1.5); kriging water-saturation interpolation across a 20x20 spatial grid. Demonstrated maturity `M1` (claimed: transparent reasoning, reduced manual scripting, and scalable automation for subsurface engineering workflows).
+  Authors' stated limitation: "our evaluation remains preliminary. The case studies illustrate the feasibility of the approach, but they do not yet exhaust the range of geological and engineering scenarios where such agents could be deployed. Demonstrating the full benefits of the framework will require more extensive benchmarking, rigorous validation across datasets, and careful testing of corner cases."
+
+- A multi-agent collaborative framework with human-in-the-loop for well log interpretation and applications (2026, Petroleum Exploration and Development). [[doi:10.1016/s1876-3804(26)60734-3]]
+  Built for automating well log interpretation (petrophysical parameter computation and reservoir/lithology classification) with engineer-in-the-loop oversight. Architecture `multi-agent-hierarchical`; techniques: tool-calling; planning; task-decomposition; self-reflection; memory; retrieval; role-specialisation; human-in-the-loop; physics-solver-in-the-loop; guardrails-validation. Base model: not stated.
+  Calls: petrophysical/theoretical formula tools; ML tools (XGBoost, MLP, LSTM, Transformer); parameter optimization tools; data-analysis/curve-editing tools; vector-search knowledge-base retrieval; Model Context Protocol (MCP) for inter-agent/tool communication.
+  Evaluated by a tool-chain planning comparison of single-agent, multi-agent-negotiation and agent-domain-specialization modes on 100 test cases, plus end-to-end interpretation on 100 field wells and reservoir classification on 20 independent wells, against manual/expert interpretation. Baseline: single-agent and negotiation modes; formula-based method; raw-data-only classification; manual/expert interpretation. Data: real-field (wells identified only as "100 field wells" / "20 independent wells", no field named).
+  Reported: agent domain specialization reaches 82% pass rate (vs 18% single-agent, 27% negotiation); ML models exceed 90% accuracy on all four reservoir parameters; reservoir classification F1 improves from 84% to 86%; human-in-the-loop geological priors reduce shale-content MAE from 47.08% to 16.60%. Demonstrated maturity `M2` (claimed: "a practically deployable human-AI collaborative solution for well log interpretation").
+  Authors' stated limitation: operation is strictly confined to a predefined toolset, preventing agents from independently writing or debugging new scripts to handle unexpected issues; the agent interaction structure still relies on manual presets, limiting adaptive adjustment to new scenarios; growing information/tool scale increases processing noise in the shared memory environment.
+
+- **LogACF.** Large language model-based AI agent for well logging data processing and interpretation (2026, Petroleum Science). [[doi:10.1016/j.petsci.2026.05.031]]
+  Built for reservoir parameter prediction (porosity, water saturation, permeability/shale volume) and integrated interpretation from multi-source well logging data. Architecture `multi-agent-hierarchical`; techniques: tool-calling; code-execution; planning; task-decomposition; self-reflection; memory; retrieval; role-specialisation; guardrails-validation. Base model: GPT-4.1 (logging expert, web-research assistant, algorithm engineer); Claude 3.7-Sonnet (report-writing assistant).
+  Calls: Python code execution (NumPy, Pandas, scikit-learn, TensorFlow-GPU, PyTorch); web search/retrieval; visualization/report figures; a physical quality-control guardrail; a code/output/prompt archive.
+  Evaluated by RMSE and R2 on held-out test wells against tree/ensemble/boosting and network-architecture baselines, plus two ablations, on the public SPWLA PDDA competition dataset and one field-measured tight-sandstone dataset from an unnamed oilfield. Baseline: Random Forest, Bagging, Ensemble, Extra Trees, HistGBDT, LightGBM, XGBoost (SPWLA); CNN, MLP, Attention, ResNet, Transformer, BiLSTM (tight sandstone); simplified-role/simplified-memory ablations. Data: benchmark; real-field (unnamed site).
+  Reported: SPWLA well-wise RMSE as low as 0.008-0.266 across PHIF/SW/VSH; tight sandstone dataset average R2 = 0.812. Demonstrated maturity `M2` (claimed: "LogACF provides a practical framework for applying LLMs to integrated well logging interpretation... in engineering practice").
+  Authors' stated limitation: relies on predefined workflows and expert rules, limiting autonomous generalization under completely unknown geological conditions; reliability strongly dependent on data quality; validation mainly based on the SPWLA dataset and one unnamed tight-sandstone case, applicability to carbonate/shale reservoirs unverified.
 
 ### Context
 
@@ -169,7 +221,6 @@ No core-tier sources in this subfield.
 - [context] Oilfield Intelligence: Generative AI Applications Deliver Real-World Value (2025). trade-press review of generative AI and multi-agent assistants in oilfield operations. [[doi:10.2118/0925-0003-jpt]]
 - [context] Guest Editorial: The Agentic Oil Field—No Longer a Vision, It Is Inevitable (2026). editorial arguing for adoption of agentic AI across oil field operations. [[doi:10.2118/0326-0003-jpt]]
 - [context] Leveraging Agent-Based Frameworks and LLMs for Multimodal Analysis in Drilling and Geological Operations (2025). multimodal analysis of drilling data for wellbore stability and drilling efficiency assessment. [[doi:10.3997/2214-4609.2025101389]]
-- [context] InsightsAI: A Unified Agentic and Generative AI Framework for Enhancing Drilling Intelligence Through WITSML and Unstructured Data (pdfs) Interaction (2025). natural-language access to structured WITSML logs and unstructured PDFs for drilling intelligence. [[doi:10.2118/229435-ms]]
 - [context] KRDS: Large Language Model Empowered Automated Reservoir Agent: A Win-Win Strategy for Reservoir Intelligent Management and Transformation (2025). LLM agent for reservoir management question answering and task execution. [[doi:10.2118/229646-ms]]
 - [context] ENERGYai: Harmonizing Subsurface Data Platforms for Agentic AI in Upstream: A Dual Layer Architecture Using OSDU and Microsoft Fabric (2025). dual-layer OSDU and Microsoft Fabric data architecture supporting agentic AI on subsurface data. [[doi:10.2118/229444-ms]]
 - [context] Explainability as a Catalyst for Agentic AI Adoption in Subsurface Oil & Gas Workflows (2025). literature review of explainability as an enabler of agentic AI adoption in subsurface workflows. [[doi:10.36227/techrxiv.175979241.11582889/v1]]
@@ -185,8 +236,6 @@ No core-tier sources in this subfield.
 - [context] Building an Intelligent Research Assistant – RAG Isn't All You Need (2025). agentic research assistant answering well planning questions over a large unstructured document corpus. [[doi:10.2118/228117-ms]]
 - [context] Transforming Engineering Workflows: A Data-Driven Generative AI Solution for Multidisciplinary Design Generation and Optimization (2026). AI assistant that generates and audits multidisciplinary well designs (drilling, completion, surface network). [[doi:10.2118/233425-ms]]
 - [context] Smarter Bits, Faster Insights: Accelerating Drill Bit Innovation Through AI-Driven Forensics, Automation and Agentic AI (2026). digital framework combining analytics, digital twins and agentic AI to accelerate drill bit design iteration. [[doi:10.2523/iptc-25138-ms]]
-- [context] Autonomous Production Optimization in the Volve Field: A Multi-Agent Reinforcement Learning using Agentic AI (2026). autonomous production optimization in the Volve field using multi-agent reinforcement learning with agentic AI. [[doi:10.13140/rg.2.2.28926.65602]]
-- [context] Innovative AI Agent for Real-Time Drill Bit Selection Optimization (2025). AI agent for real-time drill bit selection by predicting the IADC code. [[doi:10.2118/229716-ms]]
 - [context] Automatic Daily Drilling Mud Report Processing Using Generative AI to Maximize the Operational Efficiency (2025). generative AI pipeline that extracts and structures daily drilling mud report data for a BI dashboard. [[doi:10.4043/35625-ms]]
 - [context] From Data to Decisions: Harnessing the Potential of Language Based AI in Drilling (2026). high-level evaluation of language-based AI in drilling plus a proposed framework for responsible adoption. [[doi:10.2118/230773-ms]]
 - [context] From ‘Text Soup’ to a Trusted AI Foundation; Semanticising OSDU Data for a Multi-Attribute Future (2026). entitlement-first RAG architecture turning unstructured OSDU-referenced subsurface documents into auditable answers. [[doi:10.3997/1365-2397.fb2026014]]
@@ -252,7 +301,7 @@ No core-tier sources in this subfield.
 
 ## mining
 
-3 core, 11 context.
+4 core, 9 context.
 
 ### Core
 
@@ -277,15 +326,20 @@ No core-tier sources in this subfield.
   Reported: average debate latency of 10.69 s; 20 controlled trials achieved 100% execution reliability with sub-11 s debate latency. Demonstrated maturity `M1` (claimed: MINDS can systematize economic scenario analysis without sacrificing governance and verification required for definitive feasibility studies).
   Authors' stated limitation: LLM non-determinism needing industrial guardrails; demonstration relied on synthetic Marvin and curated news feeds; debate currently evaluates commodity price only.
 
+- **OntoGRC.** OntoGRC: ontology-guided mineral exploration knowledge extraction from geological texts using generate-reflect-correct prompting (2026, Ore Geology Reviews). [[doi:10.1016/j.oregeorev.2026.107411]]
+  Built for extracting ore-forming and mineral-exploration entities/relations from geological texts into an ontology-constrained knowledge graph. Architecture `pipeline-with-agent`; techniques: self-reflection; task-decomposition; guardrails-validation; knowledge-graph. Base model: DeepSeek-V3.
+  Calls: none at runtime beyond the LLM itself - the domain ontology is embedded as natural-language prompt constraints rather than an invoked tool; no simulator, solver, database or code execution.
+  Evaluated by precision/recall/F1 against manually annotated gold entities/relations on two datasets against supervised sequence-labelling and neural relation-extraction baselines, with component-wise ablation and a 1-10 iteration convergence analysis. The main benchmark, Dataset B, is derived from the authorized Xinjiang Taxkorgan-Yecheng Fe-Pb-Zn polymetallic ore assessment report. Baseline: BERT-CRF, BiLSTM-CRF, BERT-BiLSTM-CRF, PCNN+Att, CasRel, a BERT-based relation-extraction model, and unconstrained free-form LLM generation. Data: real-field (named report).
+  Reported: Dataset B F1 0.886 (entity recognition), 0.880 (relation extraction); Dataset A F1 0.858 (entity), 0.830 (relation, 0.378 above the best baseline). Demonstrated maturity `M3` (claimed: this paper concentrates on constructing and validating the extraction infrastructure; using the resulting knowledge graphs for quantitative prospectivity modelling is left as future work).
+  Authors' stated limitation: pretraining-corpus opacity of the base LLM cannot rule out prior exposure to geological literature; results derived from Chinese-language texts only and may reflect regional terminology; long-range inter-sentence metallogenic information can exceed the model's context window and break the affiliation chain; spatial modelling and ontology interoperability comparatively weak.
+
 ### Context
 
 - [context] MINDS: Large Language Model Agents in Dynamic Mine Planning: A Modular Decision-Support Framework (2026). modular multi-agent support for dynamic strategic mine planning under economic variability. [[title:largelanguagemodelagentsindynamicmineplanningamodulardecisionsupportframework]]
 - [context] Large Language Model Agents in Dynamic Mine Planning: Challenges, Opportunities, and Future Directions (2026). review of LLM agents for dynamic mine planning with a proposed maturity pathway. [[doi:10.1109/access.2026.3714775]]
 - [context] Automated Mineralization Prediction System Driven by Large Language Models (2025). LLM-agent-driven system automating mineralization prediction tasks for mineral exploration. [[doi:10.1109/caibda65784.2025.11182767]]
 - [context] Leveraging the GEOH5 Data Structure and AI Agents in Mineral Exploration (2026). AI agent framework for mineral exploration data summary, method selection and workflow execution. [[doi:10.3997/2214-4609.202620128]]
-- [context] LLM-assisted workflow for geological unit harmonization and tectonic-unit-constrained map generalization with copper occurrence overlay (2026). LLM-assisted harmonization of inconsistent geological unit descriptions into controlled age-based labels driving a deterministic GIS map-generalization and copper-occurrence overlay. [[doi:10.1016/j.oregeorev.2026.107477]]
 - [context] Artificial Intelligence for Mineral Exploration: Methods, Foundation Models, and Future Directions (2026). survey of machine learning and foundation models across the mineral exploration pipeline. [[doi:10.20944/preprints202607.2303.v1]]
-- [context] OntoGRC: OntoGRC: ontology-guided mineral exploration knowledge extraction from geological texts using generate-reflect-correct prompting (2026). zero-shot ontology-guided extraction of ore-forming knowledge triples from geological exploration texts. [[doi:10.1016/j.oregeorev.2026.107411]]
 - [context] AGEMERA Platform: AGEMERA AI: Innovative AI solution for responsible resource exploration (2024). fuse heterogeneous Earth observation data for responsible mineral exploration. [[doi:10.5194/egusphere-egu24-628]]
 - [context] GALA: GALA: A Multi-Agent GeoAI Framework for Mineral Exploration through SAM3-Augmented Knowledge Graphs and Human-in-the-Loop Validation (2026). multi-agent mineral exploration combining SAM3 visual extraction, GraphRAG knowledge graphs and HITL review. [[doi:10.1109/cait70489.2026.11553853]]
 - [context] Mining AGI Platform: Mining AGI Platform as an AGI-Oriented Multi-Agent Engineering Framework for Strategic and Operational Decision Support in Mining Enterprises (2026). strategic and operational decision support across the mine-to-market value chain. [[doi:10.5281/zenodo.21204632]]
@@ -293,7 +347,7 @@ No core-tier sources in this subfield.
 
 ## engineering_geology
 
-4 core, 15 context.
+9 core, 10 context.
 
 ### Core
 
@@ -325,19 +379,49 @@ No core-tier sources in this subfield.
   Reported: bearing capacity factors within 0.15%, design actions exact to the reported precision, design resistances within 0.012%; required widths 1.497 m (DA1-C2 against JRC 1.50), 1.211 m (DA2 against 1.21), 1.738 m (DA3 against 1.74). Demonstrated maturity `M1` (claimed: a blueprint for transitioning the industry from isolated legacy software to an interoperable, AI-ready ecosystem where engineers can leverage modern AI without surrendering professional responsibility).
   Authors' stated limitation: Section 6.3 states 'The JRC validation demonstrates precision within a specific problem class' and that 'A production-ready release of GeoMCP will require systematic validation across a broader range of geotechnical problems'; that the method card approach 'is inherently restricted to closed-form equations and iterative systems'; that the framework 'does not eliminate the potential for reasoning or data extraction errors' because the LLM interprets the scenario and extracts parameters, so interpretation errors 'will propagate into the engine's inputs'; and that auditable, citation-rich output introduces 'the secondary risk of automation bias' that 'may discourage necessary critical review', making independent checking essential. The walkthrough also records that settlement 'has not been checked' and that reproducing the JRC numbers requires resolving a documented inconsistency in the source (groundwater at 1.5 m in the text against 2.5 m in the figure).
 
+- **Tunnel geological-forecasting agent.** AI agent for advanced geological forecasting and risk control in rock tunnel construction based on multi-source information fusion (2026, Automation in Construction). [[doi:10.1016/j.autcon.2026.107055]]
+  Built for meter-by-meter advanced geological forecasting (rock mass grade classification within 30 m of the tunnel face) and generation of risk-control plans for drill-and-blast tunnel construction. Architecture `pipeline-with-agent`; techniques: tool-calling; retrieval; knowledge-graph; planning; guardrails-validation; human-in-the-loop. Base model: GPT-5 (perception module); GPT-4o (risk-control decision module).
+  Calls: the iS3 tunnel intelligent construction platform; GPR (SIR-3000 system); a tunnel-face image analysis service; a Neo4j knowledge graph (1175 nodes, 1301 edges); a Chromadb vector database; GraphRAG retrieval; an NLP/NER pipeline generating Cypher queries.
+  Evaluated by retrospective comparison of predicted rock mass grades against post-excavation ground truth (641 labels from five named drill-and-blast tunnels in Yunnan Province; confusion matrix, accuracy/precision/recall/F1), plus a knowledge-level test-question accuracy comparison against GPT-4o and traditional RAG, and a 50-trial latency analysis. Baseline: GPT-4o; traditional RAG (knowledge test); none for the rock-mass-grade task beyond ground truth. Data: real-field.
+  Reported: rock mass grade reasoning 92.04% accuracy (92.28% precision, 92.04% recall, 92.10% F1); GraphRAG knowledge-level test accuracy 96.63% vs RAG 90.38% vs GPT-4o 85.58%. Demonstrated maturity `M3` (claimed: "these results demonstrate the potential of AI agent in rock tunnel construction applications").
+  Authors' stated limitation: open-source multimodal LLMs (e.g. Qwen2.5-VL) still exhibit a noticeable gap in image recognition capability; since drill-and-blast tunnelling remains predominantly manual, the risk-control decisions generated by the agent and fed back through the iS3 platform must ultimately be executed by human operators, so fully automated or mechanized execution is not yet achievable.
+
+- **Landslide reconstruction agent.** Reconstruction of landslide events in urban setting using LLM-based Agentic AI with multimodal data (2026, Soils and Foundations). [[doi:10.1016/j.sandf.2026.101789]]
+  Built for reconstructing post-landslide events: extracting technical information from witness reports and estimating landslide scar/debris geometry from site photos, for forensic geotechnical investigation. Architecture `pipeline-with-agent`; techniques: self-reflection; retrieval; task-decomposition; fine-tuning; human-in-the-loop; guardrails-validation. Base model: GPT-5.2 (primary); GPT-4o (comparison).
+  Calls: a retrieval index/vector store with a citation-aware query engine; an OCR document parser; OpenStreetMap Nominatim geocoding; a Hong Kong government rainfall database; a fine-tuned YOLOv8-seg image segmentation model.
+  Evaluated by retrospective case studies on four named historical Hong Kong landslides (Kwun Lung Lau 1994 as main case, plus Po Shan Road 1972, Ching Cheung Road 1997, Tai Po Road 2016); RAG summaries scored against a professional investigation report, and estimated debris volume compared against the official government report figure. Baseline: LLM-only (no-RAG) summarization; BM25/DPR retrieval; GPT-4o vs GPT-5.2. Data: real-field.
+  Reported: BERTScore F1 0.84 for RAG summarization; Monte Carlo debris-volume median of 1138 m3 (90% CI 448-3380 m3) against an official report figure of 1000 m3. Demonstrated maturity `M3` (claimed: the system "can assist post-landslide investigations in urban settings by efficiently extracting, organizing, and summarizing domain-specific information from large volumes of multimodal data").
+  Authors' stated limitation: the framework is data-driven and does not directly simulate slope stability or hydrological processes; effectiveness may be reduced in rural/remote areas with less contextual information; the geometry-estimation workflow is semi-autonomous with human-in-the-loop review, and errors can propagate down the pipeline.
+
+- **multi-GeoLLM.** Multimodal framework integrating multiple large language model agents for intelligent geotechnical design (2025, Automation in Construction). [[doi:10.1016/j.autcon.2025.106257]]
+  Built for automatic multimodal (text/image) design and verification of unreinforced shallow footings - bearing capacity and settlement. Architecture `pipeline-with-agent`; techniques: tool-calling; code-execution; self-reflection; role-specialisation; human-in-the-loop; retrieval; guardrails-validation. Base model: GPT-4o.
+  Calls: a multimodal RAG search-engine module; a Python mathematical tool module - an if-elif-else logic tool for equation selection, a bearing-capacity/settlement math tool, and a drawing tool.
+  Evaluated by accuracy/precision/recall (99% CI) on 60 textbook-derived unreinforced-footing cases (20 text, 20 image, 20 text-image) and 100 textual robustness cases, against a single-LLM-agent baseline and an unframed GPT-4o baseline. Baseline: single LLM agent (no self-review); framework-less GPT-4o. Data: synthetic.
+  Reported: 60-case accuracy 1.0, precision/recall 0.992; 100-case precision 0.999, recall 1, accuracy 0.97; the framework-less GPT-4o baseline scored accuracy 0-0.05. Demonstrated maturity `M1` (claimed: the framework "can significantly reduce the repetitive mechanical operations performed by engineers in geotechnical design").
+  Authors' stated limitation: relies on reference examples and if-elif-else logic tools, so engineers must prepare examples and manually update tools for new design logic; initialized for idealized, homogeneous-strata scenarios, with reduced performance expected for heterogeneous or semi-rigid cases.
+
+- **SRAB MAS.** Uncertainty-aware multi-agent system for automated and real-time geotechnical analysis in tunneling (2026, Computer-Aided Civil and Infrastructure Engineering). [[doi:10.1016/j.cacaie.2026.100079]]
+  Built for autonomous, near-real-time uncertainty-aware geotechnical analysis (site characterization, risk assessment, report generation) for TBM tunnel-face stability from sparse borehole data. Architecture `multi-agent-hierarchical`; techniques: tool-calling; planning; task-decomposition; self-reflection; memory; role-specialisation; human-in-the-loop; physics-solver-in-the-loop; guardrails-validation. Base model: GPT-4o (headline results); Gemini 2.5 Pro and DeepSeek-V3.2 (cross-LLM comparison).
+  Calls: a Text2SQL data-management agent; an SDF-quasi-manifold geological cross-section interpolator; a Bayesian Compressive Sensing soil-property interpolator; a text-mining risk model; the KALA physics-based limit-analysis solver for tunnel-face stability; a shared blackboard data store.
+  Evaluated by Task Completion Rate over 30 repeated runs per dataset on real contractor-supplied borehole data (23-25 boreholes) from a tunnelling project in Singapore, geo-located but not given a formal project name; ablated against three simplified architectures and without-HITL/without-self-check variants; cross-LLM comparison. Baseline: sequential ReAct-blackboard, supervisor-blackboard and supervisor-ReAct simplified architectures. Data: real-field.
+  Reported: mean/median Task Completion Rate above 0.94 across all three datasets vs below 0.50 for baseline architectures. Demonstrated maturity `M2` (claimed: the system "shows superior adaptability for autonomous GAs and near-real-time risk-informed decision-making from sparse and noisy data").
+  Authors' stated limitation: does not adopt autonomous rollback across multiple forward-backward algorithms, citing context-management risk in multi-step reasoning; does not employ parallel agent execution; robustness on other large-scale infrastructure projects is left to future work.
+
+- **Slope-reliability multi-agent framework.** An LLM-based multi-agent framework for automated reliability analysis of spatially variable soils (2026, Advanced Engineering Informatics). [[doi:10.1016/j.aei.2026.105065]]
+  Built for automated probabilistic reliability analysis (slope stability, and secondarily strip-foundation bearing capacity) of spatially variable soils via LLM-orchestrated surrogate-model construction and Monte Carlo prediction. Architecture `multi-agent-hierarchical`; techniques: tool-calling; code-execution; planning; task-decomposition; self-reflection; role-specialisation; physics-solver-in-the-loop; guardrails-validation. Base model: Gemini 2.5 Flash.
+  Calls: an FE mesh-generation/geometric-analysis tool; a random-field generation tool (GStools); an in-house NS-FEM finite-element solver; LLM-generated ML training code (SVR/ANN/DNN); an Optuna hyperparameter-tuning tool.
+  Evaluated by three synthetic slope-stability case studies (undrained, drained, 4-layer stratified) plus a strip-foundation case, comparing agent-built surrogate Monte Carlo predictions against direct FE computation, with a 20-repeat robustness test per case and tuning/prompt ablations. Baseline: brute-force Monte Carlo FE analysis; a manually constructed surrogate-model workflow. Data: synthetic.
+  Reported: best-model R2 0.983-0.991 across the three slope cases; Pass@Final 95-100% over 20 runs; drained-slope runtime ~30 min vs ~3 h manual surrogate workflow vs ~10 h brute-force FE. Demonstrated maturity `M1` (claimed: "the feasibility and accuracy of this framework have been validated across realistic scenarios of varying complexity").
+  Authors' stated limitation: validated only on classic two-dimensional synthetic scenarios; complex simulation-level failures are reported via tool diagnostics rather than fully auto-corrected; future work is needed for 3D and multi-physics-coupled real-world cases.
+
 ### Context
 
 - [context] Perspectives: LLM agents reshaping the foundation of geotechnical problem-solving (2025). perspective on LLM agents for automating extraction, interpretation and quantification of geotechnical data. [[doi:10.1016/j.geoai.2025.100036]]
-- [context] An LLM-based multi-agent framework for automated reliability analysis of spatially variable soils (2026). hierarchical multi-agent automation of geotechnical reliability analysis via surrogate models. [[doi:10.1016/j.aei.2026.105065]]
-- [context] Reconstruction of landslide events in urban setting using LLM-based Agentic AI with multimodal data (2026). reconstruction of urban landslide events using LLM-based agentic AI with multimodal data (from title only). [[doi:10.1016/j.sandf.2026.101789]]
 - [context] A Multimodal Multi-Agent Framework for Automated Landslide Risk Management (2026). automated landslide risk assessment and evacuation plan generation. [[doi:10.5194/egusphere-egu26-15632]]
 - [context] TunnelSentinel: TunnelSentinel: An Agentic AI Framework for Geo-Structural Resilience and Settlement Safety in Immersed Tunnels (2026). end-to-end settlement risk management for immersed tunnels during operation and maintenance. [[doi:10.5194/egusphere-egu26-9051]]
 - [context] Agentic Spec Kit: An Agentic Machine Learning Pipeline for Drift-Aware Debris Flow Detection (2025). automated design and selection of drift-aware machine learning pipelines for seismic debris-flow detection. [[doi:10.64862/ajeg.2025.2sp.95.232]]
 - [context] MAS-LAND: MAS-LAND: A Multi-Agent System for Landslide detection and rapid response (2026). post-event landslide detection, infrastructure exposure assessment and automated reporting for civil protection. [[doi:10.2139/ssrn.6515171]]
-- [context] Multimodal framework integrating multiple large language model agents for intelligent geotechnical engineering (2025). multimodal multi-agent framework for intelligent geotechnical engineering (from title only). [[doi:10.1016/j.autcon.2025.106257]]
-- [context] Uncertainty-aware multi-agent system for automated and real-time geotechnical analysis in tunnelling (2026). uncertainty-aware LLM multi-agent system for autonomous near-real-time geotechnical analysis in tunnelling. [[doi:10.1016/j.cacaie.2026.100079]]
 - [context] Report for the 2nd GeoTechathon: A journey of reflection on geotechnical task automation (2026). report on an event in which six teams built agentic workflows for geotechnical tasks. [[doi:10.1016/j.geoai.2026.100106]]
-- [context] AI agent for advanced geological forecasting and risk control in rock tunnel construction based on multi-source information fusion (2026). AI agent fusing multi-source geological data to forecast rock mass grade ahead of a tunnel face and generate risk-control strategies fed back to construction. [[doi:10.1016/j.autcon.2026.107055]]
 - [context] X2Sim: X2Sim (2025). agentic text-to-simulation framework generating digital twins for rapid natural hazard simulation. [[doi:10.26153/tsw/62180]]
 - [context] Conversational AI for Slope Stability Monitoring: Enabling “Chat-with-Your-Data” as a Decision Support Tool (2026). vision for a chat-with-your-data conversational interface for slope stability monitoring and landslide early warning. [[doi:10.5194/egusphere-egu26-20914]]
 - [context] geotechCLI: geotechCLI: open-source agentic AI CLI for geotechnical engineering (2026). turn a folder of geotechnical data into an evidence-bound ground model and interpret it. [[title:geotechcliopensourceagenticaicliforgeotechnicalengineering]]
@@ -345,21 +429,22 @@ No core-tier sources in this subfield.
 
 ## inversion
 
-0 core, 5 context.
+0 core, 2 context.
 
-No core-tier sources in this subfield.
+No core-tier sources in this subfield. (LogACF and the well-log human-in-the-loop multi-agent
+paper, formerly listed here, were promoted to `core` and reclassified to `reservoir_engineering`;
+the GAGAW journal record, also formerly listed here, was promoted to `core` and reclassified to
+`hydrogeology` to match its evaluation focus and its sibling preprint record — all per the
+evaluation-focus subfield rule; see those sections.)
 
 ### Context
 
-- [context] GAGAW: A generalizable automated geophysical agent workflow for accessible subsurface hydrology analysis (2026). multi-agent orchestration of open-source hydrogeophysical workflows from natural-language intents. [[doi:10.1016/j.bdes.2026.100042]]
-- [context] LogACF: Large language model-based AI agent for well logging data processing and interpretation (2026). collaborative agent framework for well-log preprocessing, feature engineering, reservoir identification and report generation. [[doi:10.1016/j.petsci.2026.05.031]]
-- [context] A multi-agent collaborative framework with human-in-the-loop for well log interpretation and application (2026). human-in-the-loop multi-agent well-log interpretation from data loading to reservoir classification. [[doi:10.1016/s1876-3804(26)60734-3]]
 - [context] New Role of Technical Specialists to Enable Digital Transformation in the Petroleum Industry: A Petrophysicist-Based Proof of Concept (2025). natural-language access to petrophysical log data and standard analyses for non-specialists. [[doi:10.2118/229346-ms]]
 - [context] PyHydroGeophysX: PyHydroGeophysX (2026). automate electrical resistivity tomography and cross-modal geophysics workflows. [[doi:10.5281/zenodo.21288456]]
 
 ## geological_modelling
 
-2 core, 7 context.
+3 core, 5 context.
 
 ### Core
 
@@ -377,13 +462,18 @@ No core-tier sources in this subfield.
   Reported: average F1 approximately 0.90 for entities and 0.91 for attributes, with per-volume efficiency approximately sixfold better than the manual baseline (7 calendar days per volume against 45); a released database of 32,277 fossil taxonomic entities and 451,878 attributes built in 53 person-days; palaeomagnetism entity precision 0.93 / recall 0.96 and attribute precision 0.81 / recall 0.77; geochemistry entity F1 0.81 and attribute F1 0.51 (recall 0.35, precision 0.93). Demonstrated maturity `M4` (claimed: a practical pathway to transform historical scientific literature into FAIR-oriented structured data, offering a sustainable infrastructure for data-intensive disciplines and large-scale knowledge integration).
   Authors' stated limitation: Authors state the two-stage strategy 'introduces potential error propagation' with 'cascading errors in the output structure' when entities are missed or merged; that conservative paragraph filtering 'can also reduce recall when genuinely relevant fossil descriptions are incomplete or expressed without these cues'; that chunking and RAG on extremely long documents 'inevitably introduces a trade-off between efficiency and recall', consistent with lost-in-the-middle findings; that cross-page discontinuity can split a description so 'the latter part of the split description can be excluded'; that 'fully understanding table semantics remains difficult' for cross-page tables, merged cells and footnotes; that performance 'is influenced by the underlying OCR and layout analysis algorithms', worse for older scans; and that expert verification throughput 'represents a practical bottleneck'.
 
+- **AGeoKE.** An LLM-based multi-agent system for geoscience legacy document processing, knowledge extraction and quality control (2026, Applied Computing and Geosciences). [[doi:10.1016/j.acags.2026.100362]]
+  Built for automated multi-agent extraction, mineral/rock-entity normalization, and controlled-vocabulary alignment of geoscience knowledge from legacy PDF documents. Architecture `multi-agent-flat`; techniques: tool-calling; role-specialisation; self-reflection; guardrails-validation; retrieval. Base model: GPT-5.2 (Azure OpenAI Service).
+  Calls: the Docling OCR/document-conversion toolkit; the OpenMindat API (mineral and rock database); GeoSciML and ICS controlled-vocabulary files; an Instructor/Pydantic schema-validation library.
+  Evaluated by manual expert evaluation (one reviewer) of precision/recall/F1/vocabulary-alignment agreement on a stratified sample of 25 records x 2 schemas, drawn from two named real reference sources: the USGS Mineral Deposit Models (Bulletin 1693) and the NASA Lunar Sample Compendium (125 individually-numbered Apollo basalt samples), plus automated statistics across the full 212-document corpus. Baseline: none. Data: real-field.
+  Reported: manual-evaluation precision 97.3-99.9%, recall 88.6-99.3%, F1 93.5-98.5% across the four dataset-schema combinations. Demonstrated maturity `M3` (claimed: the case studies "validated through manual expert evaluation, demonstrate the effectiveness and cross-domain generalizability of the proposed method").
+  Authors' stated limitation: vocabulary-adaptive extraction still relies on hard-coded vocabulary parsing; the terrestrial-biased GeoSciML vocabulary misapplies Earth-centric terms to lunar samples; output is limited to controlled-vocabulary terms, lacking relational/assertion-level knowledge; manual evaluation used a single reviewer with no inter-rater reliability reported.
+
 ### Context
 
 - [context] Geological Modeling Agent: Automated Static Model Uncertainty Assessment Using AI Agent and Geology-Aware Guidance (2026). automated uncertainty assessment and optimisation of static geological models. [[doi:10.3997/2214-4609.202639113]]
 - [context] From Unstructured Geological Data to 3D Models: A Human-in-the-Loop LLM assisted Workflow for Automated Geological Model Building (2026). human-in-the-loop LLM workflow turning unstructured geological text into inputs for implicit 3D geological modelling. [[doi:10.5194/egusphere-egu26-10918]]
 - [context] GeoSAGE: GeoSAGE: A Reproducible Multi-Agent Framework for Geological Reasoning From Joint Gravity and Magnetic Inversion Models (2026). language-driven multi-agent joint gravity-magnetic inversion, quasi-geological model construction and analysis. [[doi:10.5281/zenodo.19078874]]
-- [context] LLM-Powered Data Automation for 3D Geological Model Updating: Uncovering Architectural Divergence and the Efficiency-Effectiveness Paradox (2025). LLM-powered data automation for 3D geological model updating. [[doi:10.2139/ssrn.5520018]]
-- [context] AGeoKE: An LLM-based multi-agent system for geoscience legacy document processing, knowledge extraction and quality control (2026). MCP multi-agent extraction and vocabulary alignment from unstructured Earth-science PDFs. [[doi:10.1016/j.acags.2026.100362]]
 - [context] LangGraph-Orchestrated AI Pipelines for Geological Data Interpretation: A Comparative Analysis (2026). LangGraph correction-loop RAG over geological well data compared across three LLMs. [[doi:10.3997/2214-4609.202639012]]
 - [context] Enhancing ML-Based Reservoir Characterisation with Large Language Models: A Multi-Agent RAG Workflow for Improved Sedimentological Prediction (2025). multi-agent RAG refinement of Random-Forest sedimentological genetic-element predictions in uncored wells. [[doi:10.3997/2214-4609.2025640024]]
 

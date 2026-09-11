@@ -628,3 +628,23 @@ miss — and promoted to core (M1). GAGAW ESSOAr still 403; AGeoKE still abstrac
   (4) before demoting a DOI as unread, search arXiv by title; (5) do not delegate
   unread core batches to children that can hang on a usage-limit switch —
   parent-fetch or demote.
+
+## Addendum, 2026-09-11 — paywalled full text recovered via institutional access
+
+The counts and per-subfield table above are the snapshot at the end of this run and are
+left as recorded. They no longer match `papers.csv`/`screening.csv`: eleven paywalled or
+textually-empty records were subsequently read in full via the corpus owner's institutional
+access (not a tool call in this run), seven were promoted to `core` and three of those
+moved subfield, and four were reclassified from `in`/`context` to `out` on full-text
+evidence that they are not agentic. Current totals after this first pass: admitted 151
+(30 core, 121 context). See `unreachable.md` ("Second recovery pass") for the per-record
+detail and `decisions.md` (2026-09-11) for what changed and why.
+
+## Addendum 2, 2026-09-11 — a second institutional-access batch
+
+A further eight paywalled records were supplied and read in full the same way. All eight
+were genuinely agentic; none were reclassified `out`. One (the GAGAW journal record) moved
+subfield from `inversion` to `hydrogeology`. Current totals after this second pass:
+admitted 151 (38 core, 113 context) — total admitted is unchanged from the first addendum,
+since this pass reclassified no record `out`. See `unreachable.md` ("Third recovery pass")
+and `decisions.md` (2026-09-11, second entry).

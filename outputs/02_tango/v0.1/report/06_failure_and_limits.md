@@ -2,11 +2,11 @@
 
 [Certain] What authors report their systems could not do, in their own words. Quoted rather
 than paraphrased, because the value of this section is that these are concessions the authors
-chose to make. Counts are over the 98 `core` rows, where the limitations section was read.
+chose to make. Counts are over the 101 `core` rows, where the limitations section was read.
 
 ## How much is stated at all
 
-[Certain] 94 of 98 core sources state at least one limitation of their own; **4 state none**
+[Certain] 97 of 101 core sources state at least one limitation of their own; **4 state none**
 [[doi:10.11578/dc.20260516.1]] [[doi:10.5281/zenodo.19597589]] [[doi:10.69997/pse.120458]]
 [[title:247simulationloopshowagenticaikeepssubsurfaceengineeringmoving]]. Two of those four
 are short-format sources — a two-page conference extended abstract with no limitations section
@@ -14,7 +14,7 @@ in existence [[doi:10.69997/pse.120458]] and a vendor blog post
 [[title:247simulationloopshowagenticaikeepssubsurfaceengineeringmoving]] — so the absence is
 partly a fact about the format.
 
-[Certain] Separately, **21 of 98 core sources state nothing about what happens when the driven
+[Certain] Separately, **21 of 101 core sources state nothing about what happens when the driven
 code fails**, and that silence is recorded as `NOT FOUND` in `transfer.md` rather than inferred
 (see section 01). Failure *handling* and stated *limitations* are different things, and a
 source can be generous with one and silent on the other: one system reports a detailed failure
@@ -86,7 +86,7 @@ studies [[doi:10.1038/s44172-025-00583-3]]; another reports that only four backe
 
 ## Hallucination and non-determinism
 
-[Certain] Four core sources name it explicitly, and their framings differ in a way worth
+[Certain] Five core sources name it explicitly, and their framings differ in a way worth
 preserving. One reports it as persistent despite mitigation: hallucinations "such as inserting
 unnecessary Markdown formatting, which can disrupt error correction … Despite mitigation efforts
 using prompt engineering and pydantic for structured outputs, these issues persist"
@@ -97,7 +97,14 @@ scale, adding that "LLM non-determinism means identical prompts may yield differ
 sequences across sessions" [[doi:10.1080/19401493.2026.2653969]]. One reports the failure mode
 it designed out rather than mitigated — invented object paths accounting for 78% of
 code-generation failures, which "cannot occur through typed tools"
-[[doi:10.26434/chemrxiv.15006587/v1]].
+[[doi:10.26434/chemrxiv.15006587/v1]]. The fifth reports it as an observed incident rather than
+a category: given only five search results for a request naming eight structures, the agent
+supplied eight PDB IDs of which three identify unrelated proteins — "These PDB IDs were
+hallucinated by the LLM agent, as only 5 search results were generated from the researcher" —
+and the authors add that "Based only on the model context, it failed to provide correct
+information for the following simulation runs" [[doi:10.1145/3731599.3767349]]. This last was
+not visible when that source was originally read from its preprint; the passage is in the
+published version only.
 
 [Certain] One source reports the most uncomfortable version of this, from the human side rather
 than the model side: "Language models are strong at producing coherent and plausible
@@ -140,9 +147,13 @@ section 05 records how each squares with what was measured.
 ## What no source reports
 
 [Absent-searched] (backed by query cells `q001`-`q014`) **No admitted source reports a case where its agent's output was accepted,
-acted on, and later found to be wrong.** Failures are reported as run-time errors caught inside
-the loop, as benchmark cases not passed, or as capability gaps for future work — never as a
-downstream consequence. The core query cells were harvested in full after the paging caps were
+acted on outside the experiment, and later found to be wrong.** Failures are reported as
+run-time errors caught inside the loop, as benchmark cases not passed, or as capability gaps
+for future work — never as a downstream consequence. One source comes closest and marks the
+boundary: hallucinated PDB IDs were accepted by the pipeline and molecular dynamics ran on the
+wrong protein structures before the authors identified them [[doi:10.1145/3731599.3767349]].
+That is an incorrect output acted upon, but inside the authors' own experiment and reported by
+them; no source reports one reaching a decision, a publication or a user. The core query cells were harvested in full after the paging caps were
 raised (`q001` through `q014`) and the grey pass added eighteen targeted web searches; nothing
 admitted describes an incident, a retraction, or a corrected result. Given that section 05
 finds no source above M3, this is what one would expect — systems that have not entered routine

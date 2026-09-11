@@ -5,26 +5,33 @@ of the picture is missing because the source could not be read.
 
 ## Distribution
 
-[Certain] Demonstrated maturity, rated from the evaluation section only, across the 98 `core`
+[Certain] Demonstrated maturity, rated from the evaluation section only, across the 101 `core`
 rows:
 
 | level | core rows |
 |---|---|
 | M0 | 3 |
-| M1 | 37 |
-| M2 | 47 |
-| M3 | 11 |
+| M1 | 38 |
+| M2 | 48 |
+| M3 | 12 |
 | M4 | 0 |
 | M5 | 0 |
 
-[Certain] All 85 `context` rows carry `not stated (abstract only)`. That figure is not a
-rounding detail: **46% of the admitted corpus has no maturity rating at all**, and 15 of those
-85 are records that were screened as core and demoted when their full text proved unreadable.
-`paywalled.md` lists those 15 with what reading them would change; four of them are the sort of
+[Certain] All 82 `context` rows carry `not stated (abstract only)`. That figure is not a
+rounding detail: **45% of the admitted corpus has no maturity rating at all**, and 12 of those
+82 are records that were screened as core and demoted when their full text proved unreadable.
+`paywalled.md` lists those 12 with what reading them would change; three of them are the sort of
 source most likely to sit above M2 — including one whose top agent-proposed candidate was
 synthesised and measured at 113 mS cm⁻¹ with durability beyond 2,000 hours
 [[doi:10.6084/m9.figshare.30931802]]. The maturity distribution above therefore **understates**
 the field rather than guessing at it.
+
+[Certain] That understatement is measurable rather than asserted, because part of it was
+measured directly. Three of the fifteen demoted records were retrieved by hand and read after
+screening, and all three turned out to support a core write-up: one rated M1 [[doi:10.1039/d5dd00435g]], one M2
+[[doi:10.26434/chemrxiv.15006587/v1]], and one M3 on six named buildings validated against
+metered data [[doi:10.2139/ssrn.7333555]]. Reading three of fifteen demotions moved the M3 count
+from 11 to 12 and the M2 count from 47 to 48.
 
 ## The ceiling
 
@@ -43,7 +50,7 @@ interpreted as infrastructure readiness rather than clinical readiness" [[arxiv:
 
 ## What M3 looks like here
 
-[Certain] The 11 M3 rows are the corpus's high-water mark, and ten of the eleven are
+[Certain] The 12 M3 rows are the corpus's high-water mark, and eleven of the twelve are
 retrospective work on real, named data: a real reservoir [[doi:10.48550/arxiv.2605.15028]], a
 real catchment [[doi:10.31223/x5f47g]], three named hydrogeophysics field sites
 [[doi:10.1016/j.bdes.2026.100042]], real crash-validation decks scored against published
@@ -53,9 +60,11 @@ vector-network-analyser data for a physical package [[doi:10.1109/access.2025.36
 named gauge ensemble with every workflow checked against a hand-written expert implementation
 [[doi:10.48550/arxiv.2607.15001]], a real research nuclear reactor model
 [[doi:10.25394/pgs.32118403]], a genomics platform's own production jobs
-[[doi:10.1145/3815572.3815744]] and a named field campaign [[arxiv:2607.11084]]. The eleventh
-is rated M3 on named machines rather than named data — real work on OLCF Frontier and Wombat,
-reported retrospectively [[doi:10.20944/preprints202608.1323.v1]].
+[[doi:10.1145/3815572.3815744]], a named field campaign [[arxiv:2607.11084]] and six named
+Purdue University campus buildings whose calibrated models were validated against metered
+energy-use intensities held back until after calibration [[doi:10.2139/ssrn.7333555]]. The
+twelfth is rated M3 on named machines rather than named data — real work on OLCF Frontier and
+Wombat, reported retrospectively [[doi:10.20944/preprints202608.1323.v1]].
 
 [Certain] What separates M3 from M2 in every one of these cases is the same thing: a reference
 the authors did not themselves produce. None of them claims the output changed a decision, and
@@ -122,7 +131,7 @@ calibrated consistency check rather than a blind prediction"
 
 ## Year
 
-[Certain] Publication years across all 183 rows: 2026 — 126, 2025 — 51, 2024 — 6. More than two
+[Certain] Publication years across all 183 rows: 2026 — 127, 2025 — 50, 2024 — 6. More than two
 thirds of the corpus is from the most recent year, which is the single most important caveat on
 every maturity number above: a literature this young has had no time to produce the multi-year
 deployment evidence that M4 and M5 require.

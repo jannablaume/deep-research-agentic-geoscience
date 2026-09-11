@@ -1,16 +1,16 @@
 # 04 Evaluation
 
 [Certain] How these systems were tested, against what, on what data, and whether the field
-shares any benchmark. All counts are over the 98 `core` rows; context rows are excluded because
+shares any benchmark. All counts are over the 101 `core` rows; context rows are excluded because
 an abstract does not reliably report an evaluation design.
 
 ## Data
 
-[Certain] `data_type` across core rows: benchmark 51, synthetic 28, real-field 14, not stated 5.
+[Certain] `data_type` across core rows: benchmark 52, synthetic 29, real-field 15, not stated 5.
 So roughly half of the corpus evaluates on a reusable, site-agnostic problem set, and under a
 sixth touches a named real site, facility or measurement campaign.
 
-[Certain] The 14 real-field rows are worth naming because they are what separates a
+[Certain] The 15 real-field rows are worth naming because they are what separates a
 demonstration from a result. They include the Norne reservoir [[doi:10.48550/arxiv.2605.15028]],
 the Tod Creek catchment [[doi:10.31223/x5f47g]], three western-US hydrogeophysics sites
 [[doi:10.1016/j.bdes.2026.100042]], the NREL iUnit building [[doi:10.26868/30680611.2026.1305]]
@@ -21,11 +21,14 @@ data for a physical package [[doi:10.1109/access.2025.3605803]], real crash-vali
 scored against published experimental corridors [[doi:10.5281/zenodo.22554152]], published
 catalytic kinetics for seven named catalyst systems [[arxiv:2606.05050]], a production
 university cluster [[doi:10.1145/3785462.3815873]], and public neuroimaging cohorts
-[[arxiv:2604.24696]].
+[[arxiv:2604.24696]], and six named Purdue University campus buildings validated against
+metered energy-use intensities from the university's own facilities management
+[[doi:10.2139/ssrn.7333555]] — the last of these promoted to the core tier only after its
+full text was later retrieved by hand.
 
 ## Baselines
 
-[Certain] **26 of 98 core sources report no baseline at all** — the result is the system
+[Certain] **26 of 101 core sources report no baseline at all** — the result is the system
 working, compared against nothing. Where a baseline exists it is one of four kinds, and the
 kinds are not equivalent:
 
@@ -36,7 +39,7 @@ kinds are not equivalent:
 
 ## Held-out data
 
-[Certain] `held_out` across core rows: not stated 52, no 26, yes 20. **More than half of the
+[Certain] `held_out` across core rows: not stated 53, no 26, yes 22. **More than half of the
 corpus does not say whether its evaluation problems were separated from whatever the system
 was built or tuned on.** Where separation is claimed it is sometimes explicit and checkable —
 "there is no configuration overlap between the training and benchmark sets"
@@ -99,7 +102,7 @@ replay test scored as a falsifiable question [[doi:10.48550/arxiv.2601.09749]].
 
 ## Code availability
 
-[Certain] 56 of 98 core sources give a working repository URL. Of the remainder, several state
+[Certain] 58 of 101 core sources give a working repository URL. Of the remainder, several state
 the code is forthcoming [[arxiv:2606.05050]] [[doi:10.3929/ethz-c-000801434]], one states that
 "the scenario definitions, benchmark runner, and timestamped result artifacts … are included in
 the accompanying repository" without giving its address [[arxiv:2602.20683]], and one withholds

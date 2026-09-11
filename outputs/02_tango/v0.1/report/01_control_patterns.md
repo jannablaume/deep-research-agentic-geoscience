@@ -2,7 +2,7 @@
 
 [Certain] How agents drive a simulator, solver or engineering model: what they emit, what they
 read back, and what closes the loop. Grouped by pattern. Counts are per `transfer.csv` row and
-are restricted to the 98 `core` rows unless stated, because a context row's interface and
+are restricted to the 101 `core` rows unless stated, because a context row's interface and
 autonomy come from an abstract.
 
 ## What the agent emits
@@ -13,11 +13,12 @@ even:
 | interface | core rows | all rows |
 |---|---|---|
 | code-execution | 29 | 38 |
-| file-io | 26 | 30 |
+| file-io | 28 | 32 |
 | api | 19 | 27 |
-| mcp | 18 | 26 |
+| mcp | 19 | 26 |
 | cli | 5 | 10 |
-| not stated | 1 | 50 |
+| gui | 0 | 2 |
+| not stated | 1 | 48 |
 
 [Certain] `file-io` is the oldest and plainest pattern: the agent writes the simulator's own
 input format and the simulator reads it. OpenFOAM case directories with `controlDict`,
@@ -68,7 +69,7 @@ generated workflow numerically against a trusted reference [[doi:10.48550/arxiv.
 
 ## What closes the loop
 
-[Certain] 74 of 98 core rows are `executes-and-iterates`, 18 are `executes-with-approval`, 2
+[Certain] 77 of 101 core rows are `executes-and-iterates`, 18 are `executes-with-approval`, 2
 are `suggests` and 4 are `not stated`. The dominant loop is therefore read-error, revise,
 resubmit, repeat until success or a cap. The caps are stated often enough to be a pattern in
 themselves: 10 correction attempts [[doi:10.1016/j.taml.2025.100594]], 10 iterations
@@ -102,7 +103,7 @@ artifact routing to a deterministic … executor that consumes zero LLM tokens d
 
 ## Where the loop is not closed at all
 
-[Certain] 21 of 98 core sources state nothing about what happens when the driven code fails.
+[Certain] 21 of 101 core sources state nothing about what happens when the driven code fails.
 That is not a reading failure: each of these was read in full, with the evaluation and
 limitations sections attended to, and the entry in `transfer.md` records `NOT FOUND` against a
 search for such a statement [[doi:10.1145/3731599.3767349]] [[doi:10.25394/pgs.32118403]]

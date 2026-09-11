@@ -1,23 +1,25 @@
 # 02 Architectures
 
-Recurring designs and what each is chosen for, from the 98 `core` rows unless stated. Counts
+Recurring designs and what each is chosen for, from the 101 `core` rows unless stated. Counts
 are per `papers.csv` row.
 
 ## The distribution
 
-[Certain] Across all 183 rows: `multi-agent-hierarchical` 47, `pipeline-with-agent` 30,
-`agent-plus-simulator` 26, `multi-agent-flat` 22, `single-agent` 22, `not stated` 21,
-`agent-plus-solver` 12, `agent-plus-database` 2, `router` 1. Restricted to the 98 core rows,
+[Certain] Across all 183 rows: `multi-agent-hierarchical` 49, `pipeline-with-agent` 30,
+`agent-plus-simulator` 26, `multi-agent-flat` 22, `single-agent` 22, `not stated` 19,
+`agent-plus-solver` 12, `agent-plus-database` 2, `router` 1. Restricted to the 101 core rows,
 where the label rests on a read architecture section rather than an abstract:
-`multi-agent-hierarchical` 38, `multi-agent-flat` 17, `agent-plus-simulator` 14,
+`multi-agent-hierarchical` 40, `multi-agent-flat` 17, `agent-plus-simulator` 15,
 `pipeline-with-agent` 12, `single-agent` 9, `agent-plus-solver` 6, `agent-plus-database` 1,
-`not stated` 1. Twenty of the 21 `not stated` rows are context rows: an abstract that says
-"multi-agent" does not say how the agents relate.
+`not stated` 1. Eighteen of the 19 `not stated` rows are context rows: an abstract that says
+"multi-agent" does not say how the agents relate. Two rows left the `not stated` column when
+their full text was later recovered and read [[doi:10.1039/d5dd00435g]]
+[[doi:10.2139/ssrn.7333555]]; both turned out to be hierarchical.
 
 ## Hierarchical multi-agent: the default
 
 [Certain] A supervisor decomposing a goal and dispatching to role-specialised workers is the
-most common design in the corpus at 38 of 98 core rows, and the roles recur across unrelated
+most common design in the corpus at 40 of 101 core rows, and the roles recur across unrelated
 domains. A four-agent chain of description pre-processing, object extraction, object generation
 and debugging for building energy models
 [[title:automaticbuildingenergymodeldevelopmentanddebuggingusinglargelanguagemodelsagenticworkflow]];
@@ -104,15 +106,17 @@ yield executable scripts for any of the 20 local two-point-function tasks"
 
 ## Techniques, across architectures
 
-[Certain] Technique counts over the 98 core rows: tool-calling 95, code-execution 70,
-role-specialisation 62, guardrails-validation 62, task-decomposition 61, simulator-in-the-loop
-54, planning 53, retrieval 51, self-reflection 51, human-in-the-loop 42, memory 39,
+[Certain] Technique counts over the 101 core rows: tool-calling 98, code-execution 70,
+guardrails-validation 65, role-specialisation 64, task-decomposition 63, simulator-in-the-loop
+57, planning 54, self-reflection 54, retrieval 52, human-in-the-loop 44, memory 40,
 physics-solver-in-the-loop 30, fine-tuning 5, knowledge-graph 5, router 3, multi-agent-debate 3,
-instrument-control 1.
+instrument-control 1, and one free-text entry, vision-based-verification, appended after the
+controlled terms on a single row [[doi:10.1039/d5dd00435g]].
 
 [Certain] Two of those numbers are worth stating together. `guardrails-validation` appears in
-62 of 98 core systems — more often than planning — which is consistent with what section 01
-found about where these systems spend their engineering. `fine-tuning` appears in 5, so the
+65 of 101 core systems — more often than planning, overtaking role-specialisation to become
+the third most common technique once three demoted sources were recovered and read — which is
+consistent with what section 01 found about where these systems spend their engineering. `fine-tuning` appears in 5, so the
 corpus is overwhelmingly built on prompting and scaffolding around unmodified models. Where
 fine-tuning is used it is reported as the central mechanism rather than an adjunct: a 7B model
 fine-tuned on 28,716 natural-language-to-configuration pairs reaching 88.7% accuracy against
@@ -121,7 +125,7 @@ chemistry model post-trained on a 214,000-molecule corpus
 [[doi:10.26434/chemrxiv.15005838/v1]].
 
 [Certain] Base models named in core rows, counted by family mention rather than by row (a row
-can name several): GPT 52, Claude 24, Qwen 15, Gemini 15, DeepSeek 11, Llama 10, with Mistral,
-Grok and MiniMax at 2 each. **21 of 98 core sources do not name the model at all**, which
+can name several): GPT 53, Claude 25, Qwen 17, Gemini 15, DeepSeek 11, Llama 10, with Mistral,
+Grok and MiniMax at 2 each. **21 of 101 core sources do not name the model at all**, which
 matters for reproducibility: several of these are the same sources that report reproducibility
 as their contribution.

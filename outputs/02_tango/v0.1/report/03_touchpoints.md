@@ -22,25 +22,25 @@ scope and under-report mechanism.
 
 | touchpoint | all rows | core rows |
 |---|---|---|
-| config-generation | 96 | 72 |
-| solver-control | 76 | 65 |
-| results-interpretation | 57 | 52 |
-| verification-regression | 45 | 33 |
-| optimisation-loop | 42 | 27 |
-| hpc-scale-out | 33 | 18 |
-| tool-exposure | 32 | 23 |
+| config-generation | 98 | 75 |
+| solver-control | 77 | 67 |
+| results-interpretation | 60 | 55 |
+| verification-regression | 48 | 36 |
+| optimisation-loop | 44 | 29 |
+| hpc-scale-out | 34 | 19 |
+| tool-exposure | 32 | 24 |
+| topology-construction | 25 | 21 |
 | provenance-reproducibility | 24 | 15 |
-| topology-construction | 23 | 18 |
 | surrogate-modelling | 17 | 11 |
-| uncertainty-quantification | 10 | 3 |
-| techno-economic | 6 | 5 |
-| *(none)* | 27 | 3 |
+| uncertainty-quantification | 11 | 4 |
+| techno-economic | 7 | 6 |
+| *(none)* | 25 | 3 |
 
 ---
 
 ### config-generation
 
-**96 rows, 72 core — the most common touchpoint in the corpus by a wide margin.** [Certain]
+**98 rows, 75 core — the most common touchpoint in the corpus by a wide margin.** [Certain]
 The dominant shape is an agent that emits or edits a simulator's input file and then runs it.
 The named artefacts are concrete and they repeat: OpenFOAM case directories
 [[doi:10.48550/arxiv.2509.18178]] [[doi:10.1016/j.taml.2025.100594]] [[arxiv:2602.11689]]
@@ -77,7 +77,7 @@ against each other, so this is a single measurement and not a consensus.
 
 ### solver-control
 
-**76 rows, 65 core.** [Certain] Almost every source that generates a configuration also runs
+**77 rows, 67 core.** [Certain] Almost every source that generates a configuration also runs
 it, which is why this count tracks `config-generation` so closely; the gap between the two is
 the set of systems that emit an input somebody else executes. Those exist and are worth
 separating: one materials agent writes VASP decks and SLURM scripts that "a human submits"
@@ -106,7 +106,7 @@ candidate to redesign [[arxiv:2606.05050]] are the three clearest instances in t
 
 ### results-interpretation
 
-**57 rows, 52 core.** [Certain] The near-identity of those two numbers is itself informative:
+**60 rows, 55 core.** [Certain] The near-identity of those two numbers is itself informative:
 this is a touchpoint that full-text reading finds and abstracts do not mention. It is
 generally the last stage of a pipeline and generally described briefly — a report agent that
 "synthesized geophysical and climate data into synchronized visualizations and performed
@@ -126,7 +126,7 @@ interpretations were checked for correctness separately from the numbers they re
 
 ### verification-regression
 
-**45 rows, 33 core.** [Certain] Three distinct things carry this tag and they are not
+**48 rows, 36 core.** [Certain] Three distinct things carry this tag and they are not
 interchangeable. The first is agreement against an analytical or published reference — an L2
 error of 7e-15 against an analytical heat-equation solution, seven solvers agreeing to 99.9%
 on a cross-solver Poisson benchmark [[doi:10.5281/zenodo.20543501]], validation against
@@ -154,7 +154,7 @@ caught at running time" [[arxiv:2607.18557]].
 
 ### optimisation-loop
 
-**42 rows, 27 core.** [Certain] The corpus contains two clearly different arrangements and
+**44 rows, 29 core.** [Certain] The corpus contains two clearly different arrangements and
 mixes them under one label. In the first, the agent *is* the optimiser: it proposes the next
 point itself, as in the multi-agent acquisition policy that replaces the acquisition function
 inside a 30-query budget [[doi:10.25417/uic.32994011.v1]], the bisection search over
@@ -178,7 +178,7 @@ measurements pointing the same way is not a settled finding, and neither paper c
 
 ### hpc-scale-out
 
-**33 rows, 18 core.** [Certain] What is driven here is a scheduler, almost always Slurm:
+**34 rows, 19 core.** [Certain] What is driven here is a scheduler, almost always Slurm:
 job submission and monitoring [[doi:10.48550/arxiv.2507.14267]], measurement scripts and
 submission artefacts generated together [[doi:10.48550/arxiv.2607.15001]], workflow DAGs
 executed by HTCondor across four testbed sites [[arxiv:2606.18425]], training jobs dispatched
@@ -199,7 +199,7 @@ stalls, and steering or restarting runs mid-execution — remains an open direct
 
 ### tool-exposure
 
-**32 rows, 23 core.** [Certain] This touchpoint is where the Model Context Protocol
+**32 rows, 24 core.** [Certain] This touchpoint is where the Model Context Protocol
 concentrates: 17 of the 26 rows with `interface: mcp` carry it. The counts of exposed tools
 are stated precisely and vary by two orders of magnitude — 11 [[arxiv:2602.20683]], 13
 [[doi:10.5281/zenodo.20543501]], 35 [[doi:10.1016/j.softx.2025.102367]], 42
@@ -241,7 +241,7 @@ the corpus and it is stated by the only source reporting from a leadership-class
 
 ### topology-construction
 
-**23 rows, 18 core.** [Certain] This is the touchpoint where the agent decides the *structure*
+**25 rows, 21 core.** [Certain] This is the touchpoint where the agent decides the *structure*
 of the model rather than its parameters, and it splits cleanly by domain. In process
 engineering it means assembling a flowsheet: digitising a flowsheet graph from a natural-language
 description and translating it into simulator units [[doi:10.1039/d6dd00060f]]
@@ -292,16 +292,26 @@ relative to real-world settings" [[doi:10.48550/arxiv.2601.20996]].
 
 ### uncertainty-quantification
 
-**10 rows, 3 core.** [Certain] This is the largest gap between context and core counts in the
+**11 rows, 4 core.** [Certain] This is the largest gap between context and core counts in the
 table, and the reason is access rather than absence: four of the seven context rows are
 conference abstracts and papers this run could not read
 [[doi:10.2118/229629-ms]] [[doi:10.2118/232332-ms]] [[doi:10.3997/2214-4609.2024637030]]
 [[doi:10.1016/j.net.2026.104573]], so their uncertainty claims stand on abstracts alone. The
-three core rows are specific: Monte Carlo propagation of petrophysical parameter uncertainty
+four core rows are specific: Monte Carlo propagation of petrophysical parameter uncertainty
 through Archie's law, with the ensemble spread narrowing as priors tighten
 [[doi:10.1016/j.bdes.2026.100042]]; Gaussian-process and autoencoder surrogates of a
-neutronics model [[doi:10.25394/pgs.32118403]]; and density-functional calculations dispatched
-with uncertainty-aware screening [[doi:10.48550/arxiv.2507.14267]].
+neutronics model [[doi:10.25394/pgs.32118403]]; density-functional calculations dispatched
+with uncertainty-aware screening [[doi:10.48550/arxiv.2507.14267]]; and a three-layer
+protocol of Morris screening, Sobol decomposition and Monte Carlo propagation run over an
+EnergyPlus calibration cohort [[doi:10.2139/ssrn.7333555]].
+
+[Certain] That fourth row is the only one in the corpus whose uncertainty analysis returns a
+result that contradicts the modelling assumption it was run to support: "equipment density
+accounts for 80-99% of annual energy-use variance, while envelope parameters, most directly
+recoverable from geometry, contribute negligibly", which the authors state "challenges common
+geometry-driven UBEM assumptions" [[doi:10.2139/ssrn.7333555]]. This source was originally
+unreadable by any route and entered the core tier only after its full text was retrieved by
+hand and read.
 
 [Certain] The one source that states its own uncertainty budget as incomplete does so plainly:
 "the current uncertainty quantification propagates only petrophysical parameter uncertainty",
@@ -311,11 +321,13 @@ temperature drift, are not yet incorporated into the final water content uncerta
 
 ### techno-economic
 
-**6 rows, 5 core — the smallest non-empty touchpoint.** [Certain] Where it appears it is
+**7 rows, 6 core — the smallest non-empty touchpoint.** [Certain] Where it appears it is
 usually a single objective rather than a costing model: net present value maximised over 30
 well locations [[title:247simulationloopshowagenticaikeepssubsurfaceengineeringmoving]],
 capital and operating expenditure computed on a converged flowsheet
-[[title:aspenplusmcpanmcpserveroftypedschemaconstrainedtoolsovertheaspenpluscomapi]], a
+[[title:aspenplusmcpanmcpserveroftypedschemaconstrainedtoolsovertheaspenpluscomapi]]
+[[doi:10.26434/chemrxiv.15006587/v1]] — two rows of the same system, which is why this
+touchpoint covers 7 rows but only 6 systems — a
 cost-per-activity figure of merit computed from commodity prices and industrial loadings
 [[arxiv:2606.05050]], operating-cost and return-on-investment recommendations synthesised from
 simulation results [[doi:10.1080/19401493.2026.2653969]], and a heat-pump retrofit assessed on
@@ -332,7 +344,7 @@ system whose driven artefact is an economic model.
 
 ### *(none)*
 
-**27 rows, 3 core.** [Certain] Two-thirds of these are reviews, surveys and position pieces
+**25 rows, 3 core.** [Certain] Two-thirds of these are reviews, surveys and position pieces
 admitted at `tier: context` — they describe the field rather than build in it, so no
 touchpoint applies [[doi:10.48550/arxiv.2601.01321]] [[doi:10.1007/s10270-025-01306-0]]
 [[arxiv:2608.03600]] [[arxiv:2509.08269]] [[doi:10.1016/j.apenergy.2025.126670]].
@@ -345,8 +357,10 @@ CALPHAD computation it reports was run by the authors' own scripts rather than b
 touchpoint vocabulary rather than outside scope [[doi:10.11578/dc.20260516.1]]
 [[doi:10.1016/j.compenvurbsys.2026.102449]].
 
-[Certain] Two further `none` rows mean something else entirely and should not be read as
-negatives: `doi:10.1039/d5dd00435g` and `doi:10.2139/ssrn.7333555` could not be read at all,
-by any route, so no touchpoint could be evidenced for either. `unreachable.md` records this;
-the distinction matters because an access failure and a genuine absence carry the same label
-in the column.
+[Certain] Two further rows originally carried `none` for a different reason again:
+`doi:10.1039/d5dd00435g` and `doi:10.2139/ssrn.7333555` could not be read by any route, so no
+touchpoint could be evidenced for either. Both were later read from the local PDF store and
+both are now core rows carrying six touchpoints each, which is why this count fell from 27 to
+25. The episode is kept in `unreachable.md` because the distinction it illustrates still
+holds for any future run: an access failure and a genuine absence carry the same label in the
+column, and here the label was wrong in both cases.

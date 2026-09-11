@@ -5,6 +5,13 @@ someone with the right credentials can act on. Written as the run goes; this fir
 was written at the step 3a handoff, before the core tier was deep-read, and covers the
 sources already known to be blocked. Records are added as step 4 hits further failures.
 
+**Post-report note.** After the report below was first written, fourteen sources were
+retrieved by hand into the local PDF store and read. Three of them were on the blocked list
+below; their rows have moved to "Recovered by hand" at the end of this file and they are no
+longer demoted. The remaining twelve blocked rows are unchanged, and the routes recorded
+against them are still the routes that failed. `unreachable.md` records the wider outcome of
+that round.
+
 `blocked_by` values are from the controlled list in `reference/SCHEMA_tango.md`.
 `bot-protection` is kept separate from `paywall` on purpose: several of the rows below are
 not licensing failures at all — the publisher returns HTTP 403 to an automated client
@@ -86,19 +93,25 @@ this literature is overwhelmingly preprint-first.
 
 ## Added during step 4 — the deep-read pass
 
-Fifteen further `core` records could not be read in full when the deep-read reached them.
+Fifteen further `core` records could not be read in full when the original deep-read reached
+them.
 Every one was demoted to `tier: context` with `access_status: abstract-only` and
 `maturity_demonstrated: not stated (abstract only)`, and its `screening.csv` note records
 the demotion. The count matters: the core tier fell from 113 to 98, so **13% of the
 intended deep-read was lost to access**, all of it after the handoff rather than before it.
 
-Three families dominate and none of them is a paywall in the licensing sense. ChemRxiv
-(five rows) and SSRN (three rows) both refuse automated clients outright; between them they
-account for eight of the fifteen. The third is a Zenodo record that no longer exists.
+**Three of these fifteen were later retrieved by hand and read, and all three supported a
+full `core` write-up.** The core tier recovered to 101 and the loss to access fell to 11%.
+Their rows are below the table, under "Recovered by hand"; the twelve that remain are listed
+here.
+
+Three families dominated the original fifteen and none of them is a paywall in the licensing
+sense. ChemRxiv (five rows) and SSRN (three rows) both refuse automated clients outright. Of
+the twelve that remain, ChemRxiv accounts for three and SSRN for two; the recovery came entirely
+from those two families plus RSC.
 
 | identity_key | title | url | venue | blocked_by | tried | local_pdf | would_change |
 |---|---|---|---|---|---|---|---|
-| `doi:10.26434/chemrxiv.15006587/v1` | Autonomous Flowsheet Synthesis, Simulation, and Analysis with a Locally Deployed Language Model Agent | https://doi.org/10.26434/chemrxiv.15006587/v1 | ChemRxiv | bot-protection | publisher DOI; chemrxiv.org established as unreadable to automated clients | no | little, uniquely — the authors' repository was readable and is admitted `core` under the same `system_id`, so the system itself is in the grid. The preprint would add the peer-review-facing framing and nothing the repository does not already evidence |
 | `doi:10.6084/m9.figshare.30931802` | Autonomous multi-agent AI accelerates hydroxide exchange membrane discovery through physics-grounded inverse design | https://doi.org/10.6084/m9.figshare.30931802 | Figshare | no-full-text-anywhere | Figshare API; the deposit is a dataset record whose only narrative is the abstract | no | core write-up, and it is one of the few admitted sources whose agent-proposed candidate was synthesised and measured, so it is the corpus's strongest candidate for a maturity above M3. Abstract-only forces `not stated (abstract only)` |
 | `title:agenticaienabled…` | Agentic AI-Enabled Physics-Informed Machine Learning Framework for Intelligent Building Modeling, Control, and Automation | https://surface.syr.edu/etd/2334 | Syracuse University | bot-protection | institutional repository record page (abstract retrieved in full); the full-text PDF returned HTTP 403 to every client tried, including a reader proxy | no | core write-up; the abstract reports a 6,156-run agentic benchmark, which would be the largest single evaluation in the corpus, but the orchestration modes it compares and the failure behaviour are in the unreadable chapters |
 | `doi:10.1016/j.net.2026.104573` | Embedding Bayesian optimization in a multi-agent large language model framework for critical heat flux modeling with uncertainty quantification | https://doi.org/10.1016/j.net.2026.104573 | Nuclear Engineering and Technology | bot-protection | publisher DOI; Elsevier/ScienceDirect established as unreadable to automated clients | no | core write-up; it is one of only three admitted sources tagged `uncertainty-quantification`, and the only one that reports calibrated coverage against a human-expert pipeline on the same search |
@@ -111,8 +124,21 @@ account for eight of the fifteen. The third is a Zenodo record that no longer ex
 | `doi:10.26434/chemrxiv.15002405/v1` | Q-planner: a harness system for quantum chemistry agents | https://doi.org/10.26434/chemrxiv.15002405/v1 | ChemRxiv | bot-protection | publisher DOI; chemrxiv.org established as unreadable | no | core write-up; it is the only admitted source whose central claim is that the agent should be kept *out* of the execution loop, and the abstract gives the token numbers but not the failure behaviour |
 | `doi:10.26434/chemrxiv.15007941/v1` | From Black Box to Dialogue: An MCP Server for Tanabe–Sugano Diagrams | https://doi.org/10.26434/chemrxiv.15007941/v1 | ChemRxiv | bot-protection | publisher DOI; chemrxiv.org established as unreadable | no | little; the abstract is unusually complete and the source is a proof-of-concept solver wrapper with no scored evaluation, so it would stay `context` |
 | `doi:10.2139/ssrn.6942178` | Closed-Loop LLM-Guided Molecular Dynamics Screening of Thermal Transport in Co-Cr-Ni Medium-Entropy Alloys | https://doi.org/10.2139/ssrn.6942178 | SSRN | bot-protection | publisher DOI; SSRN established as unreadable | no | core write-up; 300 simulator evaluations inside an agent-driven loop is among the larger closed-loop campaigns in the corpus, and the abstract reports that the search did *not* converge monotonically — a negative result whose discussion is unreadable |
-| `doi:10.1039/d5dd00435g` | Multi-agentic AI framework for end-to-end atomistic simulations | https://doi.org/10.1039/d5dd00435g | Digital Discovery (RSC) | bot-protection | publisher DOI and PDF (HTTP 403, Cloudflare); a reader proxy (CAPTCHA); the ScienceDirect RSC mirror; OpenAlex, which knows only the blocked RSC PDF; Europe PMC, zero hits; OSTI, no record; arXiv, no matching title | no | **everything.** This is the only admitted source of which *no* narrative text could be retrieved by any route — the single publisher-deposited sentence names no engine, so `tango_touchpoints` is recorded as `none` and every other field as `not stated`. It is the one row in the grid that is empty for want of access rather than for want of an author statement |
-| `doi:10.2139/ssrn.7333555` | Geo2UBEM: 3D Geometry Abstraction and LLM Multi-Agent Parameter Inference for Automated Urban Building Energy Modeling | https://doi.org/10.2139/ssrn.7333555 | SSRN | bot-protection | publisher DOI; SSRN established as unreadable. **No abstract exists in any harvested API record either**, so nothing beyond the title was available | no | everything. Like the row above, this record is empty rather than negative: the title names geometry abstraction and multi-agent parameter inference for urban building energy models, which would be `topology-construction` and `config-generation` evidence, but not one word of it can be quoted |
+
+## Recovered by hand
+
+Three of the fifteen step-4 demotions were retrieved by hand into the local PDF store after
+the report below was first written, read in full, and promoted back to `tier: core` with
+`access_status: full-text`. Their `screening.csv` notes record the promotion.
+
+| identity_key | title | url | venue | blocked_by (originally) | tried | local_pdf | what reading it changed |
+|---|---|---|---|---|---|---|---|
+| `doi:10.1039/d5dd00435g` | Multi-agentic AI framework for end-to-end atomistic simulations | https://doi.org/10.1039/d5dd00435g | Digital Discovery (RSC) | bot-protection | publisher DOI and PDF (HTTP 403, Cloudflare); a reader proxy (CAPTCHA); the ScienceDirect RSC mirror; OpenAlex; Europe PMC; OSTI; arXiv | `d5dd00435g.pdf` | everything. This record originally carried `tango_touchpoints: none` and `not stated` in every column because no route returned narrative text. The version of record is a full CC-BY paper: a multi-agent AutoGen/AG2 system driving LAMMPS on the Argonne Carbon cluster through Atomsk, Phonopy and OVITO, with an HPC agent doing SCP and torque submission. Rated `M1` against a human-expert baseline, now carrying six touchpoints |
+| `doi:10.2139/ssrn.7333555` | Geo2UBEM: 3D Geometry Abstraction and LLM Multi-Agent Parameter Inference for Automated Urban Building Energy Modeling | https://doi.org/10.2139/ssrn.7333555 | SSRN Electronic Journal | bot-protection | publisher DOI; SSRN established as unreadable; no abstract in any harvested API record either | `ssrn-7333555.pdf` | everything. This record originally had nothing beyond the title. The preprint is a three-agent orchestrator/diagnosis/tuning system driving EnergyPlus 23.2 through an Optuna TPE loop at 25 runs per pass on six named Purdue University buildings, validated against metered energy-use intensities held back until after calibration. Rated `M3`, and the corpus's fourth `uncertainty-quantification` core row |
+| `doi:10.26434/chemrxiv.15006587/v1` | Autonomous Flowsheet Synthesis, Simulation, and Analysis with a Locally Deployed Language Model Agent | https://doi.org/10.26434/chemrxiv.15006587/v1 | ChemRxiv | bot-protection | publisher DOI; chemrxiv.org established as unreadable to automated clients | `chemrxiv.15006587%2Fv1.pdf` | less than the two above, as predicted at the time: the system was already in the grid through the authors' repository under the same `system_id`, so no system entered or left the corpus. What it added is the peer-review-facing evidence — the models named as Qwen2.5-32B-Instruct and 14B-Instruct, the 19-task benchmark structure, the six-way failure taxonomy, and the finding that iterative error feedback recovered hallucinated variable paths in zero of thirty instances. Rated `M2` |
+
+The `would_change` column above had predicted "everything" for the first two and "little,
+uniquely" for the third. All three predictions held.
 
 ## One blocked source was recovered from the local store
 

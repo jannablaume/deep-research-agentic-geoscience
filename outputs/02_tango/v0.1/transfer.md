@@ -6,13 +6,13 @@ source's `transfer.csv` row, plus the sentence the `autonomy` rating was read fr
 
 ## doi:10.1145/3731599.3767349
 
-**autonomy (executes-and-iterates).** "When the LLM agent generates tool calls, it launches them to the Parsl queue, distributing them to the computing resource."
+**hpc-scale-out.** "With the Parsl tool ensemble, the LangChain workflow was able to access the Polaris computing resource directly without setting up the submission commands or scripts. The simulation tasks were submitted to the Parsl queue, which then assigned them to the workers with available resources." "This tool launched 100 simulation to the Parsl queue. With pre-defined configuration, Parsl requested 25 nodes from the Polaris PBS queue."
 
-**hpc-scale-out.** "All 8 simulation were then submitted to the Parsl workers and finished in ~60 seconds"
+**tool-exposure.** "The first setup was implemented by modifying the LangChain tool calling, which converts the LangChain tool calls to Parsl functions and queues them to the Parsl workers for parallel execution. The second approach was achieved by designing a Parsl ensemble function as an LLM tool, which performed parallel tasks." *(This was originally quoted from the preprint: "When the LLM agent generates tool calls, it launches them to the Parsl queue, distributing them to the computing resource." The published text instead reads "when the LLM agent invokes tool calls, it converts the tools to Parsl functions and launches" them.)*
 
-**tool-exposure.** "we implemented Parsl to the LangChain/LangGraph tool call setup, to bridge the gap between the LLM agent to the computing resource."
+**autonomy (executes-and-iterates).** "The model was able to choose the correct simulation input parameters, including the number of tool calls, based on the input prompts. These 8 simulations were then distributed to the 4 GPUs on the workstation via Parsl." No human approval step appears between the prompt and the simulations running, and the agent selects its own tool arguments.
 
-**failure_handling.** NOT FOUND: no sentence describing what happens when a submitted simulation job fails, errors or crashes.
+**What the version of record adds on failure.** The preprint record carried `failure_handling: not stated`. The published version reports hallucinated PDB IDs - "These PDB IDs were hallucinated by the LLM agent, as only 5 search results were generated from the researcher" - a tool-call cap "around 24", and worker load imbalance of "~177 seconds difference in execution time". None of these is handled by the system; they are observed and reported.
 
 ## doi:10.48550/arxiv.2604.07681
 
@@ -72,17 +72,15 @@ source's `transfer.csv` row, plus the sentence the `autonomy` rating was read fr
 
 ## doi:10.1016/j.dche.2026.100312
 
-**autonomy (executes-with-approval).** "the agent autonomously generates a detailed performance comparison table contrasting the original configuration (reflux ratio = 1.0) with the optimized configuration (reflux ratio = 1.45)."
+**tool-exposure.** "An MCP server toolset enables the LLM to communicate programmatically with APS using Python, allowing it to execute complex simulation tasks from plain-language instructions."
 
-**topology-construction.** MCP tools include "sim_create", "model_add", "models_connect", and the second case study covers "Synthesis via step-by-step dialogue and single-prompt modes".
+**topology-construction.** "The next case study assesses autonomous flowsheet synthesis through both a step-by-step dialogue and a single prompt", and on the ammonia flowsheet "the agent correctly reconstructed the main equipment connectivity and recycling-loop logic."
 
-**optimisation-loop.** "the agent autonomously generates a detailed performance comparison table contrasting the original configuration (reflux ratio = 1.0) with the optimized configuration (reflux ratio = 1.45)."
+**optimisation-loop.** "It then proceeds with a methodical approach by iteratively adjusting the reflux ratio and checking the targeted methanol purity", reaching "With a reflux ratio of 1.45, I've achieved 95.1 mol% [methanol]."
 
-**results-interpretation.** "With a reflux ratio of 1.45, I've achieved 95.1 mol% methanol purity in the distillate"
+**results-interpretation.** "The first shows the agent autonomously analyzing flowsheets, finding improvement opportunities, and iteratively optimizing, extracting data, and presenting results clearly", and "The agent effectively extracts relevant data from thousands of variables, interprets complex thermodynamic relationships, and presents findings in accessible formats."
 
-**tool-exposure.** "a large language model (LLM) agent is integrated with AVEVA Process Simulation (APS) via Model Context Protocol (MCP), allowing natural language interaction with rigorous process simulations."
-
-**failure_handling.** "a critical manual intervention is required because the user must shift the distillation column setup from 'Configure' mode to 'Solve' mode to obtain rigorous simulation results...frequently triggers convergence issues."
+**autonomy (executes-with-approval).** the loop is explicitly broken at the convergence step - "At this stage, a critical manual intervention is required because the user must shift the distillation column setup from 'Configure' mode to 'Solve' mode to obtain rigorous simulation results. This step is intentionally delegated to the human user rather than the LLM agent." The authors' own summary is that the system is "best positioned as a copilot that accelerates workflow execution, rather than as an autonomous decision-maker".
 
 ## doi:10.48550/arxiv.2605.20819
 
@@ -910,19 +908,17 @@ source's `transfer.csv` row, plus the sentence the `autonomy` rating was read fr
 
 ## doi:10.1016/j.taml.2026.100660
 
-**autonomy (executes-and-iterates).** "All the figures presented in this section were generated using OptMetaOpenFOAM based on user prompts."
+`config-generation` and `solver-control` - "MetaOpenFOAM 2.0 primarily handles the CFD simulation and postprocessing tasks through Iterative COT and Question Decomposition COT (QDCOT) mechanisms", with "OpenFOAM 10 [...] employed for CFD simulations."
 
-**config-generation.** "MetaOpenFOAM 2.0 primarily handles the CFD simulation and postprocessing tasks through Iterative COT and Question Decomposition COT (QDCOT) mechanisms."
+**optimisation-loop.** "The integration of external analysis tools, such as the active subspace method and L-BFGS-B optimization algorithm, further enhances the framework's capacity to perform detailed sensitivity analysis and multivariable optimization."
 
-**solver-control.** "A series of sampling points are then combined with the original CFD simulation and postprocessing tasks and fed into a natural language-driven CFD solver (i.e., MetaOpenFOAM 2.0 [13])."
-
-**optimisation-loop.** "Finally, based on the response surface generated by the sensitivity analysis tool and the optimization target extracted from the user's requirements, an optimization function is executed, ultimately returning the optimized values of the input variables mentioned in user requirements."
-
-**surrogate-modelling.** "Figure 11 presents the response surface and the components of w obtained by combining CFD analysis task 2 executed by OptMetaOpenFOAM with the active subspace method."
+**surrogate-modelling.** "Figure 11 presents the response surface and the components of [the active direction] obtained by combining CFD analysis task 2 executed by OptMetaOpenFOAM with the active subspace method", and the authors qualify it: "owing to these inherent bounds, the fitted response surface is not perfect."
 
 **results-interpretation.** "An external sensitivity analysis tool is then invoked to complete the sensitivity analysis task via graphical visualizations and textual explanations."
 
-**failure_handling.** NOT FOUND: no sentence anywhere in the paper describes what happens when an OpenFOAM run errors, crashes or fails to converge. The nearest statement defers the question: "due to the integration of fixed interfaces after completing the CFD simulation and postprocessing tasks, the Executability, Pass@k, and number of iterations remain consistent with the previous statistics in MetaOpenFOAM 2.0 [13]."
+**autonomy (executes-and-iterates).** "concise natural language commands (~200 characters) successfully triggered elaborate computational sequences involving simulation setup, postprocessing, sensitivity analysis, and parameter optimization, translating into over 2,000 lines of automated code execution." A single prompt drives setup, execution, sampling, surrogate fitting and optimisation with no described human step in between.
+
+**What the version of record adds.** A measured robustness figure: "pass@1 (%) ... Dataset 1 86.6 ... Dataset 2 85.0", across semantically equivalent but syntactically different prompts.
 
 ## doi:10.5281/zenodo.20543501
 
@@ -1282,3 +1278,54 @@ source's `transfer.csv` row, plus the sentence the `autonomy` rating was read fr
 
 **failure_handling.** "Typical failure cases encountered during development include invalid JSON configurations when the LLM returns malformed output and misidentified data formats. These are mitigated by the regex fallback parser, and file parser exceptions."
 
+## doi:10.1039/d5dd00435g
+
+`config-generation` — "A detailed system message was provided to the LAMMPS input creator for enabling the creation of the correct input files to perform these calculations" and "LAMMPS input agent created the input file with the appropriate thermo keywords."
+
+`topology-construction` — "The agentic system initially created the structure using the structure agent" via Atomsk; "the agent began by generating an FCC crystal structure of gold with a 2 × 2 × 2 supercell and a lattice parameter of 4.078 Å."
+
+`solver-control` — "the final step (iii) involves a heating simulation starting from room temperature and ramping up beyond and expected melting point (e.g. by 1000 K). The system is monitored until full melting is observed."
+
+`hpc-scale-out` — "The simulations were executed on the carbon HPC cluster located within the Center for Nanoscale Materials at Argonne ... Carbon HPC uses a torque-based job scheduler", and "After uploading all 192 displacement directories to the HPC system and running them in batch, the forces were collected, and phonon band structure data was generated."
+
+`results-interpretation` — "all the files were downloaded and the log.lammps file was read by the results analysis agent to extract the required quantities and provide a response to the user."
+
+`verification-regression` — "The computed elastic matrix was validated for physical consistency through symmetry checks and Born stability criteria", and the vision agent "has to make is whether a 50 : 50 solid–liquid interface has been created and whether the structure is fully melted."
+
+**autonomy (executes-and-iterates).** "A LAMMPS input script was created to relax the gold structure, but the simulation initially failed due to unrecognized or invalid commands (after read pause 0, then after minimize). These errors were progressively corrected, leading to successful relaxation and generation of a relaxed structure." The loop is closed on the system's own output without a human step, though AG2 "supports human-in-the-loop feedback".
+
+## doi:10.2139/ssrn.7333555
+
+**config-generation.** "Apply theta_k to IDF; Run EnergyPlus -> E_k; compute NMBE_k", with the Diagnosis Agent returning "a prioritised list of 3-5 parameters" per iteration; for PMU Club the agent "raised equipment density stepwise (75.0 -> 85.0 -> 100.0 W/m2, with lighting density reaching 16.0 W/m2)".
+
+**topology-construction.** "Urban 3D geometry is generated from street-level imagery, with orientation-specific window-to-wall ratios refined through facade-aware enhancement", and "Custom Python scripts parse the unified [schema into an] EnergyPlus IDF."
+
+**optimisation-loop.** "theta_k <- Optuna-TPE(B_k, n_trials = 25, seed = 42): // 25 EnergyPlus simulations", run inside a loop bounded by "MAX_ITER = 10".
+
+**uncertainty-quantification.** "A three-layer sensitivity and uncertainty analysis (Morris screening, Sobol decomposition, Monte Carlo propagation) reveals a cohort-level observability gap", and "Sobol indices confirm that envelope parameters have negligible EUI sensitivity (S_T <= 0.005)."
+
+**results-interpretation.** "the LLM-MAS diagnoses simulation-benchmark discrepancies and iteratively narrows the Bayesian optimization search space until convergence"; for MSEE, "Its P1F facade characterization initially pushed the LLM agent toward a high-intensity equipment-density range typical of engineering facilities, whereas its CBECS target (279.8 kWh/m2) is below the education-sector average. This mismatch required iterative downward bound refinement."
+
+**verification-regression.** "Convergence criteria were |NMBE| <= 5% and CV(RMSE) <= 15%, with MAX_ITER = 10. An early-stop heuristic terminated the loop when the last two consecutive CV(RMSE) improvements were each below 0.5%." Plus the Tier 1 gate: "The TuningAgent requests a final LLM plausibility check, which returns an approved flag, a confidence score (0-1), and a concerns list."
+
+**autonomy (executes-and-iterates).** the loop runs EnergyPlus, reads NMBE back, re-diagnoses and re-bounds without a human step - "The system required no manual parameter tuning, no metered data, and no building-specific configuration beyond the IDF and CBECS category." The human-in-the-loop gate is a post-hoc review queue, not an in-loop approval: "the HITL flag triggers review rather than automatic rollback".
+
+## doi:10.26434/chemrxiv.15006587/v1
+
+**tool-exposure.** "An MCP server exposes the simulator as a fixed set of strongly typed tools covering flowsheet synthesis, simulation, and analysis; requests that do not match a tool's declared input format are rejected before they reach the simulator."
+
+**topology-construction.** "A declarative builder constructs, converges, and analyzes a complete flowsheet from a single natural-language description", and "topology tools likewise auto-assign valid block and stream identifiers when none are supplied."
+
+**config-generation.** "A single block-specification tool accepts any valid pair and automatically selects the corresponding Aspen specification flag on the agent's behalf."
+
+**solver-control.** "A design-specification tool meets a target on a calculated quantity - say, a required product purity - by adjusting a manipulated variable outside the simulator through bisection, repeatedly halving the search interval between a lower and an upper bound until the sampled output reaches the target."
+
+**optimisation-loop.** "A companion optimization tool drives an equation-oriented optimizer that maximizes profit subject to a product-purity constraint, executing in an isolated simulator instance so that the agent's active flowsheet is untouched."
+
+**techno-economic.** "A techno-economic analysis tool connects the live simulation to an existing evaluation framework: it detects each block's underlying Aspen model type, maps block names onto the costing nomenclature, assembles a cost configuration from defaults, and returns capital and operating costs, revenue, and annualized profit."
+
+**results-interpretation.** "numerical values carry explicit units resolved against the flowsheet's unit table, and convergence status is returned as a plain-language summary with an explicit converged/not-converged flag."
+
+**verification-regression.** "Both tools enforce a strict honesty discipline: an unconverged simulation is refused rather than costed, and an infeasible purity target is reported as such rather than answered with a fabricated optimum."
+
+**autonomy (executes-and-iterates).** across the 19 scored tasks the model calls tools, reads self-describing errors back and continues without a human step - "an invalid connection request returns the valid ports for the target block ... turning errors into recoverable, in-loop feedback" - and the headline result is measured on end-to-end task completion, "we demonstrated that a compact, locally hosted model can, through these tools alone, construct and converge a rigorous simulation without writing any simulator-control code".

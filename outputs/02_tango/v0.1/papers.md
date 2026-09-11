@@ -6,17 +6,27 @@ obtained. The report is written from these blocks.
 
 ## doi:10.1145/3731599.3767349
 
-https://arxiv.org/html/2502.12280 — full text read from arXiv:2502.12280, the authors preprint of the same work. The ACM version returned HTTP 403 and IEEE HTTP 418. THE IDENTITY MATCH IS INFERRED from identical authorship and content, not verified against the ACM version
+https://doi.org/10.1145/3731599.3767349 - full text read from the local PDF store (`3731599.3767349.pdf`, the ACM version of record, SC Workshops '25). **This record was originally read from arXiv:2502.12280 and the identity match was inferred; it is now verified against the published version, and three of its quotes changed.** The preprint wording is noted below each one.
 
-**What was built.** "we implemented Parsl to the LangChain/LangGraph tool call setup, to bridge the gap between the LLM agent to the computing resource."
+**What was built.** "In this work, we implemented Parsl to the LangChain tool calling to bridge the gap between the LLM agent and the HPC resource. Two implementations were set up and tested on a local Nvidia GPU workstation and the Polaris/ALCF HPC system." *(The preprint originally quoted here read: "we implemented Parsl to the LangChain/LangGraph tool call setup, to bridge the gap between the LLM agent to the computing resource." The published version drops LangGraph from the sentence, names the HPC resource, and adds that there are two implementations.)*
 
-**What it can call.** "When the LLM agent generates tool calls, it launches them to the Parsl queue, distributing them to the computing resource."
+**The two implementations.** "The first setup was implemented by modifying the LangChain tool calling, which converts the LangChain tool calls to Parsl functions and queues them to the Parsl workers for parallel execution. The second approach was achieved by designing a Parsl ensemble function as an LLM tool, which performed parallel tasks." *(This distinction is not in the preprint quote originally carried here.)*
 
-**How it was evaluated.** "The local runs were performed on a lambda machine with 8 Nvidia V100 GPUs. We prompted the workflow to run 8-simulation ensemble run of different protein input instructions."
+**What it can call.** "The simulation tool is set up with the OpenMM software package to run on Nvidia GPUs. It takes a PDB file as input, and sets [up the system]." "It builds the protein topology, which comprises all the atomic bonded and nonboned interaction, using Gromacs pdb2gmx with Charm36m force field."
 
-**What it achieved.** "All 8 simulation were then submitted to the Parsl workers and finished in ~60 seconds"
+**The model.** "used OpenAI gpt-4o-mini as the LLM."
 
-**Maturity claimed.** "Our implementation enables the LLM agent to access any compatible computing resource through Parsl."
+**How it was evaluated.** "The local runs were performed on a lambda machine with 8 Nvidia V100 GPUs. We prompted the workflow to run an 8-simulation ensemble with different protein input instructions, including a local PDB file, a PDB ID, or just protein names." "On Polaris, we tested 100 simulations with 100 GPUs on 25 nodes and 80 runs with 40 GPUs on 10 nodes."
+
+**What it achieved.** "All 8 simulation were then submitted to the Parsl workers and finished in ~60 seconds." "On the Nvidia A100 GPUs, the 50-ps simulations of 2KKJ ran in ~340 ns/day, and were then finished within ~3 minutes. The majority of the run time was the queue time on Polaris." - the queue wait itself was "~265 minutes".
+
+**A scaling limit the preprint quote did not carry.** "While implemented with the Parsl tool node (setup 1), the number of tool calls that LLM agent made were capped around 24, with 100 simulations specified in the input prompt during the experiment. Therefore, a different implementation was necessitated on the HPC systems for massive parallel tool calls."
+
+**A hallucination the authors report.** "When the search tool only returned the top 5 results, it fetched PDB IDs of 148L, 1B7E, 1LYZ, 2LYZ, 3WEL, 5R2Z, 7BVM, and 7F26. Among these results, 1B7E is the structure of E. Coli transferase inhibitor, 3WEL is Sugar Beet alpha-Glucosidase and 5R2Z is Endothiapepsin. These PDB IDs were hallucinated by the LLM agent, as only 5 search results were generated from the researcher." "Based only on the model context, it failed to provide correct information for the following simulation runs."
+
+**Maturity claimed.** "Our implementation enables the LLM agent to access any computing resource with a compatible Parsl configuration." *(The preprint quote originally carried here read "any compatible computing resource through Parsl".)*
+
+**Limitations, in the authors' terms.** "Due to the LLM tool call limitation and computing system requirements, it still requires tailoring of the tool call setup depending on the tasks and computing platforms." / "However, it is now the user's responsibility to develop the simulation ensemble function with Parsl." / "the computing nodes had no internet access by default, and the unpredictable queue time on the HPC system caused delays." / "This end-to-end design is less dependent on the LLM capability, and less likely to err, but too rigid for more sophisticated tasks."
 
 ## doi:10.48550/arxiv.2604.07681
 
@@ -76,17 +86,25 @@ https://www.osti.gov/doecode/biblio/181158 — OSTI DOECODE software record read
 
 ## doi:10.1016/j.dche.2026.100312
 
-https://arxiv.org/html/2601.11650v1 — full text read from arXiv:2601.11650v1, the authors preprint. ScienceDirect returned HTTP 403. THE IDENTITY MATCH IS INFERRED from identical authorship and title, not verified against the journal version
+https://doi.org/10.1016/j.dche.2026.100312 - full text read from the local PDF store (`1-s2.0-S2772508126000256-main.pdf`, *Digital Chemical Engineering* 19 (2026) 100312, the version of record). **This record was originally read from arXiv:2601.11650v1 and the identity match was inferred; the published version adds a third case study, so the evaluation originally described here was incomplete.**
 
-**What was built.** "a large language model (LLM) agent is integrated with AVEVA Process Simulation (APS) via Model Context Protocol (MCP), allowing natural language interaction with rigorous process simulations."
+**What was built.** "To address this, a large language model (LLM) agent is integrated with AVEVA Process Simulation (APS) via Model Context Protocol (MCP), allowing natural language interaction with rigorous process simulations."
 
-**What it can call.** the MCP server exposes tools including "aps_connect", "sim_open", "sim_create", "model_add", "models_connect", "var_get_multiple", "var_set_multiple", "param_set_multiple", "fluid_create"
+**What it can call.** "An MCP server toolset enables the LLM to communicate programmatically with APS using Python, allowing it to execute complex simulation tasks from plain-language instructions."
 
-**How it was evaluated.** "Two water-methanol separation case studies assess the framework across different task complexities and interaction modes."
+**How it was evaluated.** "Three case studies assess the framework across different task complexities and interaction modes." *(Originally, from the preprint, this read "Two water-methanol separation case studies assess the framework across different task complexities and interaction modes.")* The conclusion frames the same set as "Two case studies, both utilizing a water-methanol separation process as the test system, were conducted to assess the agent's performance across varying task complexities and interaction modes. In addition, a dedicated stability case study was conducted across prompt formulations, LLM versions, and process complexity to evaluate robustness beyond single-run behavior."
 
-**What it achieved.** "With a reflux ratio of 1.45, I've achieved 95.1 mol% methanol purity in the distillate"
+**What the third case study is.** "To assess stability, we vary the framework and task setup relative to the default trial (Prompt 1.0 in Case Study 1) by changing the LLM version, prompting style, and process complexity." "Using Prompt 1.0 from Case Study 1 as the default task, we repeated this flowsheet-analysis workflow across different prompt styles and LLM versions (trials 2-5 in Supplementary Material S3.3 Table S7) and additionally tested a substantially more complex process flowsheet (trial 6)."
 
-**Maturity claimed.** "the framework's capabilities in analysis, optimization, and guided construction suggest LLM-based agents can become valuable collaborators."
+**What it achieved.** "Close! That gives 93.9% methanol. Let me try 1.45 to get closer" / "Perfect! With a reflux ratio of 1.45, I've achieved 95.1 mol% [methanol purity in the distillate]."
+
+**What the stability study found.** "In these repeated trials (2-5), the framework remained robust at the tool-execution and data-grounding levels. The agent consistently completed required MCP tool sequences and reliably reported simulator-grounded numerical values." "At the same time, variability was observed mainly in breadth of answers and depth of interpretation, not in basic data retrieval. The main residual weakness is therefore semantic interpretation rather than protocol execution." "This pattern indicates that retrieval is more stable than interpretation, which in turn supports our deployment strategy of dual verification: APS-level constraint enforcement plus expert review."
+
+**Generalisation beyond the test flowsheet.** "Despite the added complexity of branched topology and recycling structure, the agent correctly reconstructed the main equipment connectivity and recycling-loop logic, indicating that the workflow is not limited to simple linear separation problems."
+
+**Maturity claimed.** "the primary novelty is not connectivity to a commercial simulator per se, but, to the best of our knowledge, the first fully implemented and reproducible MCP-based integration with a commercial process simulator, combined with a protocol-mediated modular architecture and a trustworthiness-oriented evaluation in guided and higher-autonomy (dual-mode) operation."
+
+**Limitations, in the authors' terms.** "While current limitations mainly involve the accurate interpretation of the physical results seen in minor reasoning mistakes, such as oversimplification or misleading suggestions, mean expert oversight is still needed." / "For inexperienced users, the main risks are overtrust in fluent but overconfident explanations, difficulty distinguishing highly relevant from marginal suggestions under open-ended prompts, and limited ability to detect unsupported derived values (e.g., economic estimates) without additional checks." / "For experienced users, the main limitations include occasional semantic mismatch in variable selection despite correct retrieval, non-negligible review effort for convergence-sensitive synthesis steps." / "the system is best positioned as a copilot that accelerates workflow execution, rather than as an autonomous decision-maker."
 
 ## doi:10.48550/arxiv.2605.20819
 
@@ -972,7 +990,7 @@ https://arxiv.org/html/2408.15866 — full text read from arXiv HTML
 
 ## doi:10.1016/j.ijheatfluidflow.2026.110399
 
-https://arxiv.org/html/2504.19338 — the Elsevier version of record was not attempted as a known blocked host; full text read from the arXiv preprint with the same title and author list. IDENTITY MATCH IS INFERRED
+https://arxiv.org/html/2504.19338 — the Elsevier version of record was not attempted as a known blocked host; full text read from the arXiv preprint with the same title and author list. IDENTITY MATCH IS INFERRED, since verified — the Elsevier version of record was later read from the local PDF store (`1-s2.0-S0142727X26001657-main.pdf`). Every quote in this block was checked against it and none differed, so the inferred identity match is now confirmed.
 
 **What was built.** "We propose the first multi-agent framework for computational fluid dynamics that enables fully automated, end-to-end simulations directly from natural-language queries."
 
@@ -1000,7 +1018,7 @@ https://r.jina.ai/https://www.preprints.org/manuscript/202608.1323/v1 — full t
 
 ## doi:10.1016/j.taml.2025.100594
 
-https://arxiv.org/html/2504.09602v1 — the Elsevier version of record returned only a redirect interstitial, so the full text was read from the arXiv preprint 2504.09602v1 with the same title, authors and system description. IDENTITY MATCH IS INFERRED, not verified
+https://arxiv.org/html/2504.09602v1 — the Elsevier version of record returned only a redirect interstitial, so the full text was read from the arXiv preprint 2504.09602v1 with the same title, authors and system description. IDENTITY MATCH IS INFERRED, since verified — the Elsevier version of record was later read from the local PDF store (`1-s2.0-S2095034925000261-main.pdf`). Every quote in this block was checked against it and none differed, so the inferred identity match is now confirmed.
 
 **What was built.** "We introduce a novel approach centered on domain-specific LLM adaptation. By fine-tuning Qwen2.5-7B-Instruct on NL2FOAM, our custom dataset of 28716 natural language-to-OpenFOAM configuration pairs with chain-of-thought (CoT) annotations, we enable direct translation from natural language descriptions to executable CFD setups."
 
@@ -1014,17 +1032,21 @@ https://arxiv.org/html/2504.09602v1 — the Elsevier version of record returned 
 
 ## doi:10.1016/j.taml.2026.100660
 
-https://arxiv.org/pdf/2503.01273 — the Elsevier version of record was not attempted beyond one hop as a known blocked host; full text read from the arXiv preprint 2503.01273v1, fetched as PDF and converted with pdftotext because no HTML rendering exists. IDENTITY MATCH IS INFERRED, not verified
+https://doi.org/10.1016/j.taml.2026.100660 - full text read from the local PDF store (`1-s2.0-S2095034926000085-main.pdf`, *Theoretical and Applied Mechanics Letters* 16 (2026) 100660, the version of record). **This record was originally read from arXiv:2503.01273v1 and the identity match was inferred; the published version rewords the framing and adds a quantitative pass@1 robustness result that was originally recorded as absent.**
 
-**What was built.** "In this study, we introduce OptMetaOpenFOAM-a novel framework that bridges MetaOpenFOAM with external analysis and optimization tool libraries through a large language model (LLM)-driven chain-of-thought (COT) methodology."
+**What was built.** "In this study, we introduce OptMetaOpenFOAM, an innovative framework that employs a large language model driven multiagent architecture to automate sensitivity analyses and parameter optimization tasks in CFD via natural language instructions." *(The preprint originally quoted here read "OptMetaOpenFOAM-a novel framework that bridges MetaOpenFOAM with external analysis and optimization tool libraries".)*
 
-**What it can call.** "MetaGPT v0.8.0 [31] was chosen for the integration of different agents, while OpenFOAM 10 [9] was employed for CFD simulations due to its stability and dependability as an open-source solver."
+**What it can call.** "The integration of external analysis tools, such as the active subspace method and L-BFGS-B optimization algorithm, further enhances the framework's capacity to perform detailed sensitivity analysis and multivariable optimization." "MetaGPT v0.8.0 was chosen for the integration of different agents, while OpenFOAM 10 was employed for CFD simulations."
 
-**How it was evaluated.** "The test dataset comprises 11 distinct CFD analysis or optimization tasks, including a baseline simulation task derived from an OpenFOAM tutorial covering fluid dynamics, combustion, and heat transfer."
+**How it was evaluated.** "The framework's efficacy is demonstrated through comprehensive testing across 11 distinct CFD tasks-including fluid flow, combustion, and heat transfer-originating from standard OpenFOAM tutorials and an external validation case involving hydrogen combustion chamber optimization." *(The preprint quote originally carried here read "The test dataset comprises 11 distinct CFD analysis or optimization tasks, including a baseline simulation task derived from an OpenFOAM tutorial".)*
 
-**What it achieved.** "Remarkably, using only five concise prompts of approximately 200 characters each, the entire process-traditionally requiring over 2,000 lines of code for basic visualization, factor analysis, and key parameter optimization-was efficiently executed."
+**What it achieved.** "Remarkably, concise natural language commands (~200 characters) successfully triggered elaborate computational sequences involving simulation setup, postprocessing, sensitivity analysis, and parameter optimization, translating into over 2,000 lines of automated code execution." "Notably, the successful validation using a non-OpenFOAM-tutorial hydrogen combustion chamber case demonstrated its efficiency in handling complex combustion dynamics and optimization tasks."
 
-**Maturity claimed.** "These findings underscore the transformative potential of LLM-driven COT methodologies in linking external tool for advanced analysis and optimization, positioning OptMetaOpenFOAM as an effective tool that streamlines CFD simulations and enhances their convenience and efficiency for both industrial and research applications."
+**A quantitative result the preprint did not carry.** Table 1, "pass@1 comparison between the original and modified datasets": "Dataset 1 ... 86.6", "Dataset 2 ... 85.0". "These results confirm that OptMetaOpenFOAM maintains nearly identical success rates when handling semantically equivalent but syntactically different inputs, demonstrating strong prompt-level generalization and robustness of the proposed language-driven CFD automation framework." *(This was originally recorded as an evaluation "focused on result presentation rather than quantitative executability metrics"; that was true of the preprint and is not true of the version of record.)*
+
+**Maturity claimed.** "These findings underline the transformative potential of LLM-driven frameworks in revolutionizing CFD simulation workflows, making them more accessible, efficient, and effective for both industrial and research applications." *(The preprint quote originally carried here read "These findings underscore the transformative potential of LLM-driven COT methodologies in linking external tool for advanced analysis and optimization".)*
+
+**Limitations, in the authors' terms.** There is no limitations section. The single bounded statement is on the fitted surface: "owing to these inherent bounds, the fitted response surface is not perfect." The authors also note "A preliminary robustness and generalization analysis was presented in our previous work", deferring that evidence to MetaOpenFOAM 2.0.
 
 ## doi:10.5281/zenodo.20543501
 
@@ -1070,7 +1092,7 @@ https://arxiv.org/html/2509.20374 — full text read from arXiv HTML (v3), inclu
 
 ## doi:10.1002/aidi.202500174
 
-https://arxiv.org/html/2506.02019 — the Wiley version of record was not attempted as a known blocked host; full text read from the arXiv version 2506.02019v3, whose abstract, 315-case benchmark, headline figures and author list match the journal record. IDENTITY MATCH IS INFERRED, not verified
+https://arxiv.org/html/2506.02019 — the Wiley version of record was not attempted as a known blocked host; full text read from the arXiv version 2506.02019v3, whose abstract, 315-case benchmark, headline figures and author list match the journal record. IDENTITY MATCH IS INFERRED, since verified — the Wiley version of record was later read from the local PDF store. Every quote in this block was checked against it and none differed, so the inferred identity match is now confirmed.
 
 **What was built.** "This paper introduces ChatCFD, a LLM-driven agent system for end-to-end CFD automation. Powered by DeepSeek-R1/V3, a multi-agent architecture, structured OpenFOAM knowledge bases, precise error locator, and iterative reflection, ChatCFD dramatically outperforms prior systems."
 
@@ -1168,7 +1190,7 @@ https://www.frontiersin.org/journals/chemistry/articles/10.3389/fchem.2026.19148
 
 ## doi:10.1109/access.2025.3605803
 
-https://r.jina.ai/https://ieeexplore.ieee.org/document/11150377/ — IEEE Xplore returned an empty response; the article is CC BY and was recovered in full through the r.jina.ai reader proxy. Equations are mangled by the proxy and figures and the results table are images that could not be read
+https://r.jina.ai/https://ieeexplore.ieee.org/document/11150377/ — IEEE Xplore returned an empty response; the article is CC BY and was recovered in full through the r.jina.ai reader proxy. Equations are mangled by the proxy and figures and the results table are images that could not be read — the IEEE PDF was later read from the local PDF store (`Autonomous_Electromagnetic_Simulation_and_Modeling.pdf`). Every quote in this block was checked against it and none differed, and the equations and table values the proxy mangled are now legible - see "Table values recovered from the publisher PDF" below.
 
 **What was built.** "We develop an LLM-agent framework that autonomously generates and simulates QFN package models in Ansys HFSS. Given textual package specifications, the agent uses a large language model to run the Python script defining the 3D geometry, materials, and excitation ports for HFSS."
 
@@ -1179,6 +1201,10 @@ https://r.jina.ai/https://ieeexplore.ieee.org/document/11150377/ — IEEE Xplore
 **What it achieved.** "The framework achieved good agreement with measured data up to 1 GHz, validating the approach for practical applications."
 
 **Maturity claimed.** "The system successfully transforms user prompts into complete 3D models, executes electromagnetic simulations, extracts S-parameters, and synthesizes equivalent circuit models-all without manual intervention."
+
+**What the publisher PDF adds.** The proxy mangled the equations and could not render Figure 6; both are now legible. The RAG evaluation is reported as a scatter plot rather than a table, so there are no table cells to recover here - the correction is that **no numeric RAG accuracy figure exists in the source to quote**, which the mangled proxy rendering left ambiguous. The limitations section is now fully readable and is quoted below.
+
+**Limitations, in the authors' terms.** "First, the current model accuracy degrades above 1 GHz due to simplified geometric assumptions in the HFSS model. Improving high-frequency fidelity will require implementing adaptive mesh refinement strategies and more sophisticated port modeling techniques." / "Second, the lumped RLC topology used in the paper is chosen as a proof of concept ... The accuracy of more complex equivalent circuit topologies should be validated by measurements in an extended frequency range to confirm model usability for high-frequency applications." / "Third, the system currently relies on predefined geometric templates for QFN packages ... This would enable true design exploration rather than parameter optimization within fixed topologies."
 
 ## arxiv:2602.20683
 
@@ -1238,7 +1264,7 @@ https://developer.nvidia.com/blog/24-7-simulation-loops-how-agentic-ai-keeps-sub
 
 ## title:automaticbuildingenergymodeldevelopmentanddebuggingusinglargelanguagemodelsagenticworkflow
 
-https://www.osti.gov/servlets/purl/2480816 — the OSTI landing page gave only the record and abstract; the full accepted manuscript PDF was fetched from the OSTI full-text servlet and converted with pdftotext. The harvest metadata for this record is wrong - it is a peer-reviewed journal article, not a report
+https://www.osti.gov/servlets/purl/2480816 — the OSTI landing page gave only the record and abstract; the full accepted manuscript PDF was fetched from the OSTI full-text servlet and converted with pdftotext. The harvest metadata for this record is wrong - it is a peer-reviewed journal article, not a report — the Elsevier version of record was later read from the local PDF store (`1-s2.0-S0378778824012325-main.pdf`), confirming the journal article is *Energy and Buildings* 327 (2025) 115116. Every quote in this block was checked against it and none differed.
 
 **What was built.** "Here, we developed a generic LLM-planning-based workflow that takes a building description as input and generates an error-free EnergyPlus building energy model. Our robust workflow includes four core agents: 1) Building Description Pre-Processing, 2) IDF Object Information Extraction, 3) Single IDF Object Generator Suite, and 4) IDF Debugging Agent."
 
@@ -1266,7 +1292,7 @@ https://arxiv.org/html/2607.18557 — full text read from arXiv HTML (v1)
 
 ## doi:10.1016/j.softx.2025.102367
 
-https://www.osti.gov/servlets/purl/3015372 — ScienceDirect returned a bot-protection page; the full text was obtained from the laboratory deposit of the published open-access version and converted with pdftotext. Identity is certain - same DOI, title, authors and journal volume
+https://www.osti.gov/servlets/purl/3015372 — ScienceDirect returned a bot-protection page; the full text was obtained from the laboratory deposit of the published open-access version and converted with pdftotext. Identity is certain - same DOI, title, authors and journal volume — the Elsevier version of record was later read from the local PDF store (`1-s2.0-S2352711025003334-main.pdf`) rather than the OSTI deposit. Every quote in this block was checked against it and none differed.
 
 **What was built.** "This paper introduces EnergyPlus-MCP, the first open-source Model Context Protocol (MCP) server specifically designed for EnergyPlus simulation workflows, establishing a new foundational infrastructure for AI-driven building energy modeling."
 
@@ -1294,7 +1320,7 @@ https://publications.ibpsa.org/proceedings/simbuild/2026/papers/simbuild2026_130
 
 ## doi:10.1080/19401493.2026.2653969
 
-https://r.jina.ai/https://www.tandfonline.com/doi/full/10.1080/19401493.2026.2653969 — the publisher site was reached through the r.jina.ai reader proxy, returning the complete narrative through the data-availability statement; tables and figures render as captions and alternative text, so table cell values were not quotable
+https://r.jina.ai/https://www.tandfonline.com/doi/full/10.1080/19401493.2026.2653969 — the publisher site was reached through the r.jina.ai reader proxy, returning the complete narrative through the data-availability statement; tables and figures render as captions and alternative text, so table cell values were not quotable — the publisher PDF was later read from the local PDF store (`MCP-enabled agentic AI workflow for building energy modelling  framework and use cases.pdf`). Every quote in this block was checked against it and none differed, and the table cell values the proxy could not render are now quotable - see "Table values recovered from the publisher PDF" below.
 
 **What was built.** "This paper introduces a novel Model Context Protocol (MCP)-enabled framework that connects AI assistants to EnergyPlus through MCP, a standardized interface for tool invocation and context management."
 
@@ -1306,9 +1332,13 @@ https://r.jina.ai/https://www.tandfonline.com/doi/full/10.1080/19401493.2026.265
 
 **Maturity claimed.** "These demonstrations establish MCP as a foundational layer for AI-assisted building energy modelling, enabling natural language interactions with simulation tools while preserving professional oversight and decision-making authority."
 
+**Table values recovered from the publisher PDF.** The reader proxy rendered tables as captions only; the publisher PDF makes the cells quotable. Table 7, "LLM token consumption statistics across repeated workflow executions": Runs 10, Mean total tokens 47085.0, Standard deviation 7912.1, Min 34793, Max 63120. Table 8, per-model token usage: "GPT5 | 10 | 7,352.5 | 626.7" and "GPT4-mini | 85 | 4,674.4 | 61.9". Table 6, top-5 sensitivity ranking from Agent 3c: Orientation_180 degrees 52.0%, Orientation_90 degrees 18.1%, Roof Insulation Thickness 7.0%, Window_to_Wall_Ratio_70% 3.6%, Window_to_Wall_Ratio_80% 2.6%.
+
+The surrounding prose, which the proxy did render, attributes the variance: "GPT-5 is invoked once per run for schema reasoning and exhibits low variability (standard deviation of 627 tokens), while GPT-4o-mini handles repeated analytical tasks and contributes most of the run-to-run token fluctuation. Across 10 repeated runs, the top-ranked sensitive parameters remained consistent (orientation, roof insulation, window area)."
+
 ## doi:10.3390/buildings15173190
 
-https://r.jina.ai/https://www.mdpi.com/2075-5309/15/17/3190 — the publisher returned HTTP 403 to direct fetches of both the article and its open-access PDF; the full text was read through the r.jina.ai reader proxy. The harvest metadata carries a preprint-server manuscript number in the arXiv field, which resolves to an unrelated paper
+https://r.jina.ai/https://www.mdpi.com/2075-5309/15/17/3190 — the publisher returned HTTP 403 to direct fetches of both the article and its open-access PDF; the full text was read through the r.jina.ai reader proxy. The harvest metadata carries a preprint-server manuscript number in the arXiv field, which resolves to an unrelated paper — the publisher PDF was later read from the local PDF store (`buildings-15-03190.pdf`). Every quote in this block was checked against it and none differed, and the table cell values the proxy could not render are now quotable - see "Table values recovered from the publisher PDF" below.
 
 **What was built.** "This study introduces a novel automation pipeline that couples generative AI with finite element modelling through the Model Context Protocol (MCP)-a modular, context-aware architecture that complements language interpretation with structural computation."
 
@@ -1319,6 +1349,10 @@ https://r.jina.ai/https://www.mdpi.com/2075-5309/15/17/3190 — the publisher re
 **What it achieved.** "Across four case studies, the GPT+MCP framework demonstrated predictive accuracy for key structural parameters, with deviations under 1.5% compared to reference solutions produced using conventional finite element analysis workflows."
 
 **Maturity claimed.** "This work establishes a reproducible framework for trustworthy AI-assisted analysis in engineering, offering a scalable foundation for future developments in optimisation and regulatory automation."
+
+**Table values recovered from the publisher PDF.** The reader proxy rendered tables as captions only; the publisher PDF makes the cells quotable. Table 9, "Relative error (%) with respect to ETABS in the evaluation of max displacement in the X and Y directions", GPT+MCP column: Case A 1.427 / 1.427, Case B 1.208 / 1.624, Case C 2.834 / 0.233, Case D 1.998 / 1.422, against a standalone-GPT column running from 235.335 to 481.640. Table 10, base shear: GPT+MCP 0.007, 0.003, 0.022, 0.017 against standalone GPT 27.774, 30.489, 35.397, 43.590.
+
+**A claim its own table does not support.** The abstract states the system achieves "accuracy for key structural parameters, with deviations under 1.5% compared to reference [solutions]". Table 9 reports GPT+MCP max-displacement errors of 1.624%, 1.998% and 2.834% in three of the eight case-direction pairs. The base-shear and period errors are far below 1.5%; the max-displacement errors are not. This is recorded here because it was invisible until the publisher PDF arrived — the proxy rendering could not surface the table cells.
 
 ## doi:10.3929/ethz-c-000801434
 
@@ -1376,3 +1410,70 @@ https://doi.org/10.1016/j.bdes.2026.100042 — every online route failed - the p
 
 **Maturity claimed.** "GAGAW establishes a practical pattern for accessible, cross-modal geophysical analysis and marks a paradigm shift from LLM-assisted scripting to LLM-orchestrated, tool-centric workflows in Earth and environmental science."
 
+## doi:10.1039/d5dd00435g
+
+https://doi.org/10.1039/d5dd00435g — full text read from the local PDF store (`d5dd00435g.pdf`, the RSC version of record, CC-BY 4.0, published 9 December 2025). Every route to this paper originally failed and the record was empty; this block replaces it.
+
+**What was built.** "Here, we introduce a multi-agent artificial intelligence (AI) framework that autonomously performs end-to-end atomistic simulations, i.e. molecular dynamics (MD), with automated input and associated full suite of analyses, using large language models (LLMs) and multiple specialized AI agents."
+
+**What it can call.** "Our system orchestrates the entire simulation pipeline, from structure generation via Atomsk and interatomic potential discovery through automated web mining, to simulation setup and execution using LAMMPS on high-performance computing (HPC) platforms. Post-simulation, our agentic framework performs automated data analysis and visualization with popular analysis tools like OVITO and Phonopy."
+
+**How it reaches the machine.** "The HPC agent is responsible for packaging simulation files (structure, potential, input scripts), uploading via secure copy protocol (SCP), submitting jobs, monitoring job completion, and downloading results and notifying downstream agents for analysis."
+
+**How it was evaluated.** "In all case study simulations, we validated the capabilities of the agentic pipeline by comparing all the results with human experts. For consistent comparison and due to the deterministic nature of the LAMMPS simulations, the human expert evaluation used the same initial structure and same potential files as those generated by the structure agent and the potential agent respectively."
+
+**What it achieved.** Table 4, cohesive energy, agent versus human: "Fe (BCC) −4.3159 / −4.3159 / 0%", "Au−Cu (FCC) −3.8239 / −3.8246 / 0.018%". On melting: "the heat capacity curve is computed from fluctuations in enthalpy, and it exhibits a sharp peak at approximately 1604 K, which corresponds to the alloy's melting point."
+
+**A number the source does not state.** "The system achieved average errors below x% compared to the results of human LAMMPS simulation experts." — the placeholder is in the published version of record, so the wider crystal-system accuracy claim has no value attached to it.
+
+**Maturity claimed.** "our system successfully reproduced both static properties (lattice constants, cohesive energies, elastic constants, phonon dispersion) and dynamic properties (melting points) across a diverse set of elemental and alloy systems with accuracy comparable to human experts."
+
+**Limitations, in the authors' terms.** "First, dependency management and environment reproducibility, especially for tools like LAMMPS, Atomsk, and Phonopy, can become brittle across platforms or HPC systems." / "Second, although the system is capable of autonomous decision-making and error recovery, the trustworthiness and explainability of some AI-driven actions, particularly LLM-based reasoning, remain open challenges." / "Third, while our framework already scales to a broad class of static and dynamic materials properties, accuracy vs. automation trade-offs become critical for complex tasks such as phonon dispersion, thermal conductivity, or defect energetics."
+
+**Where the authors place the boundary of the agent's responsibility.** "Such variability stems from the intrinsic limitations and transferability of the potential itself, rather than from the agent's operation. Consequently, the agent should not be held responsible for errors originating from the underlying potential choice."
+
+## doi:10.2139/ssrn.7333555
+
+https://ssrn.com/abstract=7333555 - full text read from the local PDF store (`ssrn-7333555.pdf`, the SSRN preprint, watermarked "This preprint research paper has not been peer reviewed"). Neither a full text nor an abstract could originally be retrieved from any route, and the record held nothing but its title; this block replaces it.
+
+**What was built.** "Geo2UBEM is introduced as the first end-to-end, meter-free workflow integrating automated scan-to-IDF 3D geometry reconstruction with an LLM-driven multi-agent system (LLM-MAS) for energy parameter inference."
+
+**What it can call.** "The Geo2UBEM pipeline was developed in Python 3.11 and evaluated on a 32-core Windows 11 workstation. EnergyPlus 23.2 was the simulation engine. Bayesian optimization used Optuna TPE (seed = 42; 25 trials per pass; n_startup_trials=10; objective: minimize |NMBE|; no pruner)."
+
+**How the agents divide the work.** The system "deploys a three-agent LLM-MAS system" - an Orchestrator, a Diagnosis Agent and a Parameter Tuning Agent. "The Diagnosis Agent receives the building context. It calls the Claude API (model: claude-sonnet-4-6, temperature = 0.1) with a structured [prompt and returns] a prioritised list of 3-5 parameters." "The Parameter Tuning Agent converts the Diagnosis Agent's recommendations into Optuna [search bounds]."
+
+**What closes the loop.** "In place of the metered data conventionally required under ASHRAE Guideline 14, CBECS 2018 national median benchmarks are used: the LLM-MAS diagnoses simulation-benchmark discrepancies and iteratively narrows the Bayesian optimization search space until convergence."
+
+**How it was evaluated.** "Applied to six calibrated campus buildings across four types at Purdue University (101,170 m2), Geo2UBEM achieves ASHRAE-consistent convergence (|NMBE| <= 5%; CV(RMSE) <= 15%) without any metered input, a result not previously demonstrated for a multi-building cohort. Independent validation against actual metered EUIs confirms all six models fall within CBECS sector ranges, at an average inference cost of $0.09 per building."
+
+**What it achieved.** "Four buildings (Dudley Hall, John T. Myers, PMU, and University Hall) converged after a single LLM-MAS iteration from the neutral-parameter baseline; PMU Club required three iterations and MSEE seven." "Final convergence-check NMBE ranged from -1.22% (University Hall) to +1.04% (MSEE)." "The LLM reasoning layer incurs a modest and predictable overhead: $0.09 USD per building on average (Supplementary Table S1), totalling under $0.55 for the six-building campaign - negligible relative to the ~92-min parallel wall-clock cost."
+
+**A negative result the authors report.** "A three-layer sensitivity and uncertainty analysis (Morris screening, Sobol decomposition, Monte Carlo propagation) reveals a cohort-level observability gap: equipment density accounts for 80-99% of annual energy-use variance, while envelope parameters, most directly recoverable from geometry, contribute negligibly. This challenges common geometry-driven UBEM assumptions, indicating calibration effort is better spent characterizing operational loads than refining envelope parameters."
+
+**Maturity claimed.** "Collectively, these results establish a scalable, low-cost pathway to standards-consistent UBEM calibration for urban stocks lacking metered data."
+
+**Limitations, in the authors' terms.** "Six buildings in a single climate zone (CZ5A) constrain statistical representativeness." / "Ideal-loads systems reduce modelling uncertainty but suppress equipment-level dynamics and contribute to simulation-adequacy gaps in district-heating-dominated buildings." / "LLM reasoning is externally hosted and cannot be fully reproduced across model versions." / "Hardware scalability is extrapolated beyond the observed workload. Parallel execution on six buildings converges wall-clock time to the single-building maximum (~92 min); projecting this linearly to an N-building portfolio on an N-core node has not been validated at larger scale. Memory bottlenecks, I/O contention, and EnergyPlus licence concurrency may break the linear assumption." / "tighter automation of upstream geometry quality control and reproducible pipeline orchestration, which remain the two most manual components in the current workflow."
+
+## doi:10.26434/chemrxiv.15006587/v1
+
+https://doi.org/10.26434/chemrxiv.15006587/v1 - full text read from the local PDF store (`chemrxiv.15006587%2Fv1.pdf`, the ChemRxiv preprint dated 23 July 2026). chemrxiv.org originally refused every automated client and this record was abstract-only; the system was in the grid only through the authors' repository under the same `system_id`.
+
+**What was built.** "This work instead connects LLMs to Aspen Plus through the model context protocol (MCP), an open standard that lets an AI model operate external software through a predefined, validated set of operations rather than through code it writes itself."
+
+**What it can call.** "An MCP server exposes the simulator as a fixed set of strongly typed tools covering flowsheet synthesis, simulation, and analysis; requests that do not match a tool's declared input format are rejected before they reach the simulator. A declarative builder constructs, converges, and analyzes a complete flowsheet from a single natural-language description, and the entire system runs on the user's own hardware, so no process data leaves the site."
+
+**What the models were.** "In the reference deployment used throughout this work, an OpenClaw gateway orchestrates Qwen2.5-32B and 14B models that are quantized - compressed to lower numerical precision so they fit on modest [hardware]." "Qwen2.5-32B-Instruct and Qwen2.5-14B-Instruct, each served through vLLM on local accelerator hardware."
+
+**How convergence is handled.** "Numerical convergence is the dominant obstacle to autonomous operation. Two specialized tools encode established engineering procedures directly. A shortcut-design tool applies the Winn-Underwood-Gilliland shortcut method to estimate a column's stage count and feed location, then initializes the rigorous model from that estimate - avoiding the solver failures that commonly attend an uninitialized column."
+
+**How it was evaluated.** "Across 19 automatically scored tasks on three flowsheets, tool-calling raised the task success of a local 32B-parameter model from 16% to 89%, and of a 14B model from 0% to 84%." The comparison arm is raw COM code generation, and "The code-generation arm is additionally evaluated in an iterative variant: on failure, the execution error and traceback are re-[submitted]" for up to three attempts.
+
+**What it achieved.** "Under the code-generation paradigm, the 32B model completed 3 of 19 tasks (16%), and the 14B model [0 of 19]." "Indeed, the 14B model with the interface outperforms the 32B model without it by 68 [percentage points]."
+
+**The failure analysis, which is the paper's central evidence.** "Hallucinated variable paths dominate the code-generation failures - 14 of 16 for the 32B model and 15 of 19 for the 14B model in the definitive run, and approximately 78% of all code-generation failures aggregated across repetitions." "Under tool-calling, this entire failure class - together with syntax and type errors - was not merely reduced but absent, as the taxonomy predicts: such requests cannot reach the simulator. The only failure class observed for tool-calling was a silently incorrect answer."
+
+**What error feedback did not fix.** "Iterative error feedback did not close this gap - hallucinated variable paths recovered in zero of thirty instances across both models, the sole rescued failure being an execution exception whose error message contained the repair - confirming that the missing ingredient is schema knowledge, which retries cannot supply but a typed interface provides structurally."
+
+**Maturity claimed.** "reliability is thus a structural guarantee of the interface rather than a behavior the model must learn."
+
+**Limitations, in the authors' terms.** "The interface currently targets steady-state simulation, and the definition of components and reacting systems relies in part on workarounds for limitations of the underlying automation interface." / "The empirical evaluation is likewise centered on a single family of open-weight models and a set of representative - but not exhaustive - flowsheets, so its quantitative conclusions should be read as indicative of the achievable reliability gains rather than as universal bounds." / "the tool layer does not yet cover every Aspen Plus unit-operation model: result extraction and declarative construction support the common block set, and models outside it currently fall back to the raw variable-access tools." / "A middle ground - letting the agent write code that calls the same tested functions - might recover part of the gap; we did not test it."

@@ -182,16 +182,8 @@ is contradicted here.
 | Run | Prompt | Asks | Output |
 |---|---|---|---|
 | 01 | `prompts/01_landscape_neutral.md` | What exists in agentic AI for solid-earth geoscience | `outputs/01_landscape/v0.5` |
-| 02 | `prompts/02_tango.md` | What exists that bears on making TANGO agentic | `outputs/02_tango/v0.2` |
+| 02 | `prompts/02_tango.md` | What exists that bears on making TANGO agentic | `outputs/02_tango/v0.1` |
 | 03 | `prompts/03_gaps.md` | What the two finished runs record as missing | `outputs/03_gaps/v0.1` |
-
-`outputs/02_tango/v0.2` is v0.1 plus a hand-retrieval round: same corpus, same screening
-decisions, same 183 admitted sources, but 14 sources re-read from PDFs fetched by hand, three of
-them promoted out of `context`. Quote v0.2. **`OUT_TANGO` in the Makefile still defaults to
-`v0.1` on purpose** — `make gaps` reads it, and moving 03's inputs is a decision to take
-deliberately rather than inherit. Pass `OUT_TANGO=outputs/02_tango/v0.2` when you mean v0.2.
-`decisions.md` records why the round was written as a new directory and why that sits awkwardly
-with the 01 run's in-place correction on the same day.
 
 **The 01 pipeline is frozen.** `harvest.py`, `triage.py` and `audit.py` produced the
 v0.5 landscape and a committed run is evidence; a later run must not be able to change

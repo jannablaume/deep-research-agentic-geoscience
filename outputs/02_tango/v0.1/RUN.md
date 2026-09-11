@@ -314,24 +314,25 @@ affected.
 | Triage thresholds | `--min-score 3 --min-strong 1 --min-domain 4` |
 | Shortlisted | 773 (2% of the corpus) — 352 core scope, 421 periphery |
 | Screening decisions | 939 |
-| **Admitted** | **183 — 98 `core`, 85 `context`** |
+| **Admitted** | **183 — 101 `core`, 82 `context`** (originally 98 / 85; see step 7) |
 | Distinct systems | 177 |
 | Recall audit | 150 below-cut records screened, 3 false negatives, **2%** |
 | Periphery harvested and not read | 12,189 |
 
-**Maturity (core rows).** M0 3 · M1 37 · M2 47 · M3 11 · M4 0 · M5 0. All 85 context rows:
+**Maturity (core rows).** M0 3 · M1 38 · M2 48 · M3 12 · M4 0 · M5 0. All 82 context rows:
 `not stated (abstract only)`.
 
-**Touchpoints (all rows / core rows).** config-generation 96/72 · solver-control 76/65 ·
-results-interpretation 57/52 · verification-regression 45/33 · optimisation-loop 42/27 ·
-hpc-scale-out 33/18 · tool-exposure 32/23 · provenance-reproducibility 24/15 ·
-topology-construction 23/18 · surrogate-modelling 17/11 · uncertainty-quantification 10/3 ·
-techno-economic 6/5 · none 27/3.
+**Touchpoints (all rows / core rows).** config-generation 98/75 · solver-control 77/67 ·
+results-interpretation 60/55 · verification-regression 48/36 · optimisation-loop 44/29 ·
+hpc-scale-out 34/19 · tool-exposure 32/24 · topology-construction 25/21 ·
+provenance-reproducibility 24/15 · surrogate-modelling 17/11 · uncertainty-quantification 11/4 ·
+techno-economic 7/6 · none 25/3.
 
-**Access.** 15 core records demoted for want of full text (13% of the intended deep-read);
-2 admitted sources unreadable by any route; 8 core records read from an inferred-identity
-substitute; 4 read through a reader proxy with table values unquotable; 1 recovered from the
-local PDF store.
+**Access, after the step-7 hand-retrieval round.** 12 core records still demoted for want of
+full text (11% of the intended deep-read, down from 15 and 13%); 0 admitted sources unreadable
+by any route (was 2); 2 core records still read from an inferred-identity substitute (was 8);
+1 still read through a reader proxy with table values unquotable (was 4); 1 still read from a
+third-party deposit (was 3); 15 sources read from the local PDF store across the two rounds.
 
 ### What did not work, said as failure
 
@@ -363,12 +364,156 @@ local PDF store.
 
 ### Known weaknesses of this run
 
-- **46% of the admitted corpus has no maturity rating**, because `context` means abstract-only.
-  Fifteen of those 85 rows would have had one if their full text were reachable.
+- **45% of the admitted corpus has no maturity rating**, because `context` means abstract-only.
+  Twelve of those 82 rows would have had one if their full text were reachable — three fewer
+  than originally, because step 7 retrieved and read three of them.
 - **The `none` touchpoint conflates two different things** — a genuine negative and an access
-  failure. Two rows are the latter. Section 03 flags it; the column cannot.
+  failure. Two rows were originally the latter; step 7 retrieved both and neither carries `none`
+  any more. Section 03 records the correction; the column still cannot distinguish the two for
+  any future run.
 - **Context-tier touchpoints rest on abstracts, not on quoted sentences.** Core touchpoints
   trace to a verbatim extract in `transfer.md` as rule 2 requires; context ones do not, and
   every count in section 03 is therefore given twice so a reader can use the core-only figure.
 - **Screening was done by one reader in one pass.** There is no second screener and no
   inter-rater measurement, so the 2% false-negative rate measures the ranking, not the judgment.
+
+---
+
+## Step 7 — Post-report hand-retrieval round
+
+### What was asked for and what arrived
+
+After this run closed, the person running it worked through `unreachable.md` — not
+`paywalled.md` — and retrieved the sources it named, placing 20 PDFs in a local store outside
+this repository. That distinction matters and is worth recording, because `unreachable.md` is
+the wider file: it covers sources that *were* read but not from the place their identity key
+points at, and that is where most of this round's value turned out to be.
+
+Every PDF was matched to the admitted set by reading the DOI off its first two pages with
+`pdftotext`, never by filename — the filenames are publisher exports (`1-s2.0-S…-main.pdf` is a
+ScienceDirect PII, `3731599.3767349.pdf` an ACM DOI suffix). 19 distinct works, one duplicated.
+
+| category | PDFs | what re-reading could change |
+|---|---|---|
+| demoted to `context` at `abstract-only` | 3 | promotion to `core`; two of the three were empty rows |
+| read from an arXiv substitute, identity inferred | 6 | verification against the version of record |
+| read through the `r.jina.ai` proxy, tables unquotable | 3 | recovery of table cell values |
+| read from a third-party or laboratory deposit | 2 | verification against the publisher's own text |
+| already read in full from the same route | 3 | nothing — confirmed and skipped |
+| matched no admitted record | 2 | nothing — discarded |
+
+**14 records were re-read.** The three already-read files were `doi:10.1016/j.bdes.2026.100042`
+(read from the local store during the original deep-read already), `doi:10.69997/pse.120458` (a
+two-page abstract read whole from the start) and `2605.19743v2.pdf`, which is the arXiv
+substitute for `doi:10.3929/ethz-c-000801434` rather than the institutional version — so it
+could not verify anything the original read had not already used.
+
+### The two discarded files, both predicted in advance
+
+`2507.01968v1.pdf` is "Optimising task allocation to balance business goals and worker
+well-being for financial service workforces". `unreachable.md` had already recorded that
+`doi:10.3390/buildings15173190` carries `2507.1968` in its arXiv field, that this is a
+preprint-server manuscript number rather than an arXiv id, and that following it "resolves to an
+unrelated paper on financial-services task allocation". That is exactly this file. The warning
+worked: it was matched by DOI, found to belong to no admitted record, and discarded.
+
+`buildings-15-03191-v3.pdf` is "Development of an Indicator-Based Framework for a Sustainable
+Building Retrofit" — the article adjacent to `doi:10.3390/buildings15173190` in the same MDPI
+issue, off by one in the article number. It contains no agent and no language model and would
+be cut `not-agentic` if screened. Neither file was screened in and neither appears in any grid.
+
+### How the re-read was checked, not just done
+
+Re-reading eleven already-`core` sources is only worth anything if the check is mechanical
+rather than impressionistic. Every quoted span of five or more words in each source's
+`papers.md` and `transfer.md` block was extracted and matched against the version of record's
+text, normalised for ligatures, hyphenation across line breaks, smart quotes and dash variants,
+with a token-window similarity fallback to locate near-misses and print the divergent passage.
+
+Two mechanical lessons came out of building that check and are recorded because they would
+otherwise be repeated. First, `pdftotext -layout` interleaves running headers and the second
+column into the body text on two-column papers, so exact substring matching fails for reasons
+that have nothing to do with the text differing; plain `pdftotext` reading order is correct for
+this job. Second, the first version of the checker reported every quote in all six substitute
+sources as divergent, which was a bug in the checker and not a finding — a result that
+implausible is a signal to debug the instrument before believing it.
+
+### What the check found
+
+**Of eleven already-`core` sources re-read, eight verified unchanged and three had changed.**
+A 3-in-6 divergence rate among the arXiv-substitute reads specifically.
+
+- `doi:10.1145/3731599.3767349` — the ACM version of record describes **two** Parsl
+  implementations where the preprint described one, drops LangGraph from the sentence
+  originally quoted, and adds two things the preprint does not have: a hallucination incident in
+  which the agent invented three PDB IDs and molecular dynamics ran on the wrong protein
+  structures, and a hard tool-call cap "around 24" that forced the second implementation.
+  `failure_handling` was originally `not stated`; it now records three observed, unhandled
+  failures.
+- `doi:10.1016/j.dche.2026.100312` — the published paper has **three** case studies, not two.
+  The third is a stability assessment across prompt styles, LLM versions and an ammonia
+  synthesis flowsheet. The original `evaluation_method` was therefore incomplete.
+- `doi:10.1016/j.taml.2026.100660` — the published version reports a pass@1 comparison (86.6%
+  against 85.0% on paraphrased prompts) that was originally recorded as absent, on the grounds
+  that the evaluation was "focused on result presentation rather than quantitative executability
+  metrics". True of the preprint; not true of the version of record.
+
+Recovering table cells the reader proxy could not render changed one more thing.
+`doi:10.3390/buildings15173190` claims in its abstract "deviations under 1.5% compared to
+reference" solutions; its own Table 9 reports GPT+MCP max-displacement errors of 1.624%, 1.998%
+and 2.834%, so three of eight case-direction pairs exceed the headline figure. This is recorded
+as a measurement about the source, not an accusation, and it was simply unreadable before the
+publisher PDF arrived.
+
+### What the three promotions cost and bought
+
+The three recovered demotions were all worth reading and none of them changed the shape of the
+corpus:
+
+- `doi:10.1039/d5dd00435g` → `core`, `M1`, six touchpoints. LAMMPS on HPC through Atomsk,
+  Phonopy and OVITO. One detail is worth flagging for anyone quoting it: the published text
+  contains an unfilled placeholder — "The system achieved average errors below x% compared to
+  the results of human LAMMPS simulation experts" — so its wider accuracy claim has no value
+  attached to it in the version of record.
+- `doi:10.2139/ssrn.7333555` → `core`, `M3`, six touchpoints, and the corpus's fourth
+  `uncertainty-quantification` core row. Six named Purdue buildings, metered data held back
+  until after calibration.
+- `doi:10.26434/chemrxiv.15006587/v1` → `core`, `M2`. No new system: it shares `system_id`
+  `Aspen-MCP` with the repository record, so per-system counts are unchanged. The
+  `would_change` note written for it at the step-3a handoff predicted exactly this — "little,
+  uniquely" — and was right.
+
+**No source entered or left the admitted set.** The screening decisions, the shortlist, the
+audit sample and the false-negative rate are all unchanged from the original run.
+
+### Artifacts changed
+
+`papers.csv`, `papers.md`, `transfer.csv`, `transfer.md`, `screening.csv` (tier and note fields
+only), `paywalled.md`, `unreachable.md`, all ten report sections, and this file. `screened.csv`,
+`triage.csv`, `queries.csv`, `shortlist.md`, `audit_sample.md` and `triage_stats.md` are
+untouched.
+
+One inconsistency was introduced and caught during the round rather than after it: the new
+`transfer.md` blocks were first written with a `` `touchpoint` - `` label where the file's
+convention is `**touchpoint.**`, and one `transfer.csv` row was left carrying four touchpoints
+while its block evidenced eight. Both were found by a script that checks every declared
+touchpoint against its own block, which now reports 0 unevidenced touchpoints across all 101
+core blocks that declare any. `audit_tango.py` does not check this, which is why it was worth
+checking by hand.
+
+### What this round does not settle
+
+Twelve demotions remain and `paywalled.md` still records what each would change. Four of them
+are ChemRxiv and two SSRN — the same two hosts that caused most of the original losses, and
+neither was resolved. Two core records are still read from a substitute whose identity is
+inferred: `doi:10.3929/ethz-c-000801434`, where the hand-retrieved copy is the same arXiv
+version and so verifies nothing, and `title:aspenplusmcp…`, still asserted by the repository
+itself — though that system's evidence no longer rests on the repository alone now that its
+preprint is read. One record is still proxy-read with tables unquotable
+(`doi:10.20944/preprints202608.1323.v1`) and one still read from a laboratory deposit
+(`doi:10.11578/dc.20260516.1`).
+
+The divergence rate is the finding most likely to matter for a future run: **three of six
+preprint-to-published pairs checked had changed in ways that altered a recorded field.** On a
+sample of six that is not a rate anyone should extrapolate, but it is enough to say that
+`IDENTITY MATCH IS INFERRED` in `papers.md` is a real caveat and not a formality.

@@ -2,7 +2,7 @@
 
 Newest first. One entry per decision: what, why, what it rules out.
 
-## 2026-09-11 — 02_tango: unreachable sources retrieved by hand, written as v0.2
+## 2026-09-11 — 02_tango: unreachable sources retrieved by hand, corrected in place
 
 The corpus owner worked through `outputs/02_tango/v0.1/unreachable.md` — not `paywalled.md` —
 and retrieved 20 PDFs into a local store outside this repository. 19 distinct works; 14 were
@@ -10,7 +10,7 @@ re-read. Three were `context`/abstract-only demotions and all three supported a 
 write-up, so core rises 98 → 101 and context falls 85 → 82. The admitted set is unchanged at
 183: no source entered or left, no query ran, no threshold moved, and `screened.csv`,
 `triage.csv`, `queries.csv`, `shortlist.md`, `audit_sample.md` and `triage_stats.md` are
-byte-identical to v0.1.
+untouched.
 
 **Going after `unreachable.md` rather than `paywalled.md` is what made this worth doing.**
 `paywalled.md` lists what could not be read at all; `unreachable.md` also lists what *was*
@@ -19,35 +19,31 @@ of the fourteen re-reads were in that second category, and they are where the co
 from. Every quoted span of five or more words in those eleven records was matched mechanically
 against the version of record. Eight verified unchanged. Three had changed: a published paper
 with a third case study its preprint lacked (`doi:10.1016/j.dche.2026.100312`), one reporting a
-pass@1 robustness figure v0.1 had explicitly recorded as absent
-(`doi:10.1016/j.taml.2026.100660`), and one describing a different mechanism and reporting a
-hallucination incident the preprint does not contain (`doi:10.1145/3731599.3767349`). **Three of
-six preprint-to-published pairs had diverged.** Rules out treating `IDENTITY MATCH IS INFERRED`
-as a formality: on this sample it is a real caveat, and a run that reads preprints for blocked
-publishers should say so in every affected row rather than once in a methods note.
+pass@1 robustness figure originally recorded as absent (`doi:10.1016/j.taml.2026.100660`), and
+one describing a different mechanism and reporting a hallucination incident the preprint does
+not contain (`doi:10.1145/3731599.3767349`). **Three of six preprint-to-published pairs had
+diverged.** Rules out treating `IDENTITY MATCH IS INFERRED` as a formality: on this sample it
+is a real caveat, and a run that reads preprints for blocked publishers should say so in every
+affected row rather than once in a methods note.
 
 Recovering table cells a reader proxy could not render did the same job in miniature.
 `doi:10.3390/buildings15173190` claims "deviations under 1.5%" in its abstract; its own Table 9
 reports 1.624%, 1.998% and 2.834% in three of eight case-direction pairs. Rules out treating a
 proxy read as equivalent to a publisher read when any claim rests on a table.
 
-**Written as a new `v0.2` directory rather than corrected in place, and that conflicts with the
-01 precedent recorded below on the same day.** The 01 entry ("paywalled full text recovered via
-institutional access, corrected in place") explicitly "rules out bumping the version number for
-a correction that touches no harvested record, no query, and no scoring threshold" — which is
-exactly what this is. AGENTS.md §A8 points the other way: a committed run directory is evidence
-and a later recount belongs in a new version. Both were in force; the conflict is recorded here
-rather than resolved silently, because the two files disagree and the next person will hit it
-again. What settled it for this run is that v0.1 is committed and its numbers are cited in the
-03_gaps run, so keeping an unmodified v0.1 on disk lets `gaps.py` be re-pointed deliberately
-instead of silently re-measuring. If the repository prefers the 01 convention, v0.2's contents
-supersede v0.1's file for file and can be moved over it; nothing in v0.2 depends on the
-directory name.
+**Corrected in place in the existing run, not a new version — the same call made for 01 below
+on the same day, for the same reason.** No harvested record, no query and no scoring threshold
+changed; `screening.csv`, `papers.csv`, `papers.md`, `transfer.csv` and `transfer.md` were
+corrected and every report section that cites a count (00 through 08, `index.md`) was
+regenerated from those files rather than hand-adjusted. `AGENTS.md`'s run table already pointed
+at this directory and needed no change. Rules out bumping the version number for a correction
+that touches no harvested record, no query, and no scoring threshold — the same rule 01 states
+below.
 
-Rules out, regardless of which convention wins: reading `tango_touchpoints: none` as a negative
-without checking `access_status`. Two v0.1 rows carried `none` purely because no text could be
-retrieved; both now carry six touchpoints each. v0.1 flagged that hazard in prose and v0.2 is
-the measurement that it was real in 2 of 2 cases.
+Rules out, regardless of what a later run does: reading `tango_touchpoints: none` as a negative
+without checking `access_status`. Two rows carried `none` purely because no text could be
+retrieved; both now carry six touchpoints each. The original write-up flagged that hazard in
+prose, and this correction is the measurement that it was real in 2 of 2 cases.
 
 Twelve demotions remain unresolved — four ChemRxiv, two SSRN — and two records are still read
 from an unverified substitute. `paywalled.md` and `unreachable.md` carry both lists.

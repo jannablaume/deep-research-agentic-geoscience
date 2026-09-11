@@ -1,0 +1,105 @@
+{
+  "_comment": "Query plan for the 02_tango run. Same shape as queries.json and read by the same scripts/harvest.py --config. The research space is different: agentic systems that drive a simulator, solver, optimiser or scientific code, in any domain, because what transfers to TANGO is the control pattern rather than the physics. Edit this file to widen or narrow coverage; never edit query strings inside the prompt.",
+
+  "from_date": "2022-11-01",
+  "openalex_max_pages": 20,
+  "arxiv_max_results": 1000,
+
+  "smoke": [
+    { "scope": "core", "domain_group": "simulation_orchestration", "band": "A_agentic" },
+    { "scope": "core", "domain_group": "optimisation_uq", "band": "A_agentic" },
+    { "scope": "periphery", "domain_group": "software_engineering", "band": "A_agentic" }
+  ],
+
+  "bands": {
+    "A_agentic": {
+      "precision": "high",
+      "note": "Explicit agent vocabulary. Identical to queries.json's A_agentic plus 'model context protocol' and 'agentic simulation': MCP is how most 2025-26 systems expose a solver to an LLM, triage matches it, and queries.json never searched for it.",
+      "terms": [
+        "\"agentic AI\"", "\"agentic workflow\"", "\"AI agent\"", "\"LLM agent\"",
+        "\"language model agent\"", "\"autonomous agent\"", "\"multi-agent system\"",
+        "\"multi-agent LLM\"", "\"tool use\"", "\"function calling\"", "\"ReAct\"",
+        "\"chain of thought\"", "\"AI scientist\"", "\"autonomous experimentation\"",
+        "\"self-driving laboratory\"", "\"copilot\"", "\"AI assistant\"",
+        "\"retrieval-augmented generation\"", "\"agent orchestration\"", "\"planning agent\"",
+        "\"human-in-the-loop\"", "\"model context protocol\"", "\"agentic simulation\""
+      ]
+    },
+    "B_llm": {
+      "precision": "recall",
+      "note": "Foundation-model vocabulary without an agent term. Large and noisy; exists so that systems that drive a solver with an LLM but never use the word 'agent' are still found. Screened hard.",
+      "terms": [
+        "\"large language model\"", "\"foundation model\"", "\"GPT-4\"", "\"ChatGPT\"",
+        "\"LLM\"", "\"generative AI\"", "\"prompt engineering\"", "\"code generation\""
+      ]
+    }
+  },
+
+  "domain_groups": {
+    "core": {
+      "in_scope": true,
+      "note": "Anything an agent could drive that TANGO also is or has: a simulation orchestrator, a solver, an optimiser, an energy-system or techno-economic model, a scientific codebase. Domain-agnostic on purpose — process engineering and computational chemistry run the same control loop over a different physics engine.",
+      "groups": {
+        "simulation_orchestration": ["\"process simulation\"", "\"flowsheet\"", "\"co-simulation\"", "\"multiphysics\"", "\"simulation workflow\"", "\"digital twin\"", "\"input deck\"", "\"simulation setup\"", "\"model configuration\""],
+        "solver_control": ["\"numerical solver\"", "\"finite element\"", "\"computational fluid dynamics\"", "\"partial differential equation\"", "\"mesh generation\"", "\"solver convergence\"", "\"numerical simulation\"", "\"boundary condition\""],
+        "optimisation_uq": ["\"surrogate model\"", "\"Bayesian optimization\"", "\"design of experiments\"", "\"uncertainty quantification\"", "\"sensitivity analysis\"", "\"multi-objective optimization\"", "\"parameter sweep\"", "\"model calibration\""],
+        "energy_systems": ["\"energy system model\"", "\"power plant\"", "\"thermodynamic cycle\"", "\"organic Rankine cycle\"", "\"district heating\"", "\"techno-economic analysis\"", "\"process engineering\"", "\"heat exchanger\"", "\"levelized cost\""],
+        "geoenergy_subsurface": ["\"geothermal\"", "\"reservoir simulation\"", "\"reservoir engineering\"", "\"enhanced geothermal\"", "\"carbon storage\"", "\"well placement\"", "\"subsurface simulation\""],
+        "scientific_computing": ["\"scientific computing\"", "\"research software\"", "\"scientific software\"", "\"high performance computing\"", "\"workflow engine\"", "\"computational science\"", "\"computational reproducibility\"", "\"scientific workflow\""],
+        "computational_discovery": ["\"molecular dynamics\"", "\"density functional theory\"", "\"quantum chemistry\"", "\"computational materials\"", "\"atomistic simulation\"", "\"materials discovery\"", "\"catalyst design\""]
+      }
+    },
+    "periphery": {
+      "in_scope": false,
+      "note": "Harvested for counts and characterisation only. Never deep-read. These are the neighbouring agent literatures whose artefact is not a simulation: a codebase, a robot, a browser, a document. They bound the scope by measurement rather than assertion, and software_engineering is deliberately here — the refactor is not what this run is about.",
+      "groups": {
+        "software_engineering": ["\"software engineering\"", "\"program repair\"", "\"unit test generation\"", "\"pull request\"", "\"code review\"", "\"issue resolution\""],
+        "lab_automation": ["\"laboratory automation\"", "\"robotic laboratory\"", "\"chemical synthesis\"", "\"experimental platform\"", "\"high-throughput screening\""],
+        "interface_agents": ["\"web agent\"", "\"computer use\"", "\"graphical user interface\"", "\"robotic process automation\"", "\"browser automation\""],
+        "science_of_science": ["\"literature review\"", "\"scientific writing\"", "\"peer review\"", "\"systematic review\"", "\"knowledge extraction\""]
+      }
+    }
+  },
+
+  "triage": {
+    "_comment": "Read by scripts/triage_tango.py, not by harvest.py. One regex per domain group above, and the keys must match the group names exactly — a group that is harvested but has no triage pattern scores scope 'none' and is dropped from the shortlist without appearing in any count.",
+
+    "core": {
+      "simulation_orchestration": "process simulat|flowsheet|co[- ]simulat|multiphysic|simulation workflow|digital twin|input deck|simulation setup|model configuration|orchestrat\\w+ (?:simulation|solver|model)",
+      "solver_control": "numerical solver|finite element|finite volume|computational fluid dynamic|\\bCFD\\b|partial differential equation|mesh generat|solver converg|numerical simulation|boundary condition|time step|\\bFEM\\b",
+      "optimisation_uq": "surrogate model|bayesian optimi|design of experiment|uncertainty quantificat|sensitivity analysis|multi[- ]objective optimi|parameter sweep|model calibrat|inverse problem|history match|genetic algorithm",
+      "energy_systems": "energy system model|power plant|thermodynamic cycle|organic rankine|district heating|techno[- ]economic|process engineering|heat exchanger|levelized cost|\\bLCOE\\b|\\bORC\\b",
+      "geoenergy_subsurface": "geothermal|reservoir simulat|reservoir engineering|enhanced geothermal|carbon storage|\\bCCS\\b|well placement|subsurface|wellbore|aquifer",
+      "scientific_computing": "scientific computing|research software|scientific software|high performance computing|\\bHPC\\b|workflow engine|computational science|reproducib|scientific workflow|simulation code|open[- ]source (?:code|package|library)",
+      "computational_discovery": "molecular dynamic|density functional|quantum chemistry|computational materials|atomistic simulat|materials discovery|catalyst design|\\bDFT\\b"
+    },
+    "periphery": {
+      "software_engineering": "software engineering|program repair|unit test|pull request|code review|issue resolution|\\bSWE[- ]bench\\b|repository[- ]level",
+      "lab_automation": "laboratory automation|robotic laborator|chemical synthesis|experimental platform|high[- ]throughput screening|wet[- ]lab",
+      "interface_agents": "web agent|computer use|graphical user interface|\\bGUI\\b|robotic process automation|browser automation",
+      "science_of_science": "literature review|scientific writing|peer review|systematic review|knowledge extraction|bibliometric"
+    },
+    "general": "simulat|solver|numerical model|computational model|engineering model|scientific software|optimi[sz]ation|physics[- ]based|modelling framework|modeling framework",
+
+    "touchpoints": {
+      "_comment": "TANGO's own surfaces, from tango_complete_reference.md §2-§3: a YAML graph of units over third-party physics engines, a BC/flow-rate solver, pymoo optimisation, LHS+DVC+SLURM sweeps, GPR surrogates, LCOE/CAPEX economics, an LCOE regression suite, and a Flask/React tier. A hit here is a sorting aid for the screener and a counted signal in triage_stats.md — never an admission and never a claim that the system was built for TANGO.",
+      "config_generation": "input deck|input file generat|configuration file|\\bYAML\\b|generat\\w+ (?:the )?(?:input|config)|schema validation",
+      "topology_construction": "flowsheet synthesis|topology (?:design|generation|optimi)|graph (?:construction|assembly)|superstructure|component network",
+      "solver_control": "converg\\w+ (?:failure|criteri|issue)|solver (?:setting|parameter|selection|crash|error|configur)|time[- ]step (?:control|selection|size)|initial guess|numerical (?:stability|instability|error)|residual|mesh refinement|did not converge|non[- ]convergence",
+      "optimisation_loop": "optimi[sz]ation loop|closed[- ]loop optimi|multi[- ]objective|pareto|genetic algorithm|\\bpymoo\\b|bayesian optimi",
+      "surrogate_modelling": "surrogate|emulator|reduced[- ]order model|gaussian process regress|machine learning model of",
+      "uncertainty_quantification": "uncertainty quantificat|sensitivity analysis|monte carlo|latin hypercube|probabilistic forecast",
+      "hpc_scale_out": "high performance computing|\\bHPC\\b|\\bSLURM\\b|job scheduler|batch (?:run|simulation|job)|parallel (?:execution|run)|cluster",
+      "tool_exposure": "model context protocol|\\bMCP[\\s-]?(?:server|client|tool)|\\bAPI\\b wrapper|tool (?:registry|schema|interface)|function[- ]calling interface",
+      "results_interpretation": "results? interpretation|interpret\\w* (?:the )?(?:results|output|simulation)|automat\\w+ report|report generation|summari[sz]\\w* (?:the )?(?:results|output|findings)|plot generation|visuali[sz]\\w* (?:the )?(?:results|output)|explain\\w* (?:the )?(?:results|output|prediction)",
+      "techno_economic": "techno[- ]economic|levelized cost|\\bLCOE\\b|\\bCAPEX\\b|cost model|economic assessment",
+      "verification_regression": "regression test|characteri[sz]ation test|verification and validation|benchmark suite|reference solution|tolerance",
+      "provenance_reproducibility": "provenance|reproducib|version control|experiment tracking|\\bDVC\\b|run identifier"
+    }
+  },
+
+  "venue_hints": {
+    "_comment": "Not queried by harvest.py. Passed to the model for the grey-literature pass, which is the one thing the bibliographic APIs cannot reach. Simulation-vendor and HPC-centre material is the 02 equivalent of 01's SPE circuit.",
+    "grey": ["GitHub and Hugging Face (agent harnesses, MCP servers wrapping solvers)", "Ansys / COMSOL / AspenTech / Siemens / Schlumberger technical blogs and whitepapers", "NVIDIA, Microsoft Research, DeepMind engineering posts", "Stanford Geothermal Workshop", "IEA and IEAGHG reports", "NeurIPS / ICML / ICLR workshop pages not indexed by OpenAlex", "national-lab reports (NREL, LBNL, Sandia, PNNL)", "MODELICA / OpenFOAM / MOOSE / TESPy community proceedings"]
+  }
+}

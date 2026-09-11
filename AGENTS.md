@@ -3,9 +3,10 @@
 The single source of truth for anyone working in this repository, human or agent.
 `CLAUDE.md` and `GEMINI.md` are pointers here and hold no content of their own.
 
-**There are two jobs in this file.** Producing a research run is §A. Changing the
-scripts is §B. Read the one you are here for; they need almost nothing from each
-other.
+**There are three jobs in this file.** Producing the landscape run is §A. Producing
+either of the other two runs is §A2, which is written as a delta against §A and does
+not repeat it. Changing the scripts is §B. Read the one you are here for; they need
+almost nothing from each other.
 
 One rule spans both, and it is the rule this repository exists to enforce:
 
@@ -173,6 +174,89 @@ and `pyproject.toml` all exclude `outputs/` for this reason.
 
 ---
 
+# §A2 — The other two runs
+
+Three runs now share this repository. Everything in §A holds for all of them unless it
+is contradicted here.
+
+| Run | Prompt | Asks | Output |
+|---|---|---|---|
+| 01 | `prompts/01_landscape_neutral.md` | What exists in agentic AI for solid-earth geoscience | `outputs/01_landscape/v0.5` |
+| 02 | `prompts/02_tango.md` | What exists that bears on making TANGO agentic | `outputs/02_tango/v0.1` |
+| 03 | `prompts/03_gaps.md` | What the two finished runs record as missing | `outputs/03_gaps/v0.1` |
+
+**The 01 pipeline is frozen.** `harvest.py`, `triage.py` and `audit.py` produced the
+v0.5 landscape and a committed run is evidence; a later run must not be able to change
+what an earlier one measured. So 02 and 03 got their own scripts rather than flags on
+those three. The one exception is `harvest.py`, which is reused unchanged because it was
+already `--config`-driven — 02 ships a query plan, not a fork of the harvester.
+
+## A2.1 — 02_tango
+
+```bash
+make smoke-tango OUT_TANGO=outputs/02_tango/v0.1-test   # 3 cells, one periphery
+make harvest-tango                                      # 22 cells, ~440 OpenAlex calls
+make triage-tango
+#   ... you screen, hand back the paywall list, deep-read and write ...
+make audit-tango
+```
+
+Four things differ from §A and all four have bitten already:
+
+- **The domain filter barely filters.** 01 asks "is this one of ten solid-earth
+  subfields"; 02 asks "is this computational", which most agent papers pass. The v0.1
+  smoke corpus shortlisted 42% at 01's thresholds against 01's 6%. `triage_tango.py` has
+  a third knob, `--min-domain`, and it is usually the binding one. Settle it from
+  `triage_stats.md` before screening, and measure what it cost in the audit sample.
+- **A group harvested without a triage pattern is dropped silently**, which is the v0.5
+  `scope: none` failure in a corpus far more exposed to it. `triage_tango.py` refuses to
+  run if `reference/queries_tango.json`'s `triage` block and its `domain_groups` do not
+  name the same groups.
+- **The run pauses once**, after screening, to hand back `paywalled.md`. Institutional
+  access is the one thing the session cannot get for itself, and a source demoted for
+  want of a login is a measurement error that is cheap to fix before the report and
+  expensive after. Local PDFs live in `paywalled_paper/` and `~/Downloads/paywalled_paper_2/`.
+- **The report must not prescribe.** Describing what a system did is the job; saying
+  what TANGO should do about it is not. `audit_tango.py` fails the run for the common
+  forms, and the grep is not the specification.
+
+Contract: `reference/SCHEMA_tango.md`, which is a delta against `SCHEMA.md` — same
+`papers.csv` columns on purpose, so the two grids join and `gaps.py` reads both without
+a special case. 02 adds `transfer.csv` (what each system actually drives, at what
+autonomy, through what interface), `transfer.md` (the quotes under it) and
+`paywalled.md`.
+
+## A2.2 — 03_gaps
+
+```bash
+make gaps          # RUNS defaults to the 01 and 02 run directories
+#   ... you read, cluster, and send a verification agent after each gap ...
+make audit-gaps
+```
+
+03 harvests nothing. `scripts/gaps.py` reads seven shapes of gap out of the finished
+runs' own artifacts — authors' stated limitations, `[Absent-searched]` claims with their
+query ids, `not stated` columns with denominators, evaluations with no baseline or
+held-out set, empty subfields and touchpoints, unread sources, and systems whose claim
+outruns their evaluation. On the v0.5 run that is 117 candidates.
+
+Three rules carry this run:
+
+- **Synthesis, not reasoning.** A gap says what is absent and cites where that was
+  recorded. Why it matters, what to do about it, which is biggest — none of that, and
+  `audit_gaps.py` greps for it.
+- **A verdict is returned, never assigned.** Each gap gets a verification subagent whose
+  job is to find work that refutes it, searching the runs' own `screened.csv` first. A
+  verification that searched nothing returns `undecidable`, and `refuted` is a result to
+  keep rather than a failure to hide.
+- **Every candidate is accounted for** — cited by a gap or in the discard ledger with a
+  reason. One that quietly vanishes is indistinguishable from one nobody read.
+
+Contract: `reference/SCHEMA_gaps.md`, which fixes the `gaps.md` block format because
+`audit_gaps.py` parses it.
+
+---
+
 # §B — Changing the scripts
 
 ## B1. What this repository is
@@ -197,7 +281,16 @@ same thing earlier.
 | `triage.py` | Scores every record from title+abstract, writes the shortlist and a sample from below the cut. No network |
 | `audit.py` | Parses the run's own artifacts and checks 26 contract conditions. Exits non-zero |
 | `enrich.py` | Author-institution countries and publication type for the admitted set, from OpenAlex. The only script the front end depends on that makes a network call, and the only optional one |
-| `export_web.py` | One run → the single JSON document the front end reads |
+| `export_web.py` | One run → the single JSON document the front end reads. 01-only: its section list and subfield vocabulary are the landscape report's |
+| `triage_tango.py` | 02's ranking. Imports the agentic half of the score from `triage.py`; its domain vocabulary and TANGO touchpoints come from `reference/queries_tango.json` |
+| `audit_tango.py` | 02's gate. 38 checks, including the three artifacts 02 adds and one that fails a report for telling TANGO what to do |
+| `gaps.py` | Finished runs → `gap_candidates.csv`. Seven extractors, no judgment |
+| `audit_gaps.py` | 03's gate. 19 checks, three of which exist to stop a gap that rests on nothing |
+
+**`triage_tango.py` imports `triage.py`'s pattern lists on purpose**, so "agentic" is
+defined once. The consequence is that a change to `AGENT_LLM`, `AGENT_GENERIC`,
+`AGENT_COMPOUND`, `MEDIUM` or `NEGATIVE` is a method change for **both** runs and needs a
+re-triage of both, not one.
 
 ## B2. Setup and the gate
 

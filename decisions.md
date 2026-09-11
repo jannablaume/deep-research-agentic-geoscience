@@ -2,7 +2,170 @@
 
 Newest first. One entry per decision: what, why, what it rules out.
 
-## 2026-09-10 — every derived facet publishes its own denominator
+## 2026-09-11 — two more runs, and the 01 pipeline is frozen rather than generalised
+
+`prompts/02_tango.md` asks what exists that bears on making TANGO agentic;
+`prompts/03_gaps.md` synthesises what the finished runs record as missing. Both
+are slash commands by symlink, like 01.
+
+**The 01 scripts were not touched.** The first attempt made `triage.py`'s domain
+vocabulary config-driven and `harvest.py`'s smoke set config-declared — small,
+backward-compatible changes. Both were rejected in favour of new scripts, and the
+reason holds generally: a committed run is evidence, and a script that two runs
+share is a script whose next edit silently re-measures the earlier one. So 02 has
+`triage_tango.py` and `audit_tango.py`, and 03 has `gaps.py` and `audit_gaps.py`.
+`harvest.py` is the exception and is reused unchanged, because it was already
+`--config`-driven; 02 ships `reference/queries_tango.json` rather than a fork, and
+`reference/queries_tango_smoke.json` because the `--smoke` flag names 01's groups
+and would have built an empty plan against 02's config. A test asserts the smoke
+config is a verbatim subset of the full one, since a mechanics test over a plan
+the real run does not have proves nothing about it.
+
+**One exception to the no-sharing rule, deliberately.** `triage_tango.py` imports
+`triage.py`'s pattern lists, so "is this agentic" is defined once and a fix lands
+in both runs. That makes a change to those lists a method change for both, which
+is now recorded in AGENTS.md §B1 next to the map.
+
+**02's domain filter barely filters, and that is the finding the smoke test
+bought.** 01 asks whether a record is in one of ten solid-earth subfields, which
+most agent papers fail. 02 asks whether it is computational, which most agent
+papers pass. Measured, keyless, on 2026-09-11:
+
+```bash
+python3 scripts/harvest.py      --out outputs/02_tango/v0.1-test --no-s2 \
+    --config reference/queries_tango_smoke.json
+python3 scripts/triage_tango.py --out outputs/02_tango/v0.1-test \
+    --config reference/queries_tango.json --min-score 3 --min-strong 1 \
+    --min-domain 1 --audit-n 40
+```
+
+3 of the 22 query cells (`simulation_orchestration` and `optimisation_uq` core,
+`software_engineering` periphery, A_agentic band only), 6 API calls, 1,325 unique
+records, 86% with an abstract. Shortlist **557, or 42%** — against 01's 712 of
+11,191, or 6%. All three cells hit their paging cap, which is what the smoke
+config's `openalex_max_pages: 2` is for and is why no count above describes the
+literature.
+
+`triage_tango.py` therefore has a third knob, `--min-domain`, which took that
+corpus 557 → 301 → 169 at 1 → 2 → 3. It is not free — at 2 it also drops an LLM
+workflow for analog circuit sizing that runs a simulator in its optimisation loop
+— so the prompt requires settling it from `triage_stats.md` and measuring the cost
+in the audit sample rather than assuming it.
+
+**The knob shipped broken and the smoke numbers caught it.** `domain_score` was
+`sum(dom) or sum(per)`, which is zero for every record the `triage.general`
+fallback rescues, so the default `--min-domain 1` deleted the whole
+`simulation_general` bucket — 11 of 557, and the only visible trace was a
+shortlist one point smaller. That is the v0.5 `scope: none` regression arriving
+through a different door: a structural filter discarding a class, invisible in the
+score. The fallback now counts its own matches, and
+`TestTheFallbackBucketSurvivesTheDomainKnob` pins both halves.
+
+The run directory is **not committed**, following `v0.5-test` and `v0.5-test2`
+rather than `v0.4-test`: a harvest-and-triage mechanics pass is regenerable in ten
+minutes from the two committed configs and the commands above, and the numbers it
+produced are here. Rules out shipping a stricter default in the script, rules out
+reporting a shortlist size from this run as comparable to 01's, and rules out
+citing any of these figures as a measurement of the field.
+
+**02 keeps 01's `papers.csv` columns unchanged** and adds `transfer.csv`,
+`transfer.md` and `paywalled.md` instead. Two grids with the same columns join,
+and `gaps.py` reads both without a special case. Rules out a TANGO-relevance
+column inside the comparison grid.
+
+**The run pauses once, after screening, to hand back the paywall list.**
+Institutional access is the one thing the session cannot get for itself, and the
+01 run demoted six screened-core records to context for want of a login.
+`audit_tango.py` requires every `abstract-only` source to appear in
+`paywalled.md`, so the handoff list is complete rather than partial, and
+`blocked_by` separates `paywall` from `bot-protection` because v0.5 found a
+gold-OA paper no route could retrieve — an OA flag is a licence status, not an
+access outcome.
+
+**03 extracts candidates mechanically and verifies them with an agent.** Run
+against v0.5 it produced 117 candidates. Two shapes were wrong on the first pass
+and both are now tested: five of six "empty categories" were periphery subfields,
+which are empty by design, and `claim-gap` found nothing because `maturity_claimed`
+is free text by SCHEMA — the mechanical comparison that does hold is a non-empty
+claim against an M0/M1 evaluation, which finds 11. Rules out a gaps document
+assembled from recall, and rules out `confirmed-absent` from a verification pass
+that searched nothing.
+
+## 2026-09-11 — second paywalled-recovery batch, same in-place correction
+
+A second batch of eight PDFs, supplied the same way as the first (corpus owner's
+institutional access, read in full before any file edit), all cleared the agentic bar and
+promoted from `context`/abstract-only to `core`: a landslide-reconstruction agent
+(Soils and Foundations), multi-GeoLLM (Automation in Construction 2025), a
+supervisor-ReAct-blackboard tunnelling MAS (Computer-Aided Civil and Infrastructure
+Engineering), a slope-reliability multi-agent framework (Advanced Engineering
+Informatics), AGeoKE (Applied Computing and Geosciences), the GAGAW journal record (Big
+Data and Earth System — a second, separately-keyed publication of the ESSOAr-preprint
+system already in the corpus), EQSIM Agent (ACM), and a seismic-processing assistant (The
+Leading Edge). Unlike the first batch, none were reclassified `out` — every record this
+time genuinely decides something for itself (tool choice, planning, or self-correction over
+its own output), so this batch is a pure recovery with no scope-corrections attached.
+
+Two subfield corrections follow from the same evaluation-focus rule as the first batch:
+the GAGAW journal record moves from `inversion` to `hydrogeology`, matching both its own
+evaluation (subsurface water content, not an inversion task per se) and its sibling
+preprint record's existing subfield; EQSIM Agent's architecture is corrected from
+`single-agent` to `multi-agent-hierarchical` now that its vision and RAG sub-agents are
+visible in full text.
+
+One maturity call is a genuine tie-break, resolved for consistency rather than by a
+sharper rule: the tunnelling MAS's evaluation site is real, contractor-supplied data from
+a specific geo-located project, but the project itself is never given a formal name (only
+dataset labels and borehole IDs) — rated `M2`, the same standard already applied to the
+well-log papers' "100 field wells" in the first batch, rather than `M3`.
+
+Core rises from 30 to 38; context falls from 121 to 113; total admitted (151) is
+unchanged. Report sections 00, 01, 02, 03, 04, 05 and 08 were regenerated again from the
+updated `papers.csv`/`papers.md`, in place — same reasoning as the first batch: this is
+recovering evidence for already-admitted records, not a scoring or method change, so it
+does not warrant a version bump. Rules out treating a second venue-publication of the same
+system as a duplicate to merge — the identity-key rule keeps preprint and journal versions
+separate, so GAGAW now has two rows, one still abstract-only and one full-text. Also rules
+out chasing every remaining unread paywalled record indiscriminately: IEEE Xplore returned
+nothing to an unauthenticated fetch for IEEE CAIBDA, and no PDF was supplied for IEEE CAIT
+or the three remaining EAGE EarthDoc records, so those stay `context` rather than being
+guessed at.
+
+## 2026-09-11 — paywalled full text recovered via institutional access, corrected in place
+
+The corpus owner has institutional access to several publishers this run could not reach.
+Eleven `context`/abstract-only or textually-empty records — flagged in `unreachable.md` as
+paywalled, OA-but-blocked, or lacking any retrievable abstract — were supplied as PDFs and
+read in full, following the same step-4 procedure (full text, then the `papers.csv` row and
+`papers.md` block together, never split) as the original run.
+
+**Full text is read before deciding tier, not after.** Seven records turned out to be
+genuinely agentic (an LLM decides something for itself: plans, calls a tool, iterates on
+its own output) and are promoted to `core` — Hydro-Agent, OntoGRC, a tunnel
+geological-forecasting agent, a well-log multi-agent framework, LogACF, the Geo-Resource
+Agent and InsightsAI. Three of those also get a corrected `subfield`: two well-log papers
+move from `inversion` to `reservoir_engineering`, and the Geo-Resource Agent moves from
+`geomechanics` to `reservoir_engineering`, because SCHEMA.md assigns subfield by where the
+evaluation is set and none of the three ever evaluates the task their old subfield implied.
+Four other records — a second Ore Geology Reviews paper, an SPE drill-bit paper, an SSRN
+preprint and a ResearchGate deposit — had looked plausibly agentic from title or abstract
+alone, but full text showed either no LLM component at all (pure MARL) or an LLM confined
+to a single non-agentic extraction/classification call feeding a deterministic pipeline it
+never calls or iterates on. These four are reclassified `out` (`not-agentic` or
+`pre-llm-only`) and removed from `papers.csv` entirely, not left in `context`.
+
+**Corrected in place in the existing `v0.5` run, not a new version.** This is not a scoring
+or method change — `triage.py`, `AGENT_COMPOUND` and the shortlist cut are untouched, and
+no new query or re-triage was needed. It is the same class of correction as this run's own
+"Recovered in close-out" pass in `unreachable.md`, just after the report was already
+drafted: `screening.csv`, `papers.csv` and `papers.md` are corrected, and every report
+section that cites a count (00, 01, 02, 03, 04, 05, 08, `index.md`) was regenerated from
+those files rather than hand-adjusted. `README.md`'s headline numbers were updated to
+match. Core rises from 23 to 30; context falls from 132 to 121; total admitted falls from
+155 to 151. Rules out treating an abstract-only admission as reliable evidence of either
+scope or maturity — in this batch the abstract was wrong about scope in four cases out of
+eleven — and rules out bumping the version number for a correction that touches no
+harvested record, no query, and no scoring threshold.
 
 Two panels were answering a question with a number whose base was invisible, and
 both invited the same wrong reading.

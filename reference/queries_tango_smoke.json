@@ -1,0 +1,41 @@
+{
+  "_comment": "Mechanics test for the 02_tango run. Three cells, one of them periphery, so that periphery counting is exercised — `--limit-queries N` cannot do that, because the plan is core groups first. This exists as a config rather than a flag because scripts/harvest.py is frozen for the 01 pipeline and already takes --config. Every band and group below is copied verbatim from queries_tango.json; tests/test_queries_tango.py fails if the two ever disagree, so a smoke test can never exercise a plan the full run does not have.",
+
+  "from_date": "2022-11-01",
+  "openalex_max_pages": 2,
+  "arxiv_max_results": 100,
+
+  "bands": {
+    "A_agentic": {
+      "precision": "high",
+      "note": "Identical to queries_tango.json's A_agentic.",
+      "terms": [
+        "\"agentic AI\"", "\"agentic workflow\"", "\"AI agent\"", "\"LLM agent\"",
+        "\"language model agent\"", "\"autonomous agent\"", "\"multi-agent system\"",
+        "\"multi-agent LLM\"", "\"tool use\"", "\"function calling\"", "\"ReAct\"",
+        "\"chain of thought\"", "\"AI scientist\"", "\"autonomous experimentation\"",
+        "\"self-driving laboratory\"", "\"copilot\"", "\"AI assistant\"",
+        "\"retrieval-augmented generation\"", "\"agent orchestration\"", "\"planning agent\"",
+        "\"human-in-the-loop\"", "\"model context protocol\"", "\"agentic simulation\""
+      ]
+    }
+  },
+
+  "domain_groups": {
+    "core": {
+      "in_scope": true,
+      "note": "Two core groups, copied verbatim from queries_tango.json.",
+      "groups": {
+        "simulation_orchestration": ["\"process simulation\"", "\"flowsheet\"", "\"co-simulation\"", "\"multiphysics\"", "\"simulation workflow\"", "\"digital twin\"", "\"input deck\"", "\"simulation setup\"", "\"model configuration\""],
+        "optimisation_uq": ["\"surrogate model\"", "\"Bayesian optimization\"", "\"design of experiments\"", "\"uncertainty quantification\"", "\"sensitivity analysis\"", "\"multi-objective optimization\"", "\"parameter sweep\"", "\"model calibration\""]
+      }
+    },
+    "periphery": {
+      "in_scope": false,
+      "note": "One periphery group, copied verbatim, so the mechanics test exercises periphery counting.",
+      "groups": {
+        "software_engineering": ["\"software engineering\"", "\"program repair\"", "\"unit test generation\"", "\"pull request\"", "\"code review\"", "\"issue resolution\""]
+      }
+    }
+  }
+}

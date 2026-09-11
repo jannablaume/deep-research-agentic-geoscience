@@ -23,9 +23,16 @@
 #      make audit OUT=outputs/01_landscape/v0.6
 OUT ?= outputs/01_landscape/v0.5
 
+#  The 02_tango and 03_gaps runs have their own OUT, because they are different runs
+#  over different corpora. Override the same way:
+#      make triage-tango OUT_TANGO=outputs/02_tango/v0.2
+OUT_TANGO ?= outputs/02_tango/v0.1
+OUT_GAPS  ?= outputs/03_gaps/v0.1
+
 .DEFAULT_GOAL := help
 .PHONY: help setup lint fmt typecheck test check \
-        smoke harvest triage audit enrich export plan web web-dev clean
+        smoke harvest triage audit enrich export plan web web-dev clean \
+        smoke-tango harvest-tango triage-tango audit-tango gaps audit-gaps
 
 help: ## Show this help
 	@grep -hE '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) \
@@ -111,6 +118,43 @@ enrich: ## Fetch author-institution countries for the admitted set (one network 
 
 export: ## Export the run as the one JSON document the front end reads
 	python3 scripts/export_web.py --out $(OUT)
+
+# --- the 02_tango run -------------------------------------------------------------
+#
+# Same harvester, different research space: scripts/harvest.py is frozen and already
+# takes --config, so 02 ships its query plan rather than a fork of the script. Triage
+# and audit are 02's own, because the domain vocabulary and the output contract differ.
+
+smoke-tango: ## Mechanics test for 02: 3 query cells, one of them periphery
+	@case "$(OUT_TANGO)" in *-test*) ;; *) \
+		echo "Refusing: smoke writes a partial corpus. Use OUT_TANGO=<version>-test."; exit 2;; esac
+	python3 scripts/harvest.py --out $(OUT_TANGO) --no-s2 \
+		--config reference/queries_tango_smoke.json
+	python3 scripts/triage_tango.py --out $(OUT_TANGO) --audit-n 40
+
+harvest-tango: ## Harvest the 02 corpus (needs OPENALEX_API_KEY)
+	@test -n "$$OPENALEX_API_KEY" || echo "warning: no OPENALEX_API_KEY — the keyless \
+budget is \$$0.10/day and a full harvest will abort partway through. See .env.example."
+	python3 scripts/harvest.py --out $(OUT_TANGO) --no-s2 --config reference/queries_tango.json
+
+triage-tango: ## Rank the 02 corpus. Read triage_stats.md before changing a threshold
+	python3 scripts/triage_tango.py --out $(OUT_TANGO)
+
+audit-tango: ## Check the 02 run against its contract. Exits non-zero on failure
+	python3 scripts/audit_tango.py --out $(OUT_TANGO)
+
+# --- the 03_gaps run --------------------------------------------------------------
+#
+# Reads finished runs; harvests nothing. RUNS is the list it reads, and a gaps document
+# is a statement about those specific run directories at a specific commit.
+
+RUNS ?= $(OUT) $(OUT_TANGO)
+
+gaps: ## Extract gap candidates from the finished runs in RUNS
+	python3 scripts/gaps.py --out $(OUT_GAPS) $(foreach r,$(RUNS),--run $(r))
+
+audit-gaps: ## Check the 03 run against its contract. Exits non-zero on failure
+	python3 scripts/audit_gaps.py --out $(OUT_GAPS)
 
 web: ## Build the dashboard into web/dist/ (a folder that opens from the filesystem)
 	@test -n "$$(ls web/src/data/*.json 2>/dev/null)" \

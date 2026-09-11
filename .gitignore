@@ -7,6 +7,24 @@
 .claude/settings.local.json
 settings.local.json
 
+# Internal and non-redistributable inputs. The remote is public, so these are ignored
+# by name as well as by extension — `*.pdf` above already covers the article files, but
+# the TANGO note is Markdown and nothing else would stop `git add -A` sweeping it in.
+#
+# `tango_complete_reference.md` is the 02 run's description of TANGO and carries GEG's
+# product tiers, the open/closed component boundary and named colleagues. The 02 prompt
+# treats it as a hard local dependency and stops if it is absent, which is the honest
+# behaviour for anyone else cloning this: they cannot reproduce that run, and the
+# alternative is publishing an unpublished commercial roadmap.
+#
+# The unreachable-paper folders hold publisher PDFs retrieved by hand, one per run. They
+# are evidence for a run and they are not ours to redistribute.
+tango_complete_reference.md
+01_unreachable_paper/
+02_unreachable_paper/
+paywalled_paper*/
+previous_paywalled_paper.md
+
 # Environments and tool caches
 .venv/
 __pycache__/

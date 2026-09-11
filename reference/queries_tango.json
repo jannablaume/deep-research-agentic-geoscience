@@ -2,8 +2,8 @@
   "_comment": "Query plan for the 02_tango run. Same shape as queries.json and read by the same scripts/harvest.py --config. The research space is different: agentic systems that drive a simulator, solver, optimiser or scientific code, in any domain, because what transfers to TANGO is the control pattern rather than the physics. Edit this file to widen or narrow coverage; never edit query strings inside the prompt.",
 
   "from_date": "2022-11-01",
-  "openalex_max_pages": 20,
-  "arxiv_max_results": 1000,
+  "openalex_max_pages": 30,
+  "arxiv_max_results": 2000,
 
   "smoke": [
     { "scope": "core", "domain_group": "simulation_orchestration", "band": "A_agentic" },

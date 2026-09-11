@@ -248,16 +248,17 @@ SCHEMA.md). Only then add a `screening.csv` row, with `found_via: grey` or
 Before step 4, write `paywalled.md` for every source you already know you cannot read, per
 `reference/SCHEMA_tango.md`. Two things first:
 
-- **Check the local PDF stores first.** Two of them hold files retrieved by hand for the
-  01 run: `paywalled_paper/` in this repository, and `~/Downloads/paywalled_paper_2/`.
-  A source sitting on disk is not unreachable; read it from there and record
-  `local_pdf: <filename>`. Match on the DOI or the publisher's article id — the
-  filenames are publisher exports (`1-s2.0-S0043135426005683-main.pdf` is a
-  ScienceDirect PII, `tle44020142.1.pdf` is a DOI suffix), not titles, so a filename
-  that means nothing to you may still be the paper you are looking for.
-- **Check `previous_paywalled_paper.md`** (repo root) and
-  `outputs/01_landscape/v0.5/unreachable.md`. What defeated the 01 run will defeat this
-  one, and a route already known to fail is not worth spending a fetch on.
+- **Ask where the local PDF store is, and check it before declaring anything unreachable.**
+  Copies retrieved by hand for the 01 run live outside this repository — publisher PDFs are
+  not redistributable and the remote is public, so they are deliberately untracked and
+  their location is not recorded here. A source sitting on disk is not unreachable: read it
+  from there and record `local_pdf: <filename>`. Match on the DOI or the publisher's
+  article id, because the filenames are publisher exports rather than titles — a name that
+  means nothing to you may still be the paper you are looking for.
+- **Read `outputs/01_landscape/v0.5/unreachable.md`.** It is committed, and it records
+  which routes were already tried and refused for the 01 run — publisher DOI, Unpaywall,
+  arXiv, author copy — including one gold-open-access paper that no route could retrieve.
+  A route already known to fail is not worth spending a fetch on.
 
 Then **stop and hand the list over.** Say plainly: how many sources are blocked, what they
 would change if read (the `would_change` column), which of them already have a local PDF,

@@ -126,7 +126,7 @@ One table, one row per source whose full text could not be retrieved:
 | `venue` | |
 | `blocked_by` | `paywall` / `bot-protection` / `no-full-text-anywhere` / `tooling-failure` / `no-abstract-in-any-api` |
 | `tried` | every route attempted, `;`-separated: publisher DOI, Unpaywall, arXiv, author copy, repository |
-| `local_pdf` | the filename if a copy is already in a local store, else `no`. Two stores: `paywalled_paper/` in the repository and `~/Downloads/paywalled_paper_2/` |
+| `local_pdf` | the filename if a copy is already in the local store, else `no`. The store sits outside this repository and is untracked by decision — publisher PDFs are not redistributable and the remote is public — so ask where it is rather than assuming a path |
 | `would_change` | what reading it could change — the `tier` it would support, or the maturity it could be rated at. `nothing` is a valid entry |
 
 `blocked_by: bot-protection` is separated from `paywall` on purpose. The 01 run found a
@@ -134,8 +134,8 @@ gold-open-access paper that no route could retrieve, which means **an OA flag is
 status, not an access outcome** — a count of paywalled sources that quietly includes those
 is wrong in a way nobody can see.
 
-Before writing a row, check both local stores for a PDF: they already hold files retrieved
-by hand for the 01 run, and a source is not unreachable if it is sitting on disk. The
+Before writing a row, check the local store for a PDF: it already holds files retrieved by
+hand for the 01 run, and a source is not unreachable if it is sitting on disk. The
 filenames are publisher exports rather than titles, so match on the DOI or the article id.
 
 `unreachable.md` is still required and still means what SCHEMA.md says. `paywalled.md` is

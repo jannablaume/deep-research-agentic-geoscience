@@ -215,7 +215,9 @@ Four things differ from §A and all four have bitten already:
 - **The run pauses once**, after screening, to hand back `paywalled.md`. Institutional
   access is the one thing the session cannot get for itself, and a source demoted for
   want of a login is a measurement error that is cheap to fix before the report and
-  expensive after. Local PDFs live in `paywalled_paper/` and `~/Downloads/paywalled_paper_2/`.
+  expensive after. Hand-retrieved PDFs live outside this repository and are untracked by
+  decision — publisher PDFs are not redistributable and the remote is public — so the run
+  asks where the store is rather than assuming a path.
 - **The report must not prescribe.** Describing what a system did is the job; saying
   what TANGO should do about it is not. `audit_tango.py` fails the run for the common
   forms, and the grep is not the specification.

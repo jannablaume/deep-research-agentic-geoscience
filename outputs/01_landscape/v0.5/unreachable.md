@@ -222,3 +222,74 @@ total admitted (151) is unchanged, since every record in this pass was already a
 and none were reclassified `out`. Report sections 00, 01, 02, 03, 04, 05 and 08 were
 regenerated again from the updated `papers.csv`/`papers.md`, in place, for the same
 reasons given after the second recovery pass.
+
+## Fourth recovery pass: a third institutional-access batch
+
+The corpus owner supplied PDFs for the three EAGE EarthDoc records named at the end of the
+third pass as unresolved. All three were read in full before any file edit, per rule 1.
+The store directory has since been renamed from `paywalled_paper_2/` to
+`01_unreachable_paper/`; the paths recorded in earlier `papers.md` blocks are left as
+written, and the blocks added in this pass use the current name.
+
+**Promoted to `core`** — all three cleared the agentic bar; none were reclassified `out`:
+
+| identity_key | title | was | now |
+|---|---|---|---|
+| `doi:10.3997/2214-4609.202535040` | Geowellex Smart Agents (MCP + A2A surface logging) | context, abstract-only | core, M2 |
+| `doi:10.3997/2214-4609.202639012` | LangGraph-orchestrated geological Q&A | context, abstract-only | core, M3 |
+| `doi:10.3997/2214-4609.2025640024` | Multi-agent RAG for sedimentological prediction | context, abstract-only, subfield `geological_modelling` | core, M2, subfield `reservoir_engineering`, secondary `geological_modelling` |
+
+The subfield correction follows the SCHEMA rule to assign by where the evaluation is set,
+and the precedent set for the well-log papers in the second recovery pass: the Seksaf
+workflow is evaluated on facies and genetic-element prediction from wireline logs against
+cored-interval ground truth, which is reservoir characterisation rather than a modelling
+task. `geological_modelling` is retained as the secondary subfield.
+
+Two of the three sit close to this review's scope bar, and full text is what settled them
+rather than resolving them away. In `.202639012` the graph is fixed and the only non-fixed
+edge is a secondary classifier LLM's regenerate-or-accept verdict on the answer just
+produced; in `.2025640024` the Random Forest makes the prediction and the four LLM agents
+review and revise it. Both qualify under "iterates on its own output" and neither would
+have qualified on tool selection or planning. `.202535040` is unambiguous: its MCP control
+layer chooses which tool to invoke.
+
+**What the format costs.** All three are three-to-five-page extended abstracts, and
+reading them in full does not make them comparable in detail to the journal and preprint
+sources beside them. Two (`.202535040`, `.2025640024`) name no base model anywhere — the
+first of the recovery passes to add unnamed-model rows to the core tier, taking that count
+from 9 of 38 to 11 of 41. None of the three states code availability or a held-out split.
+`.202639012` reports no baseline pipeline at all despite arguing against "conventional"
+RAG throughout, and `.202535040` reports 81% accuracy for a classifier the agent trained
+with no comparison against the same classifier trained without it.
+
+**Two discrepancies recorded as read, not resolved.** `.202639012` carries two different
+dates and places for the same conference in its own running footer ("16 - 19 March 2026,
+Norway" on the cover page, "9 - 12 March 2026, Stavanger, Norway" on the body pages).
+`.2025640024` describes its baseline as "Random Forest" in the Summary and Methods and as
+"Decision Tree machine learning" in the Key results section. Neither is adjudicated here;
+both are quoted in `papers.md`.
+
+**A sibling record, left separate.** `.202535040` cites Jacinto et al. (2025), 86th EAGE
+Annual Conference, as the multi-agent framework its A2A architecture expands on. That
+paper is already in this corpus as `doi:10.3997/2214-4609.2025101389`
+(*Leveraging Agent-Based Frameworks and LLMs for Multimodal Analysis in Drilling and
+Geological Operations*), still `context`/abstract-only — no PDF was supplied for it. The
+records are kept separate per this review's rules. Only the record read in this pass is
+given a `system_id` (`jacinto2025-smart-agents`); the predecessor keeps `not stated`, so
+the per-system counts in the report are not inflated by the pair.
+
+**Still unresolved.** The two IEEE records remain `context`/abstract-only, unchanged since
+the third pass: CAIBDA (`doi:10.1109/caibda65784.2025.11182767`) and CAIT/GALA
+(`doi:10.1109/cait70489.2026.11553853`). IEEE Xplore returns nothing to an unauthenticated
+fetch and no PDF was supplied. The ESSOAr GAGAW preprint
+(`doi:10.22541/essoar.176336946.65126612/v1`) also remains abstract-only, though its
+journal publication is core.
+
+Net effect on the run: core rises from 38 to 41 sources; context falls from 113 to 110;
+total admitted (151) is unchanged, since all three were already admitted and none were
+reclassified `out`. Report sections 00, 01, 02, 03, 04, 05, 06 and 08 and `index.md` were
+regenerated from the updated `papers.csv`/`papers.md`, in place, for the same reasons given
+after the second and third recovery passes. Section 06 gained one entry: `.202639012`'s
+correction-loop design is a direct methodological disagreement with the GraphRAG catalog
+paper's finding of a "fundamental structural flaw in retrieval-then-synthesize
+architectures".

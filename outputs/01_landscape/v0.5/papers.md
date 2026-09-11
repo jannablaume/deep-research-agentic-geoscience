@@ -428,3 +428,45 @@ https://doi.org/10.1190/tle44020142.1 — full text, local PDF (institutional ac
 - "Figure A-3 shows the model is unable to successfully execute three tasks in sequence. Figure A-4 shows that the guardrails layer failed to block the query about deep marine exploration."
 - maturity_claimed: "The AI assistant developed in this work demonstrates the practical application of LLMs in automating seismic data processing workflows."
 - limitation: "The dependency on predefined tools and workflows means that the assistant may not handle novel or highly specialized tasks without further development."
+
+## doi:10.3997/2214-4609.202535040
+
+https://doi.org/10.3997/2214-4609.202535040 — full text, local PDF (institutional access; 01_unreachable_paper/0040.pdf). Extended abstract, First EAGE Workshop on Surface Logging, Paris, 12-14 November 2025. Two architectures are presented and evaluated separately in one paper.
+
+- "To evaluate the MCP-based integration, we exposed multiple API endpoints from preexisting surface logging applications—responsible for well data management, ML model evaluation, and model training—as MCP tools. In this architecture, a key feature is the LLM-based control layer, allowing the agent to interpret surface logging data and autonomously decide which MCP tools to invoke."
+- "For the A2A-based architecture, we expanded on the multi-agent framework introduced by Jacinto et al. (2025), implementing distributed agents deployed in independent environments, each developed using different frameworks. These agents were exposed via A2A-compliant APIs and discovered dynamically by a central Drilling Manager Agent, which orchestrated task execution by reading agent metadata (A2A Agent Cards) and coordinating inter-agent communication."
+- "The DDA Agent, responsible for detecting anomalies in mechanical parameters such as MSE and DS, and the SSI Agent, dedicated to cavings analysis from image-based data, each operate independently and expose their services through A2A-compliant APIs."
+- "This included listing and exploring well metadata, querying available machine learning models with their associated metadata, and building and training a lithology classification model for a selected well. The trained classifier achieved an accuracy of 81%, demonstrating the end-to-end feasibility of allowing an LLM to autonomously orchestrate drilling data management and machine learning model training using the MCP framework."
+- "Using MCP, an LLM successfully interacted with data from an actual well and even trained a lithology classification model with 81% accuracy."
+- NOT FOUND: any sentence naming the well, field or basin the "actual well" belongs to; any sentence naming the base model behind the LLM control layer; any sentence reporting a quantitative result for the A2A drilling-safety assessment.
+- maturity_claimed: "Together, they provide a flexible and interoperable foundation for future AI-driven surface logging operations, paving the way for more autonomous, collaborative, and production-ready digital drilling workflows."
+- limitation: "Although tested in separate scenarios, both architectures are complementary. An A2A orchestrator can dynamically leverage MCP tools as part of its workflows" — the combined MCP-plus-A2A system named in the conclusion was not itself evaluated.
+
+## doi:10.3997/2214-4609.202639012
+
+https://doi.org/10.3997/2214-4609.202639012 — full text, local PDF (institutional access; 01_unreachable_paper/12.pdf). Extended abstract, Sixth EAGE Digitalization Conference and Exhibition. The running footer gives two different dates and places for the same conference ("16 - 19 March 2026, Norway" on the cover page, "9 - 12 March 2026, Stavanger, Norway" on the body pages).
+
+- "To overcome these limitations, a LangGraph-based workflow with iterative correction was developed and tested across three foundation models: Meta LLaMA-3-90B, Anthropic Claude Sonnet, and DeepSeek R1."
+- "The corpus was indexed into a FAISS vector database using Cohere embeddings for semantic retrieval [3]."
+- "The system used a secondary classifier LLM to detect hallucinations by performing checks that evaluated the absence of contextual evidence and the presence of inconsistencies in generated outputs [4]. The system will regenerate its process after detecting hallucinations while the number of attempts stays under 2 to produce a new prompt for correction."
+- "This workflow was evaluated on geological well data from Acacia Grove-1 across three foundation models."
+- "A benchmark dataset of thirty SME-validated Q&A pairs was used as ground truth reference. The previous geological reports contained extracted questions which included data about stratigraphic layers and rock types together with hydrocarbon-related information."
+- "both models achieved 21 perfect scores (5/5) out of 30 Q&A pairs, while LLaMA lagged with 17 perfect scores (Fig. 2 – F1)."
+- "Sonnet consistently demonstrated higher average alignment (0.83) compared to LLaMA (0.80) and DeepSeek (0.81)."
+- NOT FOUND: any comparison against a non-LangGraph RAG pipeline; the paper motivates the design by the failings of "conventional" RAG but reports no measurement of one.
+- maturity_claimed: "This study shows that LangGraph is not just a research framework but a practical method for making generative AI more dependable in specialized fields like geoscience, and the methodology can be extended to other industries facing similar digitization challenges."
+- limitation: "All three models achieved nearly identical scores (≈1.0) (Fig. 2 – F3), suggesting that this metric was not discriminative for distinguishing performance... Word2Vec similarity fails to detect the subtle variations in output quality."
+
+## doi:10.3997/2214-4609.2025640024
+
+https://doi.org/10.3997/2214-4609.2025640024 — full text, local PDF (institutional access; 01_unreachable_paper/AS_Extended_Abstract-24-52-Seksaf-Mohamed_Anis.pdf). Extended abstract, Sixth EAGE Borehole Geology Workshop, Montpellier. The paper describes the system as an in-progress prototype throughout.
+
+- "This R&D initiative focuses on integrating Large Language Models (LLMs) with our established RF workflow through a multi-agent Retrieval-Augmented Generation (RAG) architecture."
+- "The multi-agent RAG workflow under development employs specialised agents, each focusing on different aspects of geological reasoning: (1) a context agent that evaluates vertical stacking patterns across multiple depth points, (2) a log pattern agent that analyses curve shapes and log responses over intervals, (3) a geological principles agent that ensures predictions adhere to established sedimentological concepts, and (4) a geologist feedback agent that incorporates expert input through an interactive loop."
+- "Stage 3: Integration of LLMs for vertical stacking corrections on a per-well basis. This stage employs a RAG framework where geological knowledge is stored in a vector database and retrieved contextually to ensure predictions conform to established depositional principles (Lewis et al., 2020)."
+- "The ongoing research utilises various datasets across different depositional environments, where expert geologist interpretations serve as ground truth for model training and evaluation."
+- "The multi-agent LLM-enhanced workflow improved overall prediction accuracy by 15-25% compared to standalone Random Forest models when tested against ground truth from cored intervals."
+- NOT FOUND: any sentence naming the base model or LLM provider; any sentence naming the fields or wells the datasets come from; any per-agent ablation separating the contribution of the four agents.
+- Internal inconsistency, recorded as read: the Summary and Methods describe the baseline as "Random Forest", while the Key results section opens "Our preliminary testing of integrating LLMs coupled with Decision Tree machine learning".
+- maturity_claimed: "This ongoing research and development initiative demonstrates that integrating LLMs with traditional machine learning algorithms through a multi-agent RAG workflow has the potential to enhance the geological validity of facies predictions in uncored wells."
+- limitation: "Further real-world testing and validation across diverse geological settings will be essential to refine and optimise this workflow/approach" and "future work will focus on expanding the capabilities of individual agents within the multi-agent system, particularly enhancing the geological principles agent with more complex stratigraphic concepts".

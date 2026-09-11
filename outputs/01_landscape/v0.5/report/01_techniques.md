@@ -1,11 +1,11 @@
 # 01 Techniques
 
-Technique counts below are source counts among the 38 full-text core rows.
+Technique counts below are source counts among the 41 full-text core rows.
 
 [Certain] The most frequent controlled terms on the core tier are `guardrails-validation`
-(33 of 38 sources), `planning` (29), `tool-calling` (27), `task-decomposition` (25),
-`retrieval` (22) and `role-specialisation` (22). Next are `self-reflection` (21), `memory`
-(17), `human-in-the-loop` (16) and `code-execution` (14). `physics-solver-in-the-loop`
+(34 of 41 sources), `planning` (30), `tool-calling` (28), `task-decomposition` (25),
+`retrieval` (24) and `role-specialisation` (24). Next are `self-reflection` (22), `memory`
+(17), `human-in-the-loop` (17) and `code-execution` (14). `physics-solver-in-the-loop`
 appears on eight sources, `simulator-in-the-loop` and `knowledge-graph` on five each,
 `fine-tuning` on three and `multi-agent-debate` on two.
 
@@ -19,6 +19,9 @@ ESHM20-MCP exposes twenty-four typed MCP endpoints wrapping OpenQuake
 [[doi:10.1038/s44304-026-00262-z]]. specfem-mcp decomposes SPECFEM 2D/3D/Globe into
 generate-mesh-solve-visualise tools [[doi:10.48550/arxiv.2512.14429]]. GeoMCP evaluates
 closed-form geotechnical method cards through FastMCP [[doi:10.48550/arxiv.2603.01022]].
+The Geowellex surface-logging agent exposes the endpoints of existing well-data and
+ML-training applications as MCP tools and lets the model choose among them, then trains a
+lithology classifier through that layer [[doi:10.3997/2214-4609.202535040]].
 AutoSurrogate's agents issue structured tool calls for profiling, memory estimation, HPO
 and training, while GEOS itself is used only to build the dataset
 [[doi:10.1016/j.aei.2026.105058]].
@@ -36,6 +39,13 @@ kinematical-analysis solver, for tunnel-face stability risk assessment
 trains against an in-house NS-FEM finite-element solver, auto-debugging its own generated
 training scripts when the solver run fails [[doi:10.1016/j.aei.2026.105065]].
 
+[Certain] A second inter-agent protocol appears once. Alongside its MCP tool layer, the
+Geowellex work exposes independently deployed agents through Agent-to-Agent (A2A) APIs and
+has a central Drilling Manager Agent discover and invoke them by reading their agent cards
+[[doi:10.3997/2214-4609.202535040]]. This is the only core source in which agents, rather
+than tools, are the things advertised and discovered at run time; MCP accounts for every
+other protocol-level tool-exposure mechanism in the core set.
+
 [Certain] Retrieval is used both as RAG over manuals and as catalog or literature search.
 PetroGraph retrieves from the OPM Flow Reference Manual [[arxiv:2605.15028]]. GAIA retrieves
 over a LanceDB of more than 5,000 geothermal papers [[doi:10.48550/arxiv.2511.03852]].
@@ -47,6 +57,13 @@ retrieval over a Neo4j graph [[doi:10.1016/j.autcon.2026.107055]], InsightsAI's
 ontology-driven graph linking WITSML entities to daily drilling reports
 [[doi:10.2118/229435-ms]], and OntoGRC's OWL 2 DL ore-forming ontology used as a semantic
 anchor for its generate-reflect-correct extraction loop [[doi:10.1016/j.oregeorev.2026.107411]].
+
+[Certain] Role-specialisation is also used without task-decomposition, to divide one
+prediction into aspects of geological reasoning rather than into sub-tasks: the
+sedimentological-prediction workflow splits four agents by what each checks — vertical
+stacking, log-curve shape, conformance to depositional principles, and expert feedback —
+over a Random-Forest prediction none of them produced
+[[doi:10.3997/2214-4609.2025640024]].
 
 [Certain] Role-specialisation and task-decomposition co-occur in the hierarchical
 multi-agent papers: HERMES (Parser, Entity Recognizer, Annotator, Validator, Tracer)
@@ -74,6 +91,10 @@ applies programmatic legality gates to candidate reconstruction programs
 [[doi:10.48550/arxiv.2608.18272]]. The borehole-report pipeline enforces a JSON schema
 after prompting [[doi:10.1038/s41598-026-61824-9]]. HERMES runs a rule-based domain
 Validator on nomenclature, units and chronostratigraphy [[doi:10.48550/arxiv.2608.14055]].
+The LangGraph geological-Q&A pipeline uses a secondary classifier LLM as the validator,
+checking a generated answer for absent contextual evidence and internal inconsistency and
+regenerating on failure under a cap of fewer than two retries
+[[doi:10.3997/2214-4609.202639012]].
 AutoSurrogate treats non-finite losses and exploding gradients as failure criteria that
 trigger a recovery policy [[doi:10.1016/j.aei.2026.105058]].
 

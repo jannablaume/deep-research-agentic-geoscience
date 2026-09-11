@@ -2,6 +2,56 @@
 
 Newest first. One entry per decision: what, why, what it rules out.
 
+## 2026-09-11 — 02_tango: unreachable sources retrieved by hand, written as v0.2
+
+The corpus owner worked through `outputs/02_tango/v0.1/unreachable.md` — not `paywalled.md` —
+and retrieved 20 PDFs into a local store outside this repository. 19 distinct works; 14 were
+re-read. Three were `context`/abstract-only demotions and all three supported a full `core`
+write-up, so core rises 98 → 101 and context falls 85 → 82. The admitted set is unchanged at
+183: no source entered or left, no query ran, no threshold moved, and `screened.csv`,
+`triage.csv`, `queries.csv`, `shortlist.md`, `audit_sample.md` and `triage_stats.md` are
+byte-identical to v0.1.
+
+**Going after `unreachable.md` rather than `paywalled.md` is what made this worth doing.**
+`paywalled.md` lists what could not be read at all; `unreachable.md` also lists what *was*
+read, but from a substitute — an author preprint, a reader proxy, a third-party deposit. Eleven
+of the fourteen re-reads were in that second category, and they are where the corrections came
+from. Every quoted span of five or more words in those eleven records was matched mechanically
+against the version of record. Eight verified unchanged. Three had changed: a published paper
+with a third case study its preprint lacked (`doi:10.1016/j.dche.2026.100312`), one reporting a
+pass@1 robustness figure v0.1 had explicitly recorded as absent
+(`doi:10.1016/j.taml.2026.100660`), and one describing a different mechanism and reporting a
+hallucination incident the preprint does not contain (`doi:10.1145/3731599.3767349`). **Three of
+six preprint-to-published pairs had diverged.** Rules out treating `IDENTITY MATCH IS INFERRED`
+as a formality: on this sample it is a real caveat, and a run that reads preprints for blocked
+publishers should say so in every affected row rather than once in a methods note.
+
+Recovering table cells a reader proxy could not render did the same job in miniature.
+`doi:10.3390/buildings15173190` claims "deviations under 1.5%" in its abstract; its own Table 9
+reports 1.624%, 1.998% and 2.834% in three of eight case-direction pairs. Rules out treating a
+proxy read as equivalent to a publisher read when any claim rests on a table.
+
+**Written as a new `v0.2` directory rather than corrected in place, and that conflicts with the
+01 precedent recorded below on the same day.** The 01 entry ("paywalled full text recovered via
+institutional access, corrected in place") explicitly "rules out bumping the version number for
+a correction that touches no harvested record, no query, and no scoring threshold" — which is
+exactly what this is. AGENTS.md §A8 points the other way: a committed run directory is evidence
+and a later recount belongs in a new version. Both were in force; the conflict is recorded here
+rather than resolved silently, because the two files disagree and the next person will hit it
+again. What settled it for this run is that v0.1 is committed and its numbers are cited in the
+03_gaps run, so keeping an unmodified v0.1 on disk lets `gaps.py` be re-pointed deliberately
+instead of silently re-measuring. If the repository prefers the 01 convention, v0.2's contents
+supersede v0.1's file for file and can be moved over it; nothing in v0.2 depends on the
+directory name.
+
+Rules out, regardless of which convention wins: reading `tango_touchpoints: none` as a negative
+without checking `access_status`. Two v0.1 rows carried `none` purely because no text could be
+retrieved; both now carry six touchpoints each. v0.1 flagged that hazard in prose and v0.2 is
+the measurement that it was real in 2 of 2 cases.
+
+Twelve demotions remain unresolved — four ChemRxiv, two SSRN — and two records are still read
+from an unverified substitute. `paywalled.md` and `unreachable.md` carry both lists.
+
 ## 2026-09-11 — two more runs, and the 01 pipeline is frozen rather than generalised
 
 `prompts/02_tango.md` asks what exists that bears on making TANGO agentic;
@@ -90,6 +140,55 @@ is free text by SCHEMA — the mechanical comparison that does hold is a non-emp
 claim against an M0/M1 evaluation, which finds 11. Rules out a gaps document
 assembled from recall, and rules out `confirmed-absent` from a verification pass
 that searched nothing.
+
+## 2026-09-11 — third paywalled-recovery batch: the three EAGE EarthDoc records
+
+The three EAGE records named as unresolved at the end of the second batch were supplied as
+PDFs and read the same way (corpus owner's institutional access, full text read before any
+file edit). All three cleared the agentic bar and promoted from `context`/abstract-only to
+`core`: the Geowellex MCP + A2A surface-logging agent (First EAGE Workshop on Surface
+Logging, M2), a LangGraph-orchestrated geological Q&A pipeline evaluated on the named
+Acacia Grove-1 well (Sixth EAGE Digitalization Conference, M3), and a four-agent RAG
+workflow revising Random-Forest sedimentological predictions (Sixth EAGE Borehole Geology
+Workshop, M2). As in the second batch, none were reclassified `out`.
+
+One subfield correction, from the same evaluation-focus rule used in both earlier batches:
+the sedimentological workflow moves from `geological_modelling` to `reservoir_engineering`
+(secondary `geological_modelling`), because it is evaluated on facies and genetic-element
+prediction from wireline logs against cored-interval ground truth — the same reasoning that
+moved the well-log papers in the first batch.
+
+Two of the three sit close to the scope bar and were admitted on "iterates on its own
+output" rather than on tool choice or planning: the LangGraph graph is fixed except for a
+classifier LLM's regenerate-or-accept verdict, and the four-agent workflow reviews a
+prediction the Random Forest made. Recording that explicitly rather than letting the tier
+imply a uniform mechanism: a `core` row means the full text was read and the bar was
+cleared, not that it was cleared the same way.
+
+**This batch falsified a claim the report was making.** Sections 02 and 04 stated that
+every core source recovered by institutional access named a base model — true of the first
+fifteen, false of these. Two of the three name no LLM anywhere, taking unnamed-model core
+rows from 9 of 38 to 11 of 41. The claim is corrected and re-scoped to the format rather
+than removed, because what changed is the venue type being read, not the recovery route.
+Three-to-five-page conference extended abstracts clear `core` on mechanism while omitting
+base model, code availability and held-out status; none of the three states any of the
+latter two.
+
+Core rises from 38 to 41; context falls from 113 to 110; total admitted (151) is unchanged.
+Report sections 00, 01, 02, 03, 04, 05, 06 and 08 and `index.md` were regenerated in place,
+same reasoning as both earlier batches. Section 06 gained one entry, the first added by a
+recovery pass: the LangGraph paper's correction-loop design is a direct methodological
+disagreement with the GraphRAG catalog paper's "fundamental structural flaw in
+retrieval-then-synthesize architectures", and the disagreement is only visible in full text.
+
+Rules out reading `tier: core` as a uniform evidence standard across venue types — it is a
+statement about what was read and what the system does, not about how completely the source
+documents itself. Whether `papers.csv` completeness should be reported per tier is left to
+v0.6 rather than fixed here, since changing what `core` asserts mid-run would re-measure the
+earlier batches. Also rules out merging the Geowellex record with its own cited predecessor
+(`doi:10.3997/2214-4609.2025101389`, still abstract-only): the identity-key rule keeps them
+separate, and only the record actually read carries a `system_id`, so the pair cannot
+inflate a per-system count.
 
 ## 2026-09-11 — second paywalled-recovery batch, same in-place correction
 

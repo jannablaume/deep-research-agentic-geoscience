@@ -2,10 +2,10 @@
 
 Shared-benchmark status is a count of named public datasets, not a judgement of quality.
 
-[Certain] Nine core sources have `data_type: benchmark`, nine `synthetic`, seventeen
+[Certain] Nine core sources have `data_type: benchmark`, nine `synthetic`, twenty
 `real-field`, and three `not stated` (TREMORS [[doi:10.48550/arxiv.2609.01777]], the
 Geo-Resource Agent [[doi:10.56952/igs-2025-0391]], and the Leading Edge seismic-processing
-assistant [[doi:10.1190/tle44020142.1]]). Held-out status is `not stated` for 26 of 38,
+assistant [[doi:10.1190/tle44020142.1]]). Held-out status is `not stated` for 29 of 41,
 `yes` for eleven, and `no` for one.
 
 [Certain] No single evaluation protocol is reused across subfields. Named public artefacts
@@ -35,6 +35,20 @@ JRC Eurocode 7 worked-example resistances within 0.012%
 [[doi:10.48550/arxiv.2608.18272]]. AutoSurrogate reports saturation R2 0.9532 against
 RecurrentRUNet3D 0.9359 and Optuna TPE 0.8915 [[doi:10.1016/j.aei.2026.105058]].
 
+[Certain] Eleven of 41 core sources record `baseline: none`, and the three EAGE extended
+abstracts recovered in the third institutional-access pass divide on it. One states a
+baseline: the sedimentological-prediction workflow reports 15-25% accuracy over standalone
+Random Forest models on cored-interval ground truth [[doi:10.3997/2214-4609.2025640024]].
+The other two do not. The LangGraph geological-Q&A pipeline is motivated throughout by the
+failure of "conventional" RAG to manage state and avoid hallucination, yet compares only
+its three interchangeable base models against each other and never measures a pipeline
+without the correction loop [[doi:10.3997/2214-4609.202639012]]. The Geowellex
+surface-logging paper reports 81% lithology-classification accuracy for a model the agent
+trained, with no comparison against the same model trained without the agent, and no
+number at all for its A2A arm [[doi:10.3997/2214-4609.202535040]]. In the two cases where
+an agent orchestrates the production of a conventional artefact, the number reported is
+the artefact's, and the agent's own contribution to it is not separately measured.
+
 [Certain] Other core papers compare against neural or RAG baselines. GeoMind reports
 weighted F1 against 17 time-series and lithology models [[arxiv:2604.21501]]. STA-CoT
 reports Pos.F1 / Avg.F1 / MCC against MCoT, RAG, tool-augmented and MineAgent
@@ -52,13 +66,16 @@ documented failure cases) [[doi:10.1190/tle44020142.1]]. TADI executes a 130-que
 taxonomy and 95 pytest tests but does not score Evidence Grounding
 [[doi:10.48550/arxiv.2605.00060]].
 
-[Certain] Nine of 38 core sources do not name the generator model, including Agents4GEOS
+[Certain] Eleven of 41 core sources do not name the generator model, including Agents4GEOS
 [[arxiv:2607.18557]], GeoMCP [[doi:10.48550/arxiv.2603.01022]], SeisEvo
 [[doi:10.48550/arxiv.2608.18272]], AutoSurrogate [[doi:10.1016/j.aei.2026.105058]],
-InsightsAI [[doi:10.2118/229435-ms]] and the Geo-Resource Agent
-[[doi:10.56952/igs-2025-0391]] — the same nine as before the second recovery pass; every
-newly-recovered core source names a specific model. A code URL is present on 14 of 38 core
-rows.
+InsightsAI [[doi:10.2118/229435-ms]], the Geo-Resource Agent
+[[doi:10.56952/igs-2025-0391]], the Geowellex surface-logging agent
+[[doi:10.3997/2214-4609.202535040]] and the sedimentological-prediction workflow
+[[doi:10.3997/2214-4609.2025640024]]. The last two were added by the third
+institutional-access pass; the fifteen sources recovered in the first two each named a
+model. A code URL is present on 14 of 41 core rows, none of them from the three EAGE
+extended abstracts, which state no code availability.
 
 [Likely] Evaluation in the readable core is therefore local: each system defines a task,
 a dataset and a metric. Where a public Earth-science artefact is used, it is used as that

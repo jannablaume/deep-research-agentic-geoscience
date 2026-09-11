@@ -14,6 +14,18 @@ the author states that multi-step arithmetic across tool results "may accumulate
 [[doi:10.48550/arxiv.2605.00060]]. Both papers are seismology-adjacent catalog or
 operational-record systems; they do not cite each other.
 
+[Certain] The same disagreement recurs over whether a self-check loop is enough to make
+retrieval-then-synthesize reliable. The GraphRAG catalog paper locates the problem in the
+architecture and routes around it [[doi:10.48550/arxiv.2607.24984]]. The LangGraph
+geological-Q&A pipeline keeps the architecture and adds a corrective layer inside it — a
+secondary classifier LLM that checks each answer for absent contextual evidence and
+inconsistency and sends it back for regeneration — and states that the result is "a
+practical method for making generative AI more dependable in specialized fields like
+geoscience" [[doi:10.3997/2214-4609.202639012]]. The two are not measured against each
+other, and neither is measured against the plain pipeline it is arguing about: the
+LangGraph paper reports no non-corrected RAG baseline, so its claim rests on the
+comparison of three base models inside the loop rather than on the loop itself.
+
 [Certain] Authors disagree on whether a vision-language model can replace a specialised
 vision stack for geohazard mapping. LandslideAgent reports that LandslideVLM's 52.05%
 fine-grained accuracy "still lags significantly behind the dedicated pure-vision models"

@@ -44,17 +44,24 @@ context sources, GWFlowAI [[doi:10.5194/egusphere-egu26-20010]] and RaKsh
 
 ## reservoir_engineering
 
-[Certain] Sixty-nine admitted sources, of which seven are core: PetroGraph history matching
+[Certain] Seventy admitted sources, of which nine are core: PetroGraph history matching
 on SPE1, SPE9 and Norne [[arxiv:2605.15028]], GeoMind lithology classification on four
 public well-log benchmarks [[arxiv:2604.21501]], TADI question answering over Volve
 [[doi:10.48550/arxiv.2605.00060]], InsightsAI correlating WITSML logs with daily drilling
 reports over the named Volve field [[doi:10.2118/229435-ms]], the Geo-Resource Agent's two
 qualitative reservoir-characterisation and decline-curve walkthroughs
 [[doi:10.56952/igs-2025-0391]], a hierarchical multi-agent well-log interpretation framework
-tested on 100 unnamed field wells [[doi:10.1016/s1876-3804(26)60734-3]], and LogACF's
+tested on 100 unnamed field wells [[doi:10.1016/s1876-3804(26)60734-3]], LogACF's
 reservoir-parameter prediction on the public SPWLA benchmark plus one unnamed tight-sandstone
-field case [[doi:10.1016/j.petsci.2026.05.031]]. The remaining 62 are context, largely SPE,
-IPTC and EAGE extended abstracts.
+field case [[doi:10.1016/j.petsci.2026.05.031]], the Geowellex surface-logging agent, which
+drove an MCP tool layer end to end to train a lithology classifier on one unnamed real well
+and separately coordinated two A2A drilling-safety agents
+[[doi:10.3997/2214-4609.202535040]], and a four-agent RAG workflow that revises
+Random-Forest sedimentological genetic-element predictions for uncored wells against stored
+geological principles, tested on unnamed datasets across several depositional environments
+[[doi:10.3997/2214-4609.2025640024]]. The last two were read in full in a third
+institutional-access pass; both are EAGE workshop extended abstracts. The remaining 61 are
+context, largely SPE, IPTC and EAGE extended abstracts.
 
 ## geothermal
 
@@ -114,13 +121,20 @@ geophysical inversion task per se. See those sections above.
 
 ## geological_modelling
 
-[Certain] Eight admitted sources, three core: HERMES extracting the Treatise on Invertebrate
+[Certain] Seven admitted sources, four core: HERMES extracting the Treatise on Invertebrate
 Paleontology into Treatise.geoLex [[doi:10.48550/arxiv.2608.14055]], the borehole-report
 coordinate pipeline [[doi:10.1038/s41598-026-61824-9]], and AGeoKE, an MCP multi-agent
 extraction system evaluated retrospectively against two named real reference sources — the
 USGS Mineral Deposit Models and the NASA Lunar Sample Compendium's individually-numbered
 Apollo samples [[doi:10.1016/j.acags.2026.100362]] — read in full after institutional
-access resolved its paywall. A likely sibling of the borehole-report pipeline, an SSRN
+access resolved its paywall, and a LangGraph question-answering pipeline over legacy
+geological reports for the named Acacia Grove-1 well, in which a secondary classifier LLM
+judges each answer and sends it back for regeneration
+[[doi:10.3997/2214-4609.202639012]]. The eighth source formerly counted in this subfield,
+the sedimentological-prediction workflow, was read in full in the same pass and
+reclassified to `reservoir_engineering`, since its evaluation rates facies and reservoir
+characterisation from wireline logs rather than a modelling task; see that section above.
+A likely sibling of the borehole-report pipeline, an SSRN
 preprint reporting the same borehole-to-coordinate task, was also read in full and found
 not to be agentic — the LLM performs one-shot entity extraction and location parsing
 feeding a fixed downstream geometry pipeline it never calls or iterates on — and so is not

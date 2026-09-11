@@ -137,7 +137,7 @@ there. [[doi:10.56952/igs-2025-0391]]
 
 ## reservoir_engineering
 
-7 core, 62 context.
+9 core, 61 context.
 
 ### Core
 
@@ -189,6 +189,20 @@ there. [[doi:10.56952/igs-2025-0391]]
   Evaluated by RMSE and R2 on held-out test wells against tree/ensemble/boosting and network-architecture baselines, plus two ablations, on the public SPWLA PDDA competition dataset and one field-measured tight-sandstone dataset from an unnamed oilfield. Baseline: Random Forest, Bagging, Ensemble, Extra Trees, HistGBDT, LightGBM, XGBoost (SPWLA); CNN, MLP, Attention, ResNet, Transformer, BiLSTM (tight sandstone); simplified-role/simplified-memory ablations. Data: benchmark; real-field (unnamed site).
   Reported: SPWLA well-wise RMSE as low as 0.008-0.266 across PHIF/SW/VSH; tight sandstone dataset average R2 = 0.812. Demonstrated maturity `M2` (claimed: "LogACF provides a practical framework for applying LLMs to integrated well logging interpretation... in engineering practice").
   Authors' stated limitation: relies on predefined workflows and expert rules, limiting autonomous generalization under completely unknown geological conditions; reliability strongly dependent on data quality; validation mainly based on the SPWLA dataset and one unnamed tight-sandstone case, applicability to carbonate/shale reservoirs unverified.
+
+- **Smart Agents (Geowellex).** LLM-Driven Smart Agents for Surface Logging: Enhancing Drilling and Geological Intelligence with MCP and A2A Protocols (2025, EAGE First Workshop on Surface Logging). [[doi:10.3997/2214-4609.202535040]]
+  Built for surface-logging workflows in drilling operations, presented as two architectures evaluated separately in one paper: an MCP layer exposing existing well-data and ML-training APIs as tools, and an A2A layer coordinating distributed agents. Architecture `multi-agent-hierarchical`; techniques: tool-calling; planning; role-specialisation; A2A agent cards for dynamic agent discovery. Base model: not stated.
+  Calls: MCP-exposed endpoints of preexisting surface logging applications for well-metadata listing, ML-model querying, dataset building and lithology-model training; and, over A2A, a DDA Agent for Mechanical Specific Energy and Drilling Strength anomaly detection and an SSI Agent for cavings image analysis, both discovered by a central Drilling Manager Agent from their agent cards.
+  Evaluated by running each architecture once, end to end: the MCP agent autonomously selected tools to list well metadata, query models and train a lithology classifier on one real well; the A2A Drilling Manager assembled a drilling safety assessment from its two subordinate agents, reported descriptively. Baseline: none. Data: real-field, well not named.
+  Reported: the agent-trained lithology classifier achieved 81% accuracy; no quantitative result is reported for the A2A drilling-safety assessment. Demonstrated maturity `M2` (claimed: "a flexible and interoperable foundation for future AI-driven surface logging operations").
+  Authors' stated limitation: the two architectures were "tested in separate scenarios", and the hybrid design named in the conclusion — an A2A orchestrator dynamically leveraging MCP tools — was not itself evaluated.
+
+- **seksaf2025-multiagent-rag.** Enhancing ML-Based Reservoir Characterisation with Large Language Models: A Multi-Agent RAG Workflow for Improved Sedimentological Prediction (2025, EAGE Sixth Borehole Geology Workshop). [[doi:10.3997/2214-4609.2025640024]]
+  Built to correct Random-Forest predictions of sedimentological genetic elements in uncored wells for vertical stacking and field-scale consistency. Architecture `pipeline-with-agent`; techniques: retrieval; role-specialisation; human-in-the-loop. Base model: not stated.
+  Calls: a vector database of geological knowledge, retrieved contextually, driven by four specialised agents — a context agent over vertical stacking patterns, a log pattern agent over curve shapes, a geological principles agent enforcing sedimentological concepts, and a geologist feedback agent running an interactive expert loop — sitting downstream of a supervised Random Forest over wireline logs and an unsupervised facies model.
+  Evaluated by prediction accuracy against expert geologist interpretations of cored intervals, on unnamed datasets spanning several depositional environments. Baseline: standalone Random Forest models. Data: real-field, sites not named. The authors describe this throughout as preliminary testing of a prototype under development.
+  Reported: 15-25% improvement in overall prediction accuracy over standalone Random Forest models. Demonstrated maturity `M2` (claimed: the workflow "has the potential to enhance the geological validity of facies predictions in uncored wells").
+  Authors' stated limitation: further real-world testing and validation across diverse geological settings "will be essential"; future work is to expand the individual agents, particularly the geological principles agent, and to move to LLMs with a larger context window.
 
 ### Context
 
@@ -244,7 +258,6 @@ there. [[doi:10.56952/igs-2025-0391]]
 - [context] A Dual-Teacher Distilled MoE Agent for Complex Industrial Document Analysis (2026). verify consistency of data items distributed across drilling reports. [[doi:10.3390/app16168089]]
 - [context] X.brain: AI Transformation: Unleashing Value with X.brain (2026). in-house enterprise AI engine supporting subsurface, drilling, production, maintenance, supply chain and corporate functions. [[doi:10.4043/36352-ms]]
 - [context] Artificial General Intelligence (AGI) Applications and Prospect in Oil and Gas Reservoir Development (2025). review of AGI applications in oil and gas reservoir development. [[doi:10.3390/pr13051413]]
-- [context] LLM-Driven Smart Agents for Surface Logging: Enhancing Drilling and Geological Intelligence (2025). MCP and A2A agent architectures for surface-logging lithology classification and drilling safety assessment. [[doi:10.3997/2214-4609.202535040]]
 - [context] SEPAL Enterprise Planning Solution (EPS): Advancing Secure Cognitive Automation in Upstream Operations: A Case Study on Artificial Intelligence Deployment Using CypherCrescent's SEPAL Enterprise Planning Solution (EPS) (2026). secure contextual querying of legacy upstream databases for economic modelling and financial analytics. [[doi:10.2118/235133-ms]]
 - [context] petro-mcp: petro-mcp: MCP server exposing petroleum engineering data and tools to LLMs (2026). expose petroleum engineering data and calculations to LLMs. [[title:petromcpmcpserverexposingpetroleumengineeringdataandtoolstollms]]
 - [context] petromcp: petromcp: local-first MCP server for petroleum data formats (LAS, DLIS, SEG-Y headers, pump cards) (2026). give LLM hosts local-first read access to binary petroleum data formats. [[title:petromcplocalfirstmcpserverforpetroleumdataformatslasdlissegyheaderspumpcards]]
@@ -444,7 +457,7 @@ evaluation-focus subfield rule; see those sections.)
 
 ## geological_modelling
 
-3 core, 5 context.
+4 core, 3 context.
 
 ### Core
 
@@ -469,11 +482,16 @@ evaluation-focus subfield rule; see those sections.)
   Reported: manual-evaluation precision 97.3-99.9%, recall 88.6-99.3%, F1 93.5-98.5% across the four dataset-schema combinations. Demonstrated maturity `M3` (claimed: the case studies "validated through manual expert evaluation, demonstrate the effectiveness and cross-domain generalizability of the proposed method").
   Authors' stated limitation: vocabulary-adaptive extraction still relies on hard-coded vocabulary parsing; the terrestrial-biased GeoSciML vocabulary misapplies Earth-centric terms to lunar samples; output is limited to controlled-vocabulary terms, lacking relational/assertion-level knowledge; manual evaluation used a single reviewer with no inter-rater reliability reported.
 
+- **alakkas2026-langgraph-rag.** LangGraph-Orchestrated AI Pipelines for Geological Data Interpretation: A Comparative Analysis (2026, EAGE Sixth Digitalization Conference). [[doi:10.3997/2214-4609.202639012]]
+  Built for question answering over legacy geological well reports, with a hallucination check that routes an answer back for regeneration. Architecture `pipeline-with-agent`; techniques: retrieval; self-reflection; guardrails-validation. Base model: Meta LLaMA-3-90B, Anthropic Claude Sonnet and DeepSeek R1, each swapped into the same graph; a secondary classifier LLM as hallucination detector; Cohere embeddings.
+  Calls: a FAISS vector index over chunked geological reports; a secondary classifier LLM that judges the generated answer for absent contextual evidence and inconsistency and triggers regeneration, capped at under two retry attempts; LangGraph nodes holding the control flow and state.
+  Evaluated on 30 subject-matter-expert-validated question-answer pairs built from legacy geological reports for the named Acacia Grove-1 well, scored three ways: LLM-as-a-Judge on a 1-5 scale, TF-IDF plus embedding lexical alignment, and Word2Vec plus embedding semantic similarity. Baseline: none — the three base models are compared against each other, and no non-LangGraph or plain-RAG pipeline is measured. Data: real-field, named well.
+  Reported: LLM-as-a-Judge perfect scores out of 30 were DeepSeek R1 21, Claude Sonnet 21 and LLaMA-3-90B 17; TF-IDF plus embedding alignment was Sonnet 0.83, DeepSeek 0.81, LLaMA-3 0.80; Word2Vec similarity was approximately 1.0 for all three. Demonstrated maturity `M3` (claimed: "a practical method for making generative AI more dependable in specialized fields like geoscience").
+  Authors' stated limitation: the Word2Vec plus embedding metric "was not discriminative for distinguishing performance" and "fails to detect the subtle variations in output quality"; the authors conclude that scientific LLM evaluation requires multiple assessment methods.
+
 ### Context
 
 - [context] Geological Modeling Agent: Automated Static Model Uncertainty Assessment Using AI Agent and Geology-Aware Guidance (2026). automated uncertainty assessment and optimisation of static geological models. [[doi:10.3997/2214-4609.202639113]]
 - [context] From Unstructured Geological Data to 3D Models: A Human-in-the-Loop LLM assisted Workflow for Automated Geological Model Building (2026). human-in-the-loop LLM workflow turning unstructured geological text into inputs for implicit 3D geological modelling. [[doi:10.5194/egusphere-egu26-10918]]
 - [context] GeoSAGE: GeoSAGE: A Reproducible Multi-Agent Framework for Geological Reasoning From Joint Gravity and Magnetic Inversion Models (2026). language-driven multi-agent joint gravity-magnetic inversion, quasi-geological model construction and analysis. [[doi:10.5281/zenodo.19078874]]
-- [context] LangGraph-Orchestrated AI Pipelines for Geological Data Interpretation: A Comparative Analysis (2026). LangGraph correction-loop RAG over geological well data compared across three LLMs. [[doi:10.3997/2214-4609.202639012]]
-- [context] Enhancing ML-Based Reservoir Characterisation with Large Language Models: A Multi-Agent RAG Workflow for Improved Sedimentological Prediction (2025). multi-agent RAG refinement of Random-Forest sedimentological genetic-element predictions in uncored wells. [[doi:10.3997/2214-4609.2025640024]]
 

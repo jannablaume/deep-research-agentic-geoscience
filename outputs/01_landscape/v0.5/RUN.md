@@ -648,3 +648,39 @@ subfield from `inversion` to `hydrogeology`. Current totals after this second pa
 admitted 151 (38 core, 113 context) — total admitted is unchanged from the first addendum,
 since this pass reclassified no record `out`. See `unreachable.md` ("Third recovery pass")
 and `decisions.md` (2026-09-11, second entry).
+
+## Addendum 3, 2026-09-11 — a third institutional-access batch
+
+The three EAGE EarthDoc records left unresolved at the end of the second batch were
+supplied as PDFs and read in full the same way (not a tool call in this run). All three
+were genuinely agentic; none were reclassified `out`. One (the Seksaf sedimentological
+workflow) moved subfield from `geological_modelling` to `reservoir_engineering`, with
+`geological_modelling` kept as secondary. Current totals after this third pass: admitted
+151 (41 core, 110 context) — total admitted is unchanged from the first addendum, since
+neither this pass nor the second reclassified any record `out`.
+
+- **Records:** `doi:10.3997/2214-4609.202535040` (Geowellex MCP + A2A surface logging,
+  M2), `doi:10.3997/2214-4609.202639012` (LangGraph geological Q&A on the named
+  Acacia Grove-1 well, M3), `doi:10.3997/2214-4609.2025640024` (four-agent RAG over
+  Random-Forest sedimentological prediction, M2).
+- **Core maturity after this pass (sources, n=41):** M1 14, M2 13, M3 13, M4 1, M5 0.
+- **Sections regenerated:** 00, 01, 02, 03, 04, 05, 06, 08 and `index.md`. Section 06
+  gained an entry; 07 is unchanged, being written from harvest counts only.
+- **What this pass changed about a standing claim.** Every core source recovered in the
+  first two institutional passes named a base model, and sections 02 and 04 said so. Two
+  of these three do not, taking unnamed-model core rows from 9 of 38 to 11 of 41. Both
+  claims are corrected rather than dropped: the format, not the recovery route, is what
+  differs.
+- **Store rename:** the supplied-PDF directory is now `01_unreachable_paper/`, formerly
+  `paywalled_paper_2/`. Paths in earlier `papers.md` blocks are left as written; blocks
+  added in this pass use the current name. The store remains outside this repository and
+  untracked by decision.
+- **Still unresolved:** IEEE CAIBDA (`doi:10.1109/caibda65784.2025.11182767`), IEEE
+  CAIT/GALA (`doi:10.1109/cait70489.2026.11553853`), and the ESSOAr GAGAW preprint
+  (`doi:10.22541/essoar.176336946.65126612/v1`). All remain `context`/abstract-only.
+- **For v0.6:** conference extended abstracts can clear the `core` bar on full text but
+  routinely omit base model, code availability and held-out status. If the next run reads
+  many of them, `papers.csv` completeness per tier is worth reporting alongside the tier
+  counts, so `core` is not read as a uniform evidence standard.
+
+See `unreachable.md` ("Fourth recovery pass") and `decisions.md` (2026-09-11, third entry).

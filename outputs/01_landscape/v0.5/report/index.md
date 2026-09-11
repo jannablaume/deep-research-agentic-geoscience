@@ -1,8 +1,8 @@
 # Landscape of LLM-based agentic AI in solid-earth and subsurface geoscience
 
 Run `outputs/01_landscape/v0.5`. Harvested 11,191 unique records; shortlisted 712;
-admitted 151 (38 core, 113 context). Below-cut audit: 150 records, 0 false negatives.
-Core maturity (full text only): M1 14, M2 11, M3 12, M4 1, M5 0.
+admitted 151 (41 core, 110 context). Below-cut audit: 150 records, 0 false negatives.
+Core maturity (full text only): M1 14, M2 13, M3 13, M4 1, M5 0.
 
 ## Contents
 

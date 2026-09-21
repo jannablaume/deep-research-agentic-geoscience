@@ -64,6 +64,12 @@ jobs:
         # the artifacts committed beside it — no network, no API key, and no
         # harvest, because the irreplaceable files are in the repository.
         #
+        # A CI checkout has no screened.csv or triage.csv (22 MB each,
+        # gitignored), so runs 01 and 02 report PARTIAL: the three checks that
+        # need them cannot run, and every other check does. PARTIAL exits 0.
+        # A run reports PARTIAL only when the failing set is exactly that trio —
+        # any other failure is a FAIL and breaks the build.
+        #
         # The pipeline has no dependencies, so this needs nothing but python3.
         run: make verify
 

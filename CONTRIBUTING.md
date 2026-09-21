@@ -34,6 +34,12 @@ for byte. The second is why adding a check is a two-part job — the gate change
 *and* the runs' recorded gate output does, and `make verify` will tell you so
 rather than letting one drift from the other.
 
+Without `screened.csv` and `triage.csv` — gitignored, 22 MB each — three checks
+per run cannot run, and `make verify` reports `PARTIAL` rather than either
+`PASS` or `FAIL`. That distinction is deliberate and is the same rule the
+reports follow: a check that could not run must not look like a measured
+result. Regenerate them with `make harvest` to get a full `PASS`.
+
 `make check` must pass **from a bare clone**: no network, no API key, no run
 directory. That property is what makes CI meaningful, so a change that breaks it
 is a bug even if the tests are green on your machine.

@@ -38,7 +38,7 @@ OUT_GAPS  ?= outputs/03_gaps/v0.1-run2
 #  Writing targets still follow §A4: bump the version before you run one.
 
 .DEFAULT_GOAL := help
-.PHONY: help setup lint fmt typecheck test check verify verify-unchanged \
+.PHONY: help setup lint fmt typecheck test check verify verify-unchanged verify-restore \
         smoke harvest triage audit enrich export plan web web-dev clean \
         smoke-tango harvest-tango triage-tango audit-tango export-tango \
         gaps audit-gaps export-gaps
@@ -93,12 +93,22 @@ check: ## Repo health check — must pass from a bare clone
 #
 #  `make check` says the code is healthy. `make verify` says the published
 #  numbers are still the numbers: it re-executes each finished run's contract
-#  audit against the artifacts committed beside it.
+#  audit against the artifacts committed beside it. No network, no API key and
+#  no harvest.
 #
-#  It needs no network, no API key and no harvest — the irreplaceable files
-#  (screening.csv, papers.csv, papers.md) are in the repository, so this runs
-#  from a bare clone. That is the whole reproducibility claim, and it is
-#  executed rather than asserted.
+#  It reports three states per run, and the distinction is the point:
+#
+#    PASS     every check passed.
+#    PARTIAL  every check that COULD run passed, and the ones that could not are
+#             exactly the checks needing screened.csv and triage.csv — 22 MB each,
+#             gitignored by design and regenerable from the query plan. This is
+#             what a bare clone gets for runs 01 and 02.
+#    FAIL     anything else.
+#
+#  PARTIAL exists because the repository's own rule applies to its gate as well:
+#  a check that could not run must not look like one that passed, and must not
+#  look like one that failed either. A run is PARTIAL only when the failing set
+#  is exactly the harvest-dependent trio; one more failure and it is a FAIL.
 #
 #  Only the three runs this repository stands behind are listed. The `-test`
 #  directories and the superseded 02 v0.2 are kept so that a changed method is
@@ -108,22 +118,43 @@ VERIFY_LANDSCAPE ?= outputs/01_landscape/v0.5
 VERIFY_TANGO     ?= outputs/02_tango/v0.1
 VERIFY_GAPS      ?= outputs/03_gaps/v0.1-run2
 
+#  The checks that cannot run without the two gitignored harvest artifacts.
+HARVEST_DEPENDENT := Required files present|screened.csv parses and is non-empty|\
+Every screening decision traces to a harvested record
+
 verify: ## Re-audit every finished run from the committed artifacts. No network
-	@fail=0; \
+	@fail=0; partial=0; \
 	for pair in "audit.py:$(VERIFY_LANDSCAPE)" \
 	            "audit_tango.py:$(VERIFY_TANGO)" \
 	            "audit_gaps.py:$(VERIFY_GAPS)"; do \
 		script=$${pair%%:*}; dir=$${pair##*:}; \
-		printf '%-46s ' "$$dir"; \
-		if python3 scripts/$$script --out "$$dir" >/dev/null 2>&1; then \
+		out=$$(python3 scripts/$$script --out "$$dir" 2>&1); rc=$$?; \
+		printf '%-42s ' "$$dir"; \
+		if [ $$rc -eq 0 ]; then \
 			echo "PASS"; \
+		elif [ ! -f "$$dir/screened.csv" ] && [ -z "$$(printf '%s\n' "$$out" \
+				| grep '| FAIL |' | grep -vE '$(HARVEST_DEPENDENT)')" ]; then \
+			n=$$(printf '%s\n' "$$out" | grep -c '| FAIL |'); \
+			echo "PARTIAL  ($$n of its checks need the gitignored harvest artifacts)"; \
+			partial=1; \
 		else \
-			echo "FAIL  (python3 scripts/$$script --out $$dir)"; fail=1; \
+			echo "FAIL"; \
+			printf '%s\n' "$$out" | grep '| FAIL |' | sed 's/^/    /'; \
+			fail=1; \
 		fi; \
 	done; \
 	test $$fail -eq 0 || { echo "VERIFY_FAIL"; exit 1; }; \
-	$(MAKE) --no-print-directory verify-unchanged
-	@echo "VERIFY_PASS — every committed run still meets its contract"
+	if [ $$partial -eq 1 ]; then \
+		$(MAKE) --no-print-directory verify-restore; \
+		echo "VERIFY_PARTIAL — every check that could run passed."; \
+		echo "  screened.csv and triage.csv are gitignored (22 MB each). To check the"; \
+		echo "  remainder, regenerate them: make harvest OUT=<run>  (needs an API key)"; \
+	else \
+		$(MAKE) --no-print-directory verify-unchanged; \
+		echo "VERIFY_PASS — every committed run still meets its contract"; \
+	fi
+
+VERIFY_AUDITS := $(VERIFY_LANDSCAPE)/audit.md $(VERIFY_TANGO)/audit.md $(VERIFY_GAPS)/audit.md
 
 verify-unchanged:
 	@# The audit scripts rewrite audit.md in the run directory; there is no flag to
@@ -134,16 +165,21 @@ verify-unchanged:
 	@# otherwise silently rewrite a committed run.
 	@git rev-parse --is-inside-work-tree >/dev/null 2>&1 || { \
 		echo "not a git checkout — skipping the audit.md comparison"; exit 0; }
-	@paths="$(VERIFY_LANDSCAPE)/audit.md $(VERIFY_TANGO)/audit.md $(VERIFY_GAPS)/audit.md"; \
-	if git diff --quiet -- $$paths; then \
+	@if git diff --quiet -- $(VERIFY_AUDITS); then \
 		echo "audit.md reproduced byte-for-byte in all three runs"; \
 	else \
 		echo "FAIL: a re-executed audit does not reproduce the committed audit.md:"; \
-		git --no-pager diff --stat -- $$paths; \
-		git checkout -- $$paths; \
+		git --no-pager diff --stat -- $(VERIFY_AUDITS); \
+		git checkout -- $(VERIFY_AUDITS); \
 		echo "(reverted; the committed runs are unchanged)"; \
 		exit 1; \
 	fi
+
+verify-restore:
+	@# A partial run rewrote audit.md with rows for checks that could not run. That
+	@# is not a record of anything, so it does not get to stay in the working tree.
+	@git rev-parse --is-inside-work-tree >/dev/null 2>&1 \
+		&& git checkout -- $(VERIFY_AUDITS) 2>/dev/null || true
 
 # --- one run -----------------------------------------------------------------
 #

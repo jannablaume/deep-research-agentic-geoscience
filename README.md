@@ -21,8 +21,8 @@ query.
 ## Quickstart
 
 Nothing below needs an API key, a harvest, or a network connection. The
-irreplaceable artifacts are committed, so a clone can re-check every published
-number for itself.
+irreplaceable artifacts are committed, so a clone can re-check the published
+numbers for itself.
 
 ```bash
 git clone https://github.com/jannablaume/deep-research-agentic-geoscience
@@ -34,18 +34,27 @@ open web/dist/index.html          # xdg-open on Linux, start on Windows
 ```
 
 `make verify` re-executes each finished run's contract audit against the files
-committed beside it. It checks two things and exits non-zero on either: that
-every contract check still passes, and that the regenerated `audit.md` matches
-the committed one **byte for byte** — so a check that changed cannot quietly
-rewrite a finished run.
+committed beside it. On a fresh clone it reports:
 
 ```
-outputs/01_landscape/v0.5                      PASS
-outputs/02_tango/v0.1                          PASS
-outputs/03_gaps/v0.1-run2                      PASS
-audit.md reproduced byte-for-byte in all three runs
-VERIFY_PASS — every committed run still meets its contract
+outputs/01_landscape/v0.5                  PARTIAL  (3 of its checks need the gitignored harvest artifacts)
+outputs/02_tango/v0.1                      PARTIAL  (3 of its checks need the gitignored harvest artifacts)
+outputs/03_gaps/v0.1-run2                  PASS
+VERIFY_PARTIAL — every check that could run passed.
 ```
+
+**`PARTIAL` is the honest answer, not a degraded one.** `screened.csv` and
+`triage.csv` are 22 MB each and gitignored by design, and exactly three checks
+per run cannot run without them — the other 23 of 26 (and 35 of 38 for `02`)
+do. A run is `PARTIAL` only when the failing set is *exactly* that trio; one
+more failure and it is a `FAIL`. The repository's own rule applies to its own
+gate: a check that could not run must not look like one that passed, and must
+not look like one that failed either.
+
+Regenerate the two files with `make harvest` (needs an API key) and the same
+command reports `PASS` — plus one more thing: that the regenerated `audit.md`
+matches the committed one **byte for byte**, so a changed check cannot quietly
+rewrite a finished run.
 
 That is the reproducibility claim, and it is executed rather than asserted.
 

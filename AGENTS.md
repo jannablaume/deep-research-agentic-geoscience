@@ -332,6 +332,10 @@ The two answer different questions. `make check` says the **code** is healthy;
 check still passes, *and* a re-executed audit reproduces the committed `audit.md` byte
 for byte. Both run from a bare clone with no network and no API key, and CI runs both.
 
+On a clone without `screened.csv` and `triage.csv` the three checks that need them
+cannot run, and `verify` reports `PARTIAL` rather than `PASS` or `FAIL` — a run earns
+`PARTIAL` only when the failing set is exactly that trio.
+
 That second half makes adding a check a two-part job — the gate changes and so does
 each run's recorded gate output. `make verify` reports the diff and reverts the run
 directory rather than letting a changed check silently rewrite committed evidence.

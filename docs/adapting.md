@@ -52,10 +52,14 @@ make check       # lint, types, tests. Must pass from a bare clone
 ```
 
 `make verify` re-executes each run's contract audit against the artifacts
-committed beside it, and additionally asserts that the regenerated `audit.md`
-matches the committed one byte for byte. It is the reproducibility claim, and it
-is executed rather than asserted. If it passes, your clone is sound and you have
-a known-good baseline to diverge from.
+committed beside it. On a fresh clone runs 01 and 02 report `PARTIAL`: exactly
+three checks each need `screened.csv` and `triage.csv`, which are 22 MB apiece
+and gitignored by design. Every other check runs, and a run is `PARTIAL` only
+when the failing set is exactly that trio — one more failure and it is a `FAIL`.
+
+With the two files regenerated it reports `PASS`, and additionally asserts that
+the regenerated `audit.md` matches the committed one byte for byte. Either way
+you have a known-good baseline to diverge from.
 
 ## 3. Decide how much you are forking
 

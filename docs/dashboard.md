@@ -71,8 +71,8 @@ bug you cannot see from the machine that built it.
 
 ## What the dashboard adds over the markdown
 
-- **A summary table first.** The funnel from 11,191 harvested records to the 38
-  with a readable evaluation section, one counted row at a time, each naming its
+- **A summary table first.** The funnel from 11,191 harvested records down to
+  the deep-read core tier, one counted row at a time, each naming its
   denominator and what it counts. The last row is the one that needed care: this
   run cannot say how many sources a paywall cost, because `papers.csv` has no
   paywall column and `access_status: abstract-only` covers paywalls,
@@ -93,7 +93,7 @@ bug you cannot see from the machine that built it.
   become chips, so "show me only what a source actually stated" is one click.
 - **Citations that resolve on the page.** Every `[[doi:…]]` is a numbered
   reference marker; clicking it opens that source's full comparison-grid record,
-  including — for the 38 core sources — the verbatim sentences from `papers.md`
+  including — for the 41 core sources — the verbatim sentences from `papers.md`
   that the characterisation rests on.
 - **All 151 sources, filterable** by tier, field, architecture, technique,
   framework, maturity, model family and year, with the filtered set

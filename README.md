@@ -108,7 +108,7 @@ is sendable as-is: see [docs/dashboard.md](docs/dashboard.md).
 | **11,191** | unique records harvested from OpenAlex and arXiv |
 | **712** | shortlisted by `triage.py` — 6% of the corpus |
 | **10,465** | below the cut, of the 11,177 the cut was applied to<sup>1</sup> |
-| **151** | admitted after screening: **38 core**, 113 context |
+| **151** | admitted after screening: **41 core**, 110 context |
 | **150** | records screened from *below* the cut, to measure what the cut cost |
 | **0** | false negatives found in that sample |
 | **26/26** | contract checks passed, executed against the artifacts |

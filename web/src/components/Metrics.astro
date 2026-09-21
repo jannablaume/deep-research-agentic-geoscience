@@ -17,8 +17,10 @@ import type { Run } from '../lib/types';
 
 interface Props {
   run: Run;
+  /** What the admitted count is admitted *to*. Defaults to the 01 wording. */
+  subject?: string;
 }
-const { run } = Astro.props;
+const { run, subject = 'the landscape' } = Astro.props;
 
 const num = (n: number | null) => (n === null ? '—' : n.toLocaleString('en-GB'));
 ---
@@ -26,7 +28,7 @@ const num = (n: number | null) => (n === null ? '—' : n.toLocaleString('en-GB'
 <div class="figure">
   <div class="value tabular">{num(run.admitted)}</div>
   <p class="label">
-    sources admitted to the landscape, from {num(run.harvested)} harvested records across
+    sources admitted to {subject}, from {num(run.harvested)} harvested records across
     {run.api_calls} API and web calls — of which {run.core} could be read in full, and are
     therefore the only ones this review characterises or rates.
   </p>

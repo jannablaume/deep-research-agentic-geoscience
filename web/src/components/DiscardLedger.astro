@@ -1,0 +1,92 @@
+---
+/**
+ * Every candidate that did not become a gap, and why.
+ *
+ * `audit_gaps.py`'s central check is that every one of the 329 candidates is
+ * either cited by a gap or listed here — a candidate that quietly vanishes is
+ * indistinguishable from one nobody read. This table is that ledger, plus the
+ * complement: the candidates of gaps the verification pass refuted, which
+ * *are* cited by a gap above but are worth surfacing separately because a
+ * refuted gap's candidates are not a standing finding either.
+ */
+import type { Gap } from '../lib/types';
+
+interface Props {
+  discarded: { id: string; reason: string; note: string }[];
+  gaps: Gap[];
+}
+const { discarded, gaps } = Astro.props;
+
+const refutedGaps = gaps.filter((g) => g.verdict === 'refuted');
+const reasonCounts = new Map<string, number>();
+for (const d of discarded) reasonCounts.set(d.reason, (reasonCounts.get(d.reason) ?? 0) + 1);
+---
+
+<div class="panel">
+  <div class="head">
+    <h3>Discarded individually</h3>
+    <span class="muted">{discarded.length} candidates</span>
+  </div>
+  <div class="body">
+    <p class="muted" style="margin:0 0 1.25rem">
+      Every candidate `gaps.py` extracted is either cited by a gap above or listed here, with
+      a reason: <code>run-artefact</code> (it records how the run was done, not what the
+      literature lacks), <code>too-specific</code> (one system's own limitation with nothing
+      else bearing on it), or <code>duplicate-of</code> another gap.
+      {[...reasonCounts].map(([r, n]) => ` ${r}: ${n}.`).join('')}
+    </p>
+    <div class="scroll-x">
+      <table class="grid">
+        <thead>
+          <tr>
+            <th>Candidate</th>
+            <th>Reason</th>
+            <th>Note</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            discarded.map((d) => (
+              <tr>
+                <td style="white-space:nowrap">
+                  <code>{d.id}</code>
+                </td>
+                <td style="white-space:nowrap">
+                  <code>{d.reason}</code>
+                </td>
+                <td style="color:var(--muted)">{d.note}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{
+  refutedGaps.length > 0 && (
+    <div class="panel" style="margin-top:1rem">
+      <div class="head">
+        <h3>Candidates of gaps found refuted</h3>
+        <span class="muted">
+          {refutedGaps.reduce((n, g) => n + g.candidates.length, 0)} candidates, {refutedGaps.length}{' '}
+          gaps
+        </span>
+      </div>
+      <div class="body">
+        <p class="muted" style="margin:0 0 1.25rem">
+          These candidates are cited by a gap above, not discarded — listed here so nothing
+          downstream mistakes a refuted gap's candidates for a standing finding.
+        </p>
+        <ul style="margin:0;padding-left:1.1rem;color:var(--muted);line-height:1.8">
+          {refutedGaps.map((g) => (
+            <li>
+              <code>{g.candidates.join('; ')}</code> — {g.id}: {g.title}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  )
+}

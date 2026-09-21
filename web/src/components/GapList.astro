@@ -1,0 +1,191 @@
+---
+/**
+ * The 29 gaps, filterable and expandable.
+ *
+ * Each card's body is rendered by `Prose.astro` — `gaps.md` uses the same
+ * `[Certain]` / `[Absent-searched]` / `**bold**` conventions as a landscape
+ * report section, so a gap's evidence paragraph gets the same treatment a
+ * report paragraph does, down to the evidence-tag chip. The per-card tag
+ * filter is switched off: two paragraphs mostly carrying the same tag do not
+ * need a widget of their own.
+ *
+ * Filtering is a handful of `<details>` elements toggling `hidden`, not the
+ * `app.ts` machinery `Explorer.astro` uses — 29 static cards need no
+ * re-render-on-keystroke, only show/hide.
+ */
+import type { Gap, GapVerdict } from '../lib/types';
+import Prose from './Prose.astro';
+
+interface Props {
+  gaps: Gap[];
+}
+const { gaps } = Astro.props;
+
+const VERDICT_CLASS: Record<GapVerdict, string> = {
+  'confirmed-absent': 'absent',
+  'partially-addressed': 'likely',
+  refuted: 'verdict-refuted',
+  undecidable: '',
+};
+const VERDICT_LABEL: Record<GapVerdict, string> = {
+  'confirmed-absent': 'Confirmed absent',
+  'partially-addressed': 'Partially addressed',
+  refuted: 'Refuted',
+  undecidable: 'Undecidable',
+};
+const isVerdict = (v: string): v is GapVerdict => v in VERDICT_LABEL;
+
+const verdicts = [...new Set(gaps.map((g) => g.verdict))].filter(isVerdict);
+const kinds = [...new Set(gaps.flatMap((g) => g.kinds))].sort();
+const runs = [...new Set(gaps.flatMap((g) => g.runs))].sort();
+---
+
+<div class="filters">
+  <label>
+    verdict
+    <select id="gf-verdict">
+      <option value="">any</option>
+      {verdicts.map((v) => <option value={v}>{VERDICT_LABEL[v]}</option>)}
+    </select>
+  </label>
+  <label>
+    kind
+    <select id="gf-kind">
+      <option value="">any</option>
+      {kinds.map((k) => <option value={k}>{k}</option>)}
+    </select>
+  </label>
+  <label>
+    run
+    <select id="gf-run">
+      <option value="">any</option>
+      {runs.map((r) => <option value={r}>{r}</option>)}
+    </select>
+  </label>
+  <button type="button" id="gf-reset">reset</button>
+</div>
+
+<div class="count">
+  <span><strong id="gf-count">{gaps.length}</strong> gaps shown</span>
+</div>
+
+<div id="gap-list">
+  {
+    gaps.map((g) => (
+      <details
+        class="panel gap-card"
+        data-verdict={g.verdict}
+        data-kinds={g.kinds.join(' ')}
+        data-runs={g.runs.join(' ')}
+        style="margin-top:1rem"
+      >
+        <summary>
+          <span class="gap-id tabular">{g.id}</span>
+          <span class="gap-title">{g.title}</span>
+          {isVerdict(g.verdict) && (
+            <span class={`tag ${VERDICT_CLASS[g.verdict]}`}>{VERDICT_LABEL[g.verdict]}</span>
+          )}
+          <span class="muted">
+            {g.candidates.length} {g.candidates.length === 1 ? 'candidate' : 'candidates'}
+          </span>
+        </summary>
+        <div class="body">
+          <Prose
+            section={{ id: g.id, number: '', title: g.title, group: 'overview', blocks: g.blocks }}
+            filter={false}
+          />
+          {g.evidence.length > 0 && (
+            <div class="chips" style="margin:.75rem 0">
+              {g.evidence.map((e) => {
+                const named = g.evidence_named.find((n) => n.key === e);
+                return (
+                  <span class="chip" title={named ? named.name : 'not admitted by either run'}>
+                    {e}
+                  </span>
+                );
+              })}
+            </div>
+          )}
+          <p class="muted" style="margin:.5rem 0 0">
+            candidates: <code>{g.candidates.join('; ')}</code> · runs: {g.runs.join('; ')} ·
+            checked {g.checked}
+          </p>
+        </div>
+      </details>
+    ))
+  }
+</div>
+
+<style>
+  .gap-card summary {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    cursor: pointer;
+    padding: var(--s-4);
+    list-style: none;
+  }
+  .gap-card summary::-webkit-details-marker {
+    display: none;
+  }
+  .gap-card[open] summary {
+    border-bottom: 1px solid var(--hair);
+  }
+  .gap-id {
+    color: var(--faint);
+    font-size: var(--t-small);
+  }
+  .gap-title {
+    font-weight: 500;
+    flex: 1 1 16rem;
+  }
+  .tag.verdict-refuted {
+    color: var(--good);
+    background: rgba(12, 163, 12, 0.14);
+  }
+  .gap-card .body {
+    padding: var(--s-4);
+  }
+</style>
+
+<script>
+  const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T | null;
+
+  const list = $<HTMLDivElement>('gap-list');
+  const count = $<HTMLElement>('gf-count');
+  const controls = {
+    verdict: $<HTMLSelectElement>('gf-verdict'),
+    kind: $<HTMLSelectElement>('gf-kind'),
+    run: $<HTMLSelectElement>('gf-run'),
+  };
+
+  function apply(): void {
+    if (!list) return;
+    const verdict = controls.verdict?.value ?? '';
+    const kind = controls.kind?.value ?? '';
+    const run = controls.run?.value ?? '';
+    let shown = 0;
+    list.querySelectorAll<HTMLDetailsElement>('.gap-card').forEach((card) => {
+      const cardVerdict = card.dataset.verdict ?? '';
+      const cardKinds = (card.dataset.kinds ?? '').split(' ');
+      const cardRuns = (card.dataset.runs ?? '').split(' ');
+      const match =
+        (!verdict || cardVerdict === verdict) &&
+        (!kind || cardKinds.includes(kind)) &&
+        (!run || cardRuns.includes(run));
+      card.hidden = !match;
+      if (match) shown += 1;
+    });
+    if (count) count.textContent = String(shown);
+  }
+
+  Object.values(controls).forEach((el) => el?.addEventListener('change', apply));
+  $<HTMLButtonElement>('gf-reset')?.addEventListener('click', () => {
+    Object.values(controls).forEach((el) => {
+      if (el) el.value = '';
+    });
+    apply();
+  });
+  apply();
+</script>

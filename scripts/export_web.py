@@ -465,16 +465,25 @@ def cite_name(key: str, names: dict[str, str] | None = None) -> str:
     return name if name and not name.startswith("not stated") else key
 
 
-def parse_report(directory: Path, names: dict[str, str], refs: dict[str, int]) -> list[Json]:
+def parse_report(
+    directory: Path,
+    names: dict[str, str],
+    refs: dict[str, int],
+    file_map: list[tuple[str, str]] | None = None,
+) -> list[Json]:
     """Report markdown into blocks the page renders, tag by tag.
 
     Paragraphs carry `[Certain]` / `[Likely]` / `[Absent-searched]` as their
     first token. Lifting the tag out of the text and onto the block is what
     lets the page filter on it: the tag is the claim's evidential status, and
     reading only the certain claims is a thing a reviewer actually wants to do.
+
+    `file_map` defaults to this run's own section list. `export_web_tango.py`
+    passes its own — same parser, different report — rather than this file
+    growing a second run's vocabulary into its defaults.
     """
     sections: list[Json] = []
-    for filename, group in SECTIONS:
+    for filename, group in file_map if file_map is not None else SECTIONS:
         raw = read_text(directory / filename)
         if not raw:
             continue

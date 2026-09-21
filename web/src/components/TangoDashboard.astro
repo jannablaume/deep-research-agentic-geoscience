@@ -1,0 +1,126 @@
+---
+/**
+ * The 02_tango page body, given a dataset that definitely exists.
+ *
+ * Same split as `Dashboard.astro`, for the same reason: `data` is nullable at
+ * the page level because the glob that finds it may return nothing, and this
+ * component exists so the null check happens once rather than at every
+ * reference. The section order is 02's own report re-cut, with one section 01
+ * does not have — `touchpoints`, `03_touchpoints.md`'s prose beside the
+ * `transfer.csv` facets, because TANGO's own surfaces are this run's central
+ * axis rather than a subsection of "how the systems are built".
+ */
+import type { TangoDataset } from '../lib/types';
+import Metrics from './Metrics.astro';
+import Summary from './Summary.astro';
+import ReportPanel from './ReportPanel.astro';
+import Explorer from './Explorer.astro';
+import Publication from './Publication.astro';
+import Domains from './Domains.astro';
+import Systems from './Systems.astro';
+import Transfer from './Transfer.astro';
+import Evidence from './Evidence.astro';
+import Periphery from './Periphery.astro';
+import Method from './Method.astro';
+
+interface Props {
+  data: TangoDataset;
+}
+const { data } = Astro.props;
+
+const group = (name: string) => data.report.filter((s) => s.group === name);
+const overview = group('overview');
+---
+
+<section class="band" style="padding-top:0" id="overview">
+  <Metrics run={data.run} subject="this review" />
+
+  <Summary funnel={data.funnel} />
+
+  <div style="margin-top:1rem">
+    <ReportPanel sections={overview} />
+  </div>
+</section>
+
+<section class="band" id="papers">
+  <Explorer data={data} />
+
+  <div style="margin-top:2rem">
+    <Publication
+      types={data.types}
+      journals={data.journals}
+      countries={data.countries}
+      coverage={data.countries_coverage}
+      total={data.run.admitted}
+    />
+  </div>
+</section>
+
+<section class="band" id="domains">
+  <Domains fields={data.fields} total={data.run.admitted} sections={group('fields')} />
+</section>
+
+<section class="band" id="systems">
+  <Systems
+    techniques={data.techniques_core}
+    techniquesAll={data.techniques}
+    frameworks={data.frameworks}
+    coverage={data.frameworks_coverage}
+    architectures={data.architectures_core}
+    architecturesAll={data.architectures}
+    models={data.models_core}
+    modelsMulti={data.models_multi}
+    core={data.run.core}
+    total={data.run.admitted}
+    sections={group('systems')}
+  />
+</section>
+
+<section class="band" id="touchpoints">
+  <Transfer
+    transfer={data.transfer}
+    core={data.run.core}
+    total={data.run.admitted}
+    sections={group('touchpoints')}
+  />
+</section>
+
+<section class="band" id="evidence">
+  <Evidence
+    maturity={data.maturity}
+    dataTypes={data.data_types}
+    heldOut={data.held_out}
+    rubric={data.rubric}
+    run={data.run}
+    sections={group('evidence')}
+  />
+</section>
+
+<section class="band" id="periphery">
+  <Periphery
+    periphery={data.periphery}
+    cuts={data.cuts}
+    run={data.run}
+    sections={group('periphery')}
+  />
+</section>
+
+<section class="band" id="method">
+  <Method data={data} />
+</section>
+
+<footer class="foot">
+  <p class="muted">
+    Nothing on this page is a summary of a summary. Every characterisation of a core source
+    resolves to the sentence it came from, in the authors' own words, on that source's
+    record — and every count is either read from a run artifact or computed from one, with
+    the single exception of the derived framework facet, which says so everywhere it
+    appears. A touchpoint on <code>transfer.csv</code> is a claim about the source, not
+    about TANGO: it records that the source demonstrates an agent doing that kind of work
+    on some system, never that the technique would work inside TANGO itself. The
+    {data.run.context} context-tier sources are known only from their abstracts and carry
+    no maturity rating; reading this run's maturity distribution as this literature's
+    operational maturity over-weights the readable slice, which is the report's own
+    caution and not a hedge added here.
+  </p>
+</footer>

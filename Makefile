@@ -32,7 +32,8 @@ OUT_GAPS  ?= outputs/03_gaps/v0.1
 .DEFAULT_GOAL := help
 .PHONY: help setup lint fmt typecheck test check \
         smoke harvest triage audit enrich export plan web web-dev clean \
-        smoke-tango harvest-tango triage-tango audit-tango gaps audit-gaps
+        smoke-tango harvest-tango triage-tango audit-tango export-tango \
+        gaps audit-gaps export-gaps
 
 help: ## Show this help
 	@grep -hE '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) \
@@ -143,6 +144,9 @@ triage-tango: ## Rank the 02 corpus. Read triage_stats.md before changing a thre
 audit-tango: ## Check the 02 run against its contract. Exits non-zero on failure
 	python3 scripts/audit_tango.py --out $(OUT_TANGO)
 
+export-tango: ## Export the 02 run as the JSON document the front end reads
+	python3 scripts/export_web_tango.py --out $(OUT_TANGO)
+
 # --- the 03_gaps run --------------------------------------------------------------
 #
 # Reads finished runs; harvests nothing. RUNS is the list it reads, and a gaps document
@@ -156,7 +160,17 @@ gaps: ## Extract gap candidates from the finished runs in RUNS
 audit-gaps: ## Check the 03 run against its contract. Exits non-zero on failure
 	python3 scripts/audit_gaps.py --out $(OUT_GAPS)
 
-web: ## Build the dashboard into web/dist/ (a folder that opens from the filesystem)
+export-gaps: ## Export the 03 run as the JSON document the front end reads
+	python3 scripts/export_web_gaps.py --out $(OUT_GAPS)
+
+# --- the front end -----------------------------------------------------------------
+#
+# One Astro build makes all three dashboards (landscape at /, tango at /tango, gaps
+# at /gaps): a page whose export is missing renders its own "no exported run" message
+# rather than failing the build, so `make web` never has to know which of the three
+# have been exported.
+
+web: ## Build the dashboards into web/dist/ (a folder that opens from the filesystem)
 	@test -n "$$(ls web/src/data/*.json 2>/dev/null)" \
 		|| { echo "No exported run. Run: make export OUT=$(OUT)"; exit 2; }
 	cd web && npm install --no-audit --no-fund && npm run build

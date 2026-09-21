@@ -1,0 +1,27 @@
+---
+/**
+ * One number, and the sentence that makes it mean something — the 03 version
+ * of `Metrics.astro`. The headline here is not a count of literature; it is a
+ * count of *gaps this synthesis could state*, out of every candidate a script
+ * pulled out of the other two runs' own artifacts.
+ */
+import type { GapsDataset } from '../lib/types';
+
+interface Props {
+  data: GapsDataset;
+}
+const { data } = Astro.props;
+
+const refuted = data.verdicts.find((v) => v.label === 'refuted')?.n ?? 0;
+---
+
+<div class="figure">
+  <div class="value tabular">{data.gaps_total}</div>
+  <p class="label">
+    gaps stated, synthesised from {data.candidates_total} candidates read out of the
+    finished runs' own artifacts — {data.cited_total} candidates cited, {data.discarded_total}
+    {' '}set aside with a reason. A verification pass checked every one against the runs'
+    own harvest and the open literature before it was written down, and refuted
+    {refuted === 1 ? ' one of them' : ` ${refuted} of them`}.
+  </p>
+</div>

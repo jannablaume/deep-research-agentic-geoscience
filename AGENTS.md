@@ -199,6 +199,8 @@ make harvest-tango                                      # 22 cells, ~440 OpenAle
 make triage-tango
 #   ... you screen, hand back the paywall list, deep-read and write ...
 make audit-tango
+make export-tango  # → web/src/data/tango.web.json
+make web           # dashboard at web/dist/tango.html, alongside the landscape one
 ```
 
 Four things differ from §A and all four have bitten already:
@@ -234,6 +236,8 @@ autonomy, through what interface), `transfer.md` (the quotes under it) and
 make gaps          # RUNS defaults to the 01 and 02 run directories
 #   ... you read, cluster, and send a verification agent after each gap ...
 make audit-gaps
+make export-gaps OUT_GAPS=outputs/03_gaps/v0.1-run2  # → web/src/data/gaps.web.json
+make web                                             # dashboard at web/dist/gaps.html
 ```
 
 03 harvests nothing. `scripts/gaps.py` reads seven shapes of gap out of the finished
@@ -286,8 +290,10 @@ same thing earlier.
 | `export_web.py` | One run → the single JSON document the front end reads. 01-only: its section list and subfield vocabulary are the landscape report's |
 | `triage_tango.py` | 02's ranking. Imports the agentic half of the score from `triage.py`; its domain vocabulary and TANGO touchpoints come from `reference/queries_tango.json` |
 | `audit_tango.py` | 02's gate. 38 checks, including the three artifacts 02 adds and one that fails a report for telling TANGO what to do |
+| `export_web_tango.py` | 02's export. Imports `export_web.py`'s column parsers and framework derivation wherever the two runs share a column; its own vocabulary and the `transfer.csv` / `paywalled.md` readers are new |
 | `gaps.py` | Finished runs → `gap_candidates.csv`. Seven extractors, no judgment |
 | `audit_gaps.py` | 03's gate. 19 checks, three of which exist to stop a gap that rests on nothing |
+| `export_web_gaps.py` | 03's export. Reads `gap_candidates.csv` and `gaps.md` rather than a `papers.csv` of its own; resolves evidence keys against whichever source runs `RUN.md` names |
 
 **`triage_tango.py` imports `triage.py`'s pattern lists on purpose**, so "agentic" is
 defined once. The consequence is that a change to `AGENT_LLM`, `AGENT_GENERIC`,

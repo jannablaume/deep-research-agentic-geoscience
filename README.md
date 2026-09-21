@@ -286,8 +286,8 @@ what the authors claimed, and what they demonstrated.
 | `prompts/` | Versioned research prompts, broad → narrow |
 | `.claude/skills/` | **Symlinks** into `prompts/`, so each prompt is a slash command |
 | `reference/` | `SCHEMA.md` (columns, rubrics, tiers) and `queries.json` (the query plan) |
-| `scripts/` | `harvest.py`, `triage.py`, `audit.py`, `enrich.py`, `export_web.py` |
-| `web/` | The static dashboard. Astro; `dist/` opens from the filesystem, `src/data/*.json` is generated |
+| `scripts/` | `harvest.py`, `triage.py`, `audit.py`, `enrich.py`, `export_web.py` (+ `_tango`/`_gaps` variants for the other two runs) |
+| `web/` | The static dashboards — landscape, tango, gaps, one page each with a switcher between them. Astro; `dist/` opens from the filesystem, `src/data/*.json` is generated |
 | `tests/` | Mirrors `scripts/`. `audit.py` is tested by mutation — see [AGENTS.md §B4](./AGENTS.md) |
 | `outputs/<prompt>/<version>/` | One directory per run. **Never overwritten** |
 | `decisions.md` | Decision log. Each entry says what it *rules out* |
@@ -328,6 +328,13 @@ start web\dist\index.html         # Windows
 That is the whole procedure. Double-clicking `web/dist/index.html` in a file
 browser works identically — there is no server to start and nothing is fetched
 at runtime.
+
+**The other two runs get their own page the same way.** `make export-tango` and
+`make export-gaps` write `web/src/data/tango.web.json` and `gaps.web.json`; one
+`make web` builds all three into `web/dist/` — `index.html`, `tango.html`,
+`gaps.html` — and each carries a small switcher in its header to the other two.
+A page whose export is missing says so rather than failing the build, so you
+never have to run all three exporters just to look at one.
 
 **You need Node.** The badge above says the *pipeline* has no dependencies, and
 that is true: `python3 scripts/harvest.py` runs on a bare Python 3.11+. The

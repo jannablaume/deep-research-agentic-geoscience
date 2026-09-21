@@ -1,0 +1,161 @@
+---
+/**
+ * What each core system actually drives — TANGO's own surfaces, claimed by evidence.
+ *
+ * This section exists only in the 02_tango dashboard: `transfer.csv` is the one
+ * artifact 01 does not have, and it is the run's central axis. A touchpoint here
+ * is a claim about the *source*, not about TANGO — it records that the source
+ * demonstrates an agent doing that kind of work on some system, never that the
+ * technique would work inside TANGO itself. `none` is kept as a bar rather than
+ * dropped, the same reason a rubric facet keeps its zeros elsewhere on this
+ * site: a core system claiming no touchpoint at all is a measurement, not a gap
+ * in the data.
+ */
+import type { ReportSection, TransferFacets } from '../lib/types';
+import Bars from './Bars.astro';
+import ReportPanel from './ReportPanel.astro';
+
+interface Props {
+  transfer: TransferFacets;
+  core: number;
+  total: number;
+  sections: ReportSection[];
+}
+const { transfer, core, total, sections } = Astro.props;
+
+const pretty = (s: string) => s.replace(/-/g, ' ');
+const failure = transfer.failure_handling;
+---
+
+<div class="section-head">
+  <h2>What TANGO's surfaces see used</h2>
+  <p>
+    <code>tango_touchpoints</code> is TANGO's own list of surfaces — config generation,
+    solver control, the optimisation loop, and nine others — and a system is counted
+    against one only where its <em>evaluated</em> behaviour covers it, not where its
+    introduction claims it could. Counts are over the {core} core systems, where that
+    claim was checked against the paper.
+  </p>
+</div>
+
+<div class="two-up">
+  <div class="panel">
+    <div class="head">
+      <h3>Touchpoints claimed</h3>
+      <span class="muted">of {core} core systems</span>
+    </div>
+    <div class="body">
+      <Bars items={transfer.touchpoints} total={core} limit={13} unit="core systems" />
+      <details class="tail">
+        <summary>the same facet across all {total} admitted sources</summary>
+        <div style="margin-top:.75rem">
+          <Bars items={transfer.touchpoints_all} total={total} limit={13} unit="sources" />
+          <p class="muted" style="margin:.75rem 0 0">
+            On the context rows this is the abstract's account of itself, unchecked against
+            a paper — most of which is why `none` rises so much further on this view.
+          </p>
+        </div>
+      </details>
+    </div>
+  </div>
+
+  <div>
+    <div class="panel">
+      <div class="head">
+        <h3>Autonomy</h3>
+        <span class="muted">of {core} core systems</span>
+      </div>
+      <div class="body">
+        <Bars
+          items={transfer.autonomy}
+          total={core}
+          unit="core systems"
+          note="Rated from the evaluation section only: `executes-and-iterates` means the system closed the loop on its own output during the reported evaluation, not that it could in principle."
+        />
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:1rem">
+      <div class="head">
+        <h3>Interface</h3>
+        <span class="muted">of {core} core systems</span>
+      </div>
+      <div class="body">
+        <Bars
+          items={transfer.interface}
+          total={core}
+          unit="core systems"
+          note="How the agent reaches what it drives — an API, a CLI, raw file I/O, MCP, code execution, or a GUI."
+        />
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="panel" style="margin-top:1rem">
+  <div class="head">
+    <h3>Failure handling</h3>
+    <span class="muted">of {core} core systems</span>
+  </div>
+  <div class="body">
+    <p class="claim">
+      <span class="tag certain" title="Stated by a source or counted from an artifact">
+        Certain
+      </span>
+      {failure.stated} of {failure.total} core systems state what happens when the driven
+      code fails or does not converge, in the authors' own terms. The other
+      {failure.not_stated} say nothing about it — silence is recorded as
+      <code>not stated</code>, never read as "handles it".
+    </p>
+  </div>
+</div>
+
+<div class="panel" style="margin-top:1rem">
+  <div class="head">
+    <h3>What each core system drives</h3>
+    <span class="muted">{transfer.drives.length} systems</span>
+  </div>
+  <div class="body">
+    <div class="scroll-x">
+      <table class="grid">
+        <thead>
+          <tr>
+            <th>System</th>
+            <th>What it drives</th>
+            <th>Touchpoints</th>
+            <th>Interface</th>
+            <th>Autonomy</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            transfer.drives.map((d) => (
+              <tr>
+                <td>
+                  <button type="button" class="chip" data-system={d.system_id}>
+                    {d.system_id}
+                  </button>
+                </td>
+                <td style="color:var(--muted)">{d.what_it_drives}</td>
+                <td>
+                  <span class="chips">
+                    {d.touchpoints.map((t) => (
+                      <span class="chip">{pretty(t)}</span>
+                    ))}
+                  </span>
+                </td>
+                <td>{d.interface}</td>
+                <td>{pretty(d.autonomy)}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+    <p class="muted" style="margin:.9rem 0 0">
+      One row per core system. Click a system to open its full record.
+    </p>
+  </div>
+</div>
+
+<ReportPanel sections={sections} />

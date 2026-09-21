@@ -12,13 +12,37 @@
  * did not say which run it was would invite being read as the field's state
  * rather than one measurement of it.
  */
-import type { Run } from '../lib/types';
+/**
+ * Only the fields this component actually reads, rather than the full `Run` —
+ * so `GapsRun`, which has no harvest funnel of its own, satisfies this too and
+ * the gaps page can reuse this component without inventing the fields it lacks.
+ */
+interface HeroRun {
+  version: string;
+  path: string;
+  prompt: string;
+  model: string;
+  date: string;
+}
 
 interface Props {
-  run: Run;
+  run: HeroRun;
   generated: string;
+  /** The noun after "Scoping review · " — `landscape`, `tango`, `gaps`. */
+  kicker?: string;
+  title?: string;
+  subtitle?: string;
+  lede?: string;
 }
-const { run, generated } = Astro.props;
+const {
+  run,
+  generated,
+  kicker = 'landscape',
+  title = 'LLM-based agentic AI in',
+  subtitle = 'solid-earth and subsurface geoscience',
+  lede = 'What has been built, how it was evaluated, and how mature it is — as harvested ' +
+    'and screened in one run. Descriptive only: no gap analysis, and no research agenda.',
+} = Astro.props;
 
 const day = (iso: string) => (iso ? iso.slice(0, 10) : '');
 ---
@@ -27,18 +51,15 @@ const day = (iso: string) => (iso ? iso.slice(0, 10) : '');
   <div class="wrap">
     <p class="eyebrow">
       <span class="live" aria-hidden="true"></span>
-      Scoping review · landscape {run.version}
+      Scoping review · {kicker} {run.version}
     </p>
 
     <h1>
-      LLM-based agentic AI in<br />
-      <span style="color:var(--muted)">solid-earth and subsurface geoscience</span>
+      {title}<br />
+      <span style="color:var(--muted)">{subtitle}</span>
     </h1>
 
-    <p class="lede">
-      What has been built, how it was evaluated, and how mature it is — as harvested and
-      screened in one run. Descriptive only: no gap analysis, and no research agenda.
-    </p>
+    <p class="lede">{lede}</p>
 
     <p class="meta">
       run <code>{run.path}</code>

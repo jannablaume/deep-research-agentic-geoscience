@@ -1,0 +1,137 @@
+---
+/**
+ * The 03_gaps page body, given a dataset that definitely exists.
+ *
+ * Same null-narrowing reason as `Dashboard.astro` and `TangoDashboard.astro`.
+ * The shape is different from both, deliberately: there is no corpus here, so
+ * no fields, systems, evidence or periphery sections — just how many
+ * candidates became how many gaps, the gaps themselves, and what was set
+ * aside.
+ */
+import type { FunnelRow, GapsDataset } from '../lib/types';
+import GapsMetrics from './GapsMetrics.astro';
+import Summary from './Summary.astro';
+import Bars from './Bars.astro';
+import GapList from './GapList.astro';
+import DiscardLedger from './DiscardLedger.astro';
+import GapsMethod from './GapsMethod.astro';
+
+interface Props {
+  data: GapsDataset;
+}
+const { data } = Astro.props;
+
+const funnel: FunnelRow[] = [
+  {
+    label: 'Candidates extracted',
+    n: data.candidates_total,
+    of: null,
+    what: 'seven shapes of gap, read mechanically out of the finished runs’ own artifacts',
+  },
+  {
+    label: 'Cited by a stated gap',
+    n: data.cited_total,
+    of: data.candidates_total,
+    what: 'clustered into one of the gaps below',
+  },
+  {
+    label: 'Discarded individually',
+    n: data.discarded_total,
+    of: data.candidates_total,
+    what: 'a run artefact, too specific to generalise, or a duplicate of another gap',
+  },
+  {
+    label: 'Gaps stated',
+    n: data.gaps_total,
+    of: null,
+    what: 'each checked by a verification pass before it was written down',
+    emphasis: true,
+  },
+];
+for (const v of data.verdicts) {
+  if (!v.n) continue;
+  funnel.push({
+    label: `— ${v.label}`,
+    n: v.n,
+    of: data.gaps_total,
+    what:
+      v.label === 'confirmed-absent'
+        ? 'looked for and not found, with the query ids that looked'
+        : v.label === 'refuted'
+          ? 'the verification pass found work that already addresses it'
+          : v.label === 'partially-addressed'
+            ? 'true in part; the sources that address the rest are named'
+            : 'the verification pass could not settle it either way',
+  });
+}
+---
+
+<section class="band" style="padding-top:0" id="overview">
+  <GapsMetrics data={data} />
+
+  <Summary funnel={funnel} />
+
+  <div class="two-up" style="margin-top:1rem">
+    <div class="panel">
+      <div class="head">
+        <h3>What kind of gap</h3>
+        <span class="muted">of {data.candidates_total} candidates</span>
+      </div>
+      <div class="body">
+        <Bars
+          items={data.kinds}
+          total={data.candidates_total}
+          unit="candidates"
+          note="Author-stated limitation, absence claim, evidence hole, evaluation hole, empty category, unread source, or a claim the evidence does not fully support — gaps.py's seven extractors, no judgment."
+        />
+      </div>
+    </div>
+    <div class="panel">
+      <div class="head">
+        <h3>Which run a candidate came from</h3>
+        <span class="muted">of {data.candidates_total} candidates</span>
+      </div>
+      <div class="body">
+        <Bars items={data.runs} total={data.candidates_total} unit="candidates" sort={false} />
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="gaps">
+  <div class="section-head">
+    <h2>The gaps</h2>
+    <p>
+      Each gap says what is absent, unstated, unevaluated or unread, and cites where that
+      was recorded. None of them ranks the others or says what to do about any of them —
+      that is the next run's job, not this one's.
+    </p>
+  </div>
+  <GapList gaps={data.gaps} />
+</section>
+
+<section class="band" id="ledger">
+  <div class="section-head">
+    <h2>What was set aside</h2>
+    <p>
+      A gap synthesis is only as trustworthy as its accounting: every one of the
+      {data.candidates_total} candidates above is either cited by a gap or listed here, with
+      a reason.
+    </p>
+  </div>
+  <DiscardLedger discarded={data.discarded} gaps={data.gaps} />
+</section>
+
+<section class="band" id="method">
+  <GapsMethod data={data} />
+</section>
+
+<footer class="foot">
+  <p class="muted">
+    Synthesis only, per the run's own rule: a gap statement here says what is absent and
+    cites where that was recorded, never why it matters or what should be done about it.
+    Every verdict was returned by a verification pass that searched the source runs' own
+    harvest first, then the bibliographic APIs and the open web, and <code>refuted</code> is
+    a result this run keeps rather than a failure it hides.
+  </p>
+</footer>

@@ -10,6 +10,11 @@
 import type { EvidenceTag, Paper } from './types';
 
 const papers: Paper[] = (window as unknown as { __PAPERS__?: Paper[] }).__PAPERS__ ?? [];
+// Named per page so a CSV exported from the tango dashboard is not mistaken for a
+// landscape one. Defaults to `landscape` for a page that sets nothing, which is
+// every page this file predates.
+const runSlug =
+  (window as unknown as { __RUN_SLUG__?: string }).__RUN_SLUG__ ?? 'landscape';
 
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T | null;
 
@@ -376,7 +381,7 @@ function downloadCsv(rows: Paper[]): void {
   });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `landscape-${rows.length}-sources.csv`;
+  a.download = `${runSlug}-${rows.length}-sources.csv`;
   a.click();
   URL.revokeObjectURL(a.href);
 }

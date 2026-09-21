@@ -1,0 +1,88 @@
+---
+/**
+ * One page: the 03_gaps dashboard. Same shape as `index.astro` and
+ * `tango.astro` — see `index.astro`'s own comment for why the data is
+ * nullable and why the glob is scoped. No `<dialog>`/paper explorer here: 03
+ * has no corpus of its own, so `app.ts`'s paper-list code simply finds nothing
+ * to wire up and the theme toggle and section nav still work.
+ */
+import '../styles/tokens.css';
+import Hero from '../components/Hero.astro';
+import GapsDashboard from '../components/GapsDashboard.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import type { GapsDataset } from '../lib/types';
+
+const exported = import.meta.glob<{ default: GapsDataset }>('../data/gaps*.web.json', {
+  eager: true,
+});
+const found = Object.entries(exported).sort(([a], [b]) => a.localeCompare(b));
+
+const wanted = import.meta.env.GAPS_RUN;
+const chosen =
+  (wanted && found.find(([path]) => path.endsWith(`/${wanted}.web.json`))) ?? found.at(0);
+
+const data: GapsDataset | null = chosen ? chosen[1].default : null;
+const loadError = data
+  ? ''
+  : 'No exported run found. Generate one with `python3 scripts/export_web_gaps.py --out outputs/03_gaps/v0.1-run2` from the repository root.';
+
+const SECTIONS = [
+  { id: 'overview', label: 'Overview' },
+  { id: 'gaps', label: 'Gaps' },
+  { id: 'ledger', label: 'Ledger' },
+  { id: 'method', label: 'Method' },
+];
+
+const version = data?.run.version ?? '';
+
+const PAGES = [
+  { href: './index.html', label: 'Landscape', active: false },
+  { href: './tango.html', label: 'Tango', active: false },
+  { href: './gaps.html', label: 'Gaps', active: true },
+];
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="cache-control" content="no-cache" />
+    <title>{version ? `Gaps ${version} · agentic geoscience` : 'agentic geoscience'}</title>
+    <meta
+      name="description"
+      content="A synthesis of every research gap the finished landscape and tango runs already contain, each traced to the artifact it came from and checked against the literature before it is stated."
+    />
+    <script is:inline>
+      try {
+        const t = localStorage.getItem('theme');
+        if (t === 'dark' || t === 'light') document.documentElement.dataset.theme = t;
+      } catch {}
+    </script>
+  </head>
+  <body>
+    <SiteHeader sections={SECTIONS} pages={PAGES} />
+
+    {
+      data && (
+        <Hero
+          run={data.run}
+          generated={data.generated_at}
+          kicker="gaps"
+          title="What the finished runs already record as"
+          subtitle="missing, unstated, unevaluated, or unread"
+          lede="Synthesis only: every gap here cites where it was recorded and was checked by
+            a verification pass before it was stated. No ranking, no research agenda, no
+            recommendation about what to do next."
+        />
+      )
+    }
+
+    <main class="wrap">
+      {loadError && <p class="muted" style="padding:4rem 0">{loadError}</p>}
+
+      {data && <GapsDashboard data={data} />}
+    </main>
+
+    <script src="../lib/app.ts"></script>
+  </body>
+</html>

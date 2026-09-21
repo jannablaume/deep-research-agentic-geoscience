@@ -1,0 +1,78 @@
+---
+/**
+ * The header every dashboard shares: wordmark, a switcher between the three
+ * reviews, the current page's own section nav, and the theme control.
+ *
+ * Extracted out of `index.astro` once a second and third page needed the same
+ * chrome. The run switcher is a `<div>`, not a second `<nav>`, on purpose:
+ * `header.top nav` in `tokens.css` carries `margin-left:auto` so the section nav
+ * can push itself to the right of the wordmark, and a second element matching
+ * that selector would fight it for the same auto margin rather than sitting
+ * beside it.
+ */
+import Wordmark from './Wordmark.astro';
+
+interface Props {
+  /** The current page's own in-page anchors — different on every dashboard. */
+  sections: { id: string; label: string }[];
+  /** The three reviews, in nav order. Exactly one carries `active: true`. */
+  pages: { href: string; label: string; active: boolean }[];
+}
+const { sections, pages } = Astro.props;
+---
+
+<header class="top" id="top">
+  <div class="wrap">
+    <a href="#top" aria-label="agentic geoscience, back to top"><Wordmark /></a>
+    <div class="runs" aria-label="Reviews">
+      {
+        pages.map((p) => (
+          <a href={p.href} aria-current={p.active ? 'true' : undefined}>
+            {p.label}
+          </a>
+        ))
+      }
+    </div>
+    <nav aria-label="Sections">
+      {sections.map((s) => <a href={`#${s.id}`} data-nav={s.id}>{s.label}</a>)}
+    </nav>
+    <button id="theme" class="theme" type="button" aria-label="Switch between light and dark">
+      <span aria-hidden="true"></span>
+    </button>
+  </div>
+</header>
+
+<style>
+  /* Same shape as `header.top nav a` in tokens.css, deliberately not that
+     selector — see the module comment on why this is a `<div>`. */
+  .runs {
+    display: flex;
+    gap: var(--s-1);
+    padding-left: var(--s-3);
+    margin-left: var(--s-3);
+    border-left: 1px solid var(--hair);
+  }
+  .runs a {
+    color: var(--muted);
+    font-size: var(--t-small);
+    padding: 0.3rem 0.6rem;
+    border-radius: 100px;
+    white-space: nowrap;
+    transition: color var(--fast) var(--ease);
+  }
+  .runs a:hover {
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .runs a[aria-current='true'] {
+    color: var(--ink);
+    background: var(--accent-wash);
+    font-weight: 500;
+  }
+  @media (max-width: 720px) {
+    .runs {
+      padding-left: var(--s-2);
+      margin-left: var(--s-2);
+    }
+  }
+</style>

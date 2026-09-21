@@ -1,0 +1,99 @@
+---
+/**
+ * One page: the 02_tango dashboard. Same shape as `index.astro` — see that
+ * file's own comment for why the data is nullable and why the glob is scoped.
+ */
+import '../styles/tokens.css';
+import Hero from '../components/Hero.astro';
+import TangoDashboard from '../components/TangoDashboard.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import type { TangoDataset } from '../lib/types';
+
+const exported = import.meta.glob<{ default: TangoDataset }>('../data/tango*.web.json', {
+  eager: true,
+});
+const found = Object.entries(exported).sort(([a], [b]) => a.localeCompare(b));
+
+const wanted = import.meta.env.TANGO_RUN;
+const chosen =
+  (wanted && found.find(([path]) => path.endsWith(`/${wanted}.web.json`))) ?? found.at(0);
+
+const data: TangoDataset | null = chosen ? chosen[1].default : null;
+const loadError = data
+  ? ''
+  : 'No exported run found. Generate one with `python3 scripts/export_web_tango.py --out outputs/02_tango/v0.1` from the repository root.';
+
+const SECTIONS = [
+  { id: 'overview', label: 'Overview' },
+  { id: 'papers', label: 'Papers' },
+  { id: 'domains', label: 'Domains' },
+  { id: 'systems', label: 'Systems' },
+  { id: 'touchpoints', label: 'Touchpoints' },
+  { id: 'evidence', label: 'Evidence' },
+  { id: 'periphery', label: 'Periphery' },
+  { id: 'method', label: 'Method' },
+];
+
+const version = data?.run.version ?? '';
+const papers = data?.papers ?? [];
+
+const PAGES = [
+  { href: './index.html', label: 'Landscape', active: false },
+  { href: './tango.html', label: 'Tango', active: true },
+  { href: './gaps.html', label: 'Gaps', active: false },
+];
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="cache-control" content="no-cache" />
+    <title>{version ? `Tango ${version} · agentic geoscience` : 'agentic geoscience'}</title>
+    <meta
+      name="description"
+      content="A scoping review of agentic systems that drive a simulator, solver, optimiser or scientific code — the control patterns relevant to making TANGO agentic. Descriptive only."
+    />
+    <script is:inline>
+      try {
+        const t = localStorage.getItem('theme');
+        if (t === 'dark' || t === 'light') document.documentElement.dataset.theme = t;
+      } catch {}
+    </script>
+  </head>
+  <body>
+    <SiteHeader sections={SECTIONS} pages={PAGES} />
+
+    {
+      data && (
+        <Hero
+          run={data.run}
+          generated={data.generated_at}
+          kicker="tango"
+          title="Agentic control of a simulator, solver or"
+          subtitle="optimiser — what exists that bears on making TANGO agentic"
+          lede="What drives a simulation target, at what autonomy, through what interface —
+            as harvested and screened in one run. Descriptive only: no recommendation about
+            what TANGO should do."
+        />
+      )
+    }
+
+    <main class="wrap">
+      {loadError && <p class="muted" style="padding:4rem 0">{loadError}</p>}
+
+      {data && <TangoDashboard data={data} />}
+    </main>
+
+    <dialog id="detail" aria-label="Source record">
+      <button class="close" id="detail-close" aria-label="Close">&times;</button>
+      <div class="sheet" id="detail-body"></div>
+    </dialog>
+
+    <script is:inline define:vars={{ papers }}>
+      window.__PAPERS__ = papers;
+      window.__RUN_SLUG__ = 'tango';
+    </script>
+    <script src="../lib/app.ts"></script>
+  </body>
+</html>

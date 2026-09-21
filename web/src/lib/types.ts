@@ -86,8 +86,12 @@ export interface ReportSection {
   id: string;
   number: string;
   title: string;
-  /** Which page section this prose belongs beside. */
-  group: 'overview' | 'fields' | 'systems' | 'evidence' | 'periphery';
+  /**
+   * Which page section this prose belongs beside. `touchpoints` exists only in
+   * the 02_tango dataset — `03_touchpoints.md` is the run's central axis and gets
+   * its own page group rather than being folded into `systems`.
+   */
+  group: 'overview' | 'fields' | 'systems' | 'evidence' | 'periphery' | 'touchpoints';
   blocks: Block[];
 }
 
@@ -252,4 +256,120 @@ export interface Dataset {
   queries: Query[];
   report: ReportSection[];
   papers: Paper[];
+}
+
+/**
+ * What each core system actually drives — `transfer.csv`, which only the 02_tango
+ * run has. `touchpoints` and `touchpoints_all` mirror the `techniques` /
+ * `techniques_core` pair on `Dataset`: core first, the full admitted set behind a
+ * disclosure, because a touchpoint read off an abstract is the abstract's word for
+ * itself.
+ */
+export interface DriveRow {
+  key: string;
+  system_id: string;
+  touchpoints: string[];
+  what_it_drives: string;
+  interface: string;
+  autonomy: string;
+}
+
+export interface TransferFacets {
+  touchpoints: Facet[];
+  touchpoints_all: Facet[];
+  interface: Facet[];
+  autonomy: Facet[];
+  failure_handling: { stated: number; not_stated: number; total: number };
+  drives: DriveRow[];
+}
+
+export interface PaywalledSummary {
+  total: number;
+  blocked_by: Facet[];
+  would_change_nothing: number;
+}
+
+/** The 02_tango export: everything `Dataset` has, plus what each system drives. */
+export interface TangoDataset extends Dataset {
+  transfer: TransferFacets;
+  paywalled: PaywalledSummary;
+}
+
+// --- 03_gaps -----------------------------------------------------------------
+// A different shape entirely: no corpus, no papers, no fields. The "run" here is
+// a synthesis over two other runs' own artifacts, so its dataset is a list of
+// gaps and the ledger of candidates that did not become one.
+
+export type GapVerdict = 'confirmed-absent' | 'partially-addressed' | 'refuted' | 'undecidable';
+
+export interface GapCandidate {
+  id: string;
+  run: string;
+  kind: string;
+  subject: string;
+  statement: string;
+  evidence_ref: string;
+  count: number | null;
+  denominator: number | null;
+}
+
+/** An evidence key resolved to the system it names, where that source was admitted. */
+export interface NamedEvidence {
+  key: string;
+  name: string;
+}
+
+export interface Gap {
+  id: string;
+  title: string;
+  candidates: string[];
+  /** The `kind`s of the candidates this gap cites, derived for client-side filtering. */
+  kinds: string[];
+  runs: string[];
+  verdict: GapVerdict | '';
+  evidence: string[];
+  evidence_named: NamedEvidence[];
+  checked: string;
+  blocks: Block[];
+}
+
+export interface DiscardedCandidate {
+  id: string;
+  reason: string;
+  note: string;
+}
+
+export interface SourceRun {
+  name: string;
+  directory: string;
+  commit: string;
+}
+
+export interface GapsRun {
+  path: string;
+  version: string;
+  date: string;
+  prompt: string;
+  model: string;
+  source_runs: SourceRun[];
+}
+
+export interface GapsDataset {
+  generated_at: string;
+  run: GapsRun;
+  audit: Audit;
+  candidates_total: number;
+  gaps_total: number;
+  cited_total: number;
+  discarded_total: number;
+  /** Candidates neither cited by a gap nor listed in the discard ledger. Empty on
+   *  a clean run — `audit_gaps.py` fails one where it is not. */
+  unaccounted: string[];
+  verdicts: Facet[];
+  kinds: Facet[];
+  runs: Facet[];
+  discard_reasons: Facet[];
+  gaps: Gap[];
+  discarded: DiscardedCandidate[];
+  candidates: GapCandidate[];
 }

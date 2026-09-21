@@ -52,6 +52,21 @@ jobs:
         # precision of 0 a run at 64.8% prints FAIL and then exits 0.
         run: uv run pytest -m "not network" --cov --cov-report=term-missing
 
+  verify:
+    name: committed runs still meet their contract
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Re-audit every finished run
+        # `test` says the code is healthy; this says the published numbers are
+        # still the numbers. Each run's contract audit is re-executed against
+        # the artifacts committed beside it — no network, no API key, and no
+        # harvest, because the irreplaceable files are in the repository.
+        #
+        # The pipeline has no dependencies, so this needs nothing but python3.
+        run: make verify
+
   hooks:
     name: pre-commit
     runs-on: ubuntu-latest

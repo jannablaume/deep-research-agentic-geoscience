@@ -8,6 +8,14 @@ either of the other two runs is §A2, which is written as a delta against §A an
 not repeat it. Changing the scripts is §B. Read the one you are here for; they need
 almost nothing from each other.
 
+Three further documents exist so that neither §A nor §B has to carry them:
+
+| Document | For |
+|---|---|
+| `CONTRIBUTING.md` | The conventions in §B, for a human contributor arriving cold |
+| `docs/adapting.md` | Pointing this machinery at a different literature |
+| `reference/SCHEMA_queries.md` | The query-plan **input** contract, and `queries_template.json` beside it |
+
 One rule spans both, and it is the rule this repository exists to enforce:
 
 > **A number is counted or it is not stated.** Nothing here estimates, rounds up
@@ -183,7 +191,12 @@ is contradicted here.
 |---|---|---|---|
 | 01 | `prompts/01_landscape_neutral.md` | What exists in agentic AI for solid-earth geoscience | `outputs/01_landscape/v0.5` |
 | 02 | `prompts/02_tango.md` | What exists that bears on making TANGO agentic | `outputs/02_tango/v0.1` |
-| 03 | `prompts/03_gaps.md` | What the two finished runs record as missing | `outputs/03_gaps/v0.1` |
+| 03 | `prompts/03_gaps.md` | What the two finished runs record as missing | `outputs/03_gaps/v0.1-run2` |
+
+`outputs/02_tango/v0.2` is a **superseded** fork of 02 kept on disk — the 2026-09-11
+correction was made in place in `v0.1` instead. Cite `v0.1`; see
+`outputs/02_tango/v0.2/SUPERSEDED.md`. `outputs/03_gaps/v0.1` is the candidate-extraction
+stage only, not a finished run.
 
 **The 01 pipeline is frozen.** `harvest.py`, `triage.py` and `audit.py` produced the
 v0.5 landscape and a committed run is evidence; a later run must not be able to change
@@ -311,7 +324,17 @@ Before every commit:
 
 ```bash
 make check      # ruff, ruff-format, mypy --strict, pytest+coverage, pre-commit, symlinks
+make verify     # re-audit every finished run against its committed artifacts
 ```
+
+The two answer different questions. `make check` says the **code** is healthy;
+`make verify` says the **published numbers** are still the numbers: every contract
+check still passes, *and* a re-executed audit reproduces the committed `audit.md` byte
+for byte. Both run from a bare clone with no network and no API key, and CI runs both.
+
+That second half makes adding a check a two-part job — the gate changes and so does
+each run's recorded gate output. `make verify` reports the diff and reverts the run
+directory rather than letting a changed check silently rewrite committed evidence.
 
 `make check` must pass from a bare clone: no network, no API key, no run
 directory. **Never use `git commit --no-verify`.** If a hook is wrong, fix the

@@ -27,10 +27,18 @@ OUT ?= outputs/01_landscape/v0.5
 #  over different corpora. Override the same way:
 #      make triage-tango OUT_TANGO=outputs/02_tango/v0.2
 OUT_TANGO ?= outputs/02_tango/v0.1
-OUT_GAPS  ?= outputs/03_gaps/v0.1
+OUT_GAPS  ?= outputs/03_gaps/v0.1-run2
+
+#  Each of the three defaults names the *finished* run, so that the read-only
+#  targets — audit, export — work from a bare clone with no arguments. v0.1 is
+#  the candidate-extraction stage only, and `make audit-gaps` against it fails
+#  on 326 unaccounted candidates, which reads as a broken repository rather
+#  than as the wrong directory.
+#
+#  Writing targets still follow §A4: bump the version before you run one.
 
 .DEFAULT_GOAL := help
-.PHONY: help setup lint fmt typecheck test check \
+.PHONY: help setup lint fmt typecheck test check verify verify-unchanged \
         smoke harvest triage audit enrich export plan web web-dev clean \
         smoke-tango harvest-tango triage-tango audit-tango export-tango \
         gaps audit-gaps export-gaps
@@ -80,6 +88,62 @@ check: ## Repo health check — must pass from a bare clone
 	@test -z "$$(git ls-files 'outputs/**/screened.csv' 'outputs/**/triage.csv')" \
 		|| { echo "FAIL: a regenerable harvest artifact is tracked by git"; exit 1; }
 	@echo "CHECK_PASS"
+
+# --- reproducibility ---------------------------------------------------------
+#
+#  `make check` says the code is healthy. `make verify` says the published
+#  numbers are still the numbers: it re-executes each finished run's contract
+#  audit against the artifacts committed beside it.
+#
+#  It needs no network, no API key and no harvest — the irreplaceable files
+#  (screening.csv, papers.csv, papers.md) are in the repository, so this runs
+#  from a bare clone. That is the whole reproducibility claim, and it is
+#  executed rather than asserted.
+#
+#  Only the three runs this repository stands behind are listed. The `-test`
+#  directories and the superseded 02 v0.2 are kept so that a changed method is
+#  inspectable, not because their numbers mean anything.
+
+VERIFY_LANDSCAPE ?= outputs/01_landscape/v0.5
+VERIFY_TANGO     ?= outputs/02_tango/v0.1
+VERIFY_GAPS      ?= outputs/03_gaps/v0.1-run2
+
+verify: ## Re-audit every finished run from the committed artifacts. No network
+	@fail=0; \
+	for pair in "audit.py:$(VERIFY_LANDSCAPE)" \
+	            "audit_tango.py:$(VERIFY_TANGO)" \
+	            "audit_gaps.py:$(VERIFY_GAPS)"; do \
+		script=$${pair%%:*}; dir=$${pair##*:}; \
+		printf '%-46s ' "$$dir"; \
+		if python3 scripts/$$script --out "$$dir" >/dev/null 2>&1; then \
+			echo "PASS"; \
+		else \
+			echo "FAIL  (python3 scripts/$$script --out $$dir)"; fail=1; \
+		fi; \
+	done; \
+	test $$fail -eq 0 || { echo "VERIFY_FAIL"; exit 1; }; \
+	$(MAKE) --no-print-directory verify-unchanged
+	@echo "VERIFY_PASS — every committed run still meets its contract"
+
+verify-unchanged:
+	@# The audit scripts rewrite audit.md in the run directory; there is no flag to
+	@# suppress it. Rather than work around that, assert it: a fresh execution must
+	@# reproduce the committed audit.md byte for byte. That makes the side effect the
+	@# strongest part of the check — the committed gate output is exactly what the
+	@# gate produces today — and it catches the case where a changed check would
+	@# otherwise silently rewrite a committed run.
+	@git rev-parse --is-inside-work-tree >/dev/null 2>&1 || { \
+		echo "not a git checkout — skipping the audit.md comparison"; exit 0; }
+	@paths="$(VERIFY_LANDSCAPE)/audit.md $(VERIFY_TANGO)/audit.md $(VERIFY_GAPS)/audit.md"; \
+	if git diff --quiet -- $$paths; then \
+		echo "audit.md reproduced byte-for-byte in all three runs"; \
+	else \
+		echo "FAIL: a re-executed audit does not reproduce the committed audit.md:"; \
+		git --no-pager diff --stat -- $$paths; \
+		git checkout -- $$paths; \
+		echo "(reverted; the committed runs are unchanged)"; \
+		exit 1; \
+	fi
 
 # --- one run -----------------------------------------------------------------
 #

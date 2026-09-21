@@ -5,6 +5,12 @@ until you know why. Read this before removing anything that looks redundant.
 
 `decisions.md` is the chronological record — what changed, when, and what it
 ruled out. This file is the standing rationale.
+[`architecture.drawio`](./architecture.drawio) beside it is an editable
+[diagrams.net](https://app.diagrams.net) source for the same structure; the
+README's flowcharts are Mermaid and are edited in place.
+
+Adapting this machinery to another literature is [`adapting.md`](./adapting.md);
+building and reading the static pages is [`dashboard.md`](./dashboard.md).
 
 ---
 

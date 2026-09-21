@@ -18,6 +18,64 @@ query.
 
 ---
 
+## Quickstart
+
+Nothing below needs an API key, a harvest, or a network connection. The
+irreplaceable artifacts are committed, so a clone can re-check every published
+number for itself.
+
+```bash
+git clone https://github.com/jannablaume/deep-research-agentic-geoscience
+cd deep-research-agentic-geoscience
+
+make verify                       # re-audit all three runs against their artifacts
+make export && make web           # build the dashboards
+open web/dist/index.html          # xdg-open on Linux, start on Windows
+```
+
+`make verify` re-executes each finished run's contract audit against the files
+committed beside it. It checks two things and exits non-zero on either: that
+every contract check still passes, and that the regenerated `audit.md` matches
+the committed one **byte for byte** — so a check that changed cannot quietly
+rewrite a finished run.
+
+```
+outputs/01_landscape/v0.5                      PASS
+outputs/02_tango/v0.1                          PASS
+outputs/03_gaps/v0.1-run2                      PASS
+audit.md reproduced byte-for-byte in all three runs
+VERIFY_PASS — every committed run still meets its contract
+```
+
+That is the reproducibility claim, and it is executed rather than asserted.
+
+`make web` needs Node; everything else runs on a bare Python 3.11+.
+
+| I want to… | Go to |
+|---|---|
+| read the findings | [the report](outputs/01_landscape/v0.5/report/index.md) |
+| check a number | [Why you can check any number here](#why-you-can-check-any-number-here) |
+| **use this on my own topic** | **[docs/adapting.md](docs/adapting.md)** |
+| understand the design | [docs/architecture.md](docs/architecture.md) |
+| change the code | [CONTRIBUTING.md](CONTRIBUTING.md) |
+| drive it with an agent | [AGENTS.md](AGENTS.md) |
+
+## The three runs
+
+| Run | Asks | Output | Dashboard |
+|---|---|---|---|
+| **01_landscape** | What exists in agentic AI for solid-earth geoscience | [`v0.5`](outputs/01_landscape/v0.5) | `index.html` |
+| **02_tango** | What exists that bears on making a simulator agentic | [`v0.1`](outputs/02_tango/v0.1) | `tango.html` |
+| **03_gaps** | What the two finished runs record as missing | [`v0.1-run2`](outputs/03_gaps/v0.1-run2) | `gaps.html` |
+
+Those three are the record. Anything else under `outputs/` — the `-test`
+directories, and `02_tango/v0.2`, which is
+[superseded](outputs/02_tango/v0.2/SUPERSEDED.md) by `v0.1` — is kept because a
+method that changed should be inspectable, not because its numbers mean
+anything. `make verify` audits only the three.
+
+---
+
 ## Start here
 
 The current landscape is **v0.5**. Read in this order:
@@ -29,18 +87,10 @@ The current landscape is **v0.5**. Read in this order:
 3. **[reference/SCHEMA.md](reference/SCHEMA.md)** — the columns, the tiers, and
    the maturity rubric every claim is graded against
 
-**Or read it as a dashboard.** `make export && make web` builds `web/dist/`,
-which opens by double-clicking `index.html` — no server, nothing fetched, and
-the folder is sendable as-is. It is the same report with each section beside the
-counts it describes, its evidence tags as filters, its citations as links into a
-filterable list of all 151 sources, and the verbatim quote behind every
-characterisation one click away. The built page is **not** committed — see
-[Reading it as a dashboard](#reading-it-as-a-dashboard) for the two commands and
-what you need installed.
-
-Earlier directories (`v0.2`, `v0.4`, and anything `-test`) are method tests.
-They are kept because a method that was changed should be inspectable, not
-because their numbers mean anything.
+**Or read it as a dashboard** — the same report with each section beside the
+counts it describes, its evidence tags as filters, and the verbatim quote behind
+every characterisation one click away. Two commands, no server, and the folder
+is sendable as-is: see [docs/dashboard.md](docs/dashboard.md).
 
 ## Where v0.5 landed
 
@@ -279,19 +329,48 @@ what the authors claimed, and what they demonstrated.
 | **M4** | Output entered a real workflow or influenced a real decision; site named, time-bounded |
 | **M5** | Routine use beyond a trial, evidenced by somebody other than the vendor |
 
+## Using it for your own research
+
+The subject is geoscience, but nothing in `harvest.py` or the scoring knows
+that. If you want a scoping review of another literature — with a shortlist cut
+that is measured rather than assumed, and a report that cannot state a number
+nobody computed — you can point this at your own field.
+
+**[docs/adapting.md](docs/adapting.md) is the walkthrough.** The short version:
+
+```bash
+cp reference/queries_template.json reference/queries_mytopic.json   # annotated starter
+$EDITOR reference/queries_mytopic.json                              # your two axes
+python3 scripts/harvest.py --out outputs/04_mytopic/v0.1 --dry-run \
+    --config reference/queries_mytopic.json                         # validate, call nothing
+```
+
+Copy the **02** run, not 01: 01's domain vocabulary is compiled into
+`scripts/triage.py`, while 02's is read from its query plan, which is what makes
+`harvest.py` and `triage_tango.py` reusable with no new Python at all. The audit
+and export scripts need a fork — their controlled vocabularies are constants at
+the top of each file, duplicated from the schema deliberately so that facet order
+is stable across runs. `docs/adapting.md` has the file-by-file table.
+
+The input contract is [`reference/SCHEMA_queries.md`](reference/SCHEMA_queries.md),
+which had no documentation until it was needed for exactly this.
+
 ## Repository layout
 
 | Path | What |
 |---|---|
 | `prompts/` | Versioned research prompts, broad → narrow |
 | `.claude/skills/` | **Symlinks** into `prompts/`, so each prompt is a slash command |
-| `reference/` | `SCHEMA.md` (columns, rubrics, tiers) and `queries.json` (the query plan) |
+| `reference/` | The contracts. `SCHEMA*.md` for what a run produces, `SCHEMA_queries.md` for the query plan that drives one, `queries*.json` for the plans themselves |
 | `scripts/` | `harvest.py`, `triage.py`, `audit.py`, `enrich.py`, `export_web.py` (+ `_tango`/`_gaps` variants for the other two runs) |
 | `web/` | The static dashboards — landscape, tango, gaps, one page each with a switcher between them. Astro; `dist/` opens from the filesystem, `src/data/*.json` is generated |
 | `tests/` | Mirrors `scripts/`. `audit.py` is tested by mutation — see [AGENTS.md §B4](./AGENTS.md) |
 | `outputs/<prompt>/<version>/` | One directory per run. **Never overwritten** |
 | `decisions.md` | Decision log. Each entry says what it *rules out* |
 | `docs/architecture.md` | Why it is shaped this way, and what looks wrong until you know why |
+| `docs/adapting.md` | Pointing the machinery at a different literature |
+| `docs/dashboard.md` | Building and reading the static pages |
+| `CONTRIBUTING.md` | Conventions, what counts as a method change, what not to touch |
 
 A committed run directory is **evidence**. `.editorconfig`,
 `.pre-commit-config.yaml` and `pyproject.toml` all exclude `outputs/` so that no
@@ -307,117 +386,49 @@ from `reference/queries.json` in minutes. `screening.csv`, `papers.csv` and
 
 ![The dashboard: the run summary table, above the executive summary](docs/img/dashboard.png)
 
-**The built page is not in the repository.** `web/dist/` is gitignored, because
-it is generated from a committed run and regenerates in seconds. Cloning gets
-you the source; one command gets you the page.
-
-### See it, from a fresh clone
+Each run also builds a static page: the report with every section beside the
+counts it describes, evidence tags as filters, all sources filterable and
+downloadable as CSV, and the verbatim quote behind every characterisation one
+click away.
 
 ```bash
-git clone git@github.com:jannablaume/deep-research-agentic-geoscience.git
-cd deep-research-agentic-geoscience
-
-make export        # the committed run → web/src/data/landscape.web.json
-make web           # that JSON        → web/dist/  (runs npm install for you)
-
-open web/dist/index.html          # macOS
-xdg-open web/dist/index.html      # Linux
-start web\dist\index.html         # Windows
+make export && make web        # → web/dist/index.html
 ```
 
-That is the whole procedure. Double-clicking `web/dist/index.html` in a file
-browser works identically — there is no server to start and nothing is fetched
-at runtime.
+`web/dist/` is **not** committed — it is generated from a committed run and
+regenerates in seconds. It opens by double-clicking, with no server and nothing
+fetched at runtime, so a copy of the folder is a copy of the data and you can
+zip it and email it.
 
-**The other two runs get their own page the same way.** `make export-tango` and
-`make export-gaps` write `web/src/data/tango.web.json` and `gaps.web.json`; one
-`make web` builds all three into `web/dist/` — `index.html`, `tango.html`,
-`gaps.html` — and each carries a small switcher in its header to the other two.
-A page whose export is missing says so rather than failing the build, so you
-never have to run all three exporters just to look at one.
+`make export-tango` and `make export-gaps` add the other two pages; one
+`make web` builds all three, each with a switcher to the others.
 
-**You need Node.** The badge above says the *pipeline* has no dependencies, and
-that is true: `python3 scripts/harvest.py` runs on a bare Python 3.11+. The
-front end is the one exception — `make web` needs **Node 18.20.8, 20.3+, or 22+**
-and npm 9.6.5+ (Astro's own requirement), used only at build time. Nothing Node
-touches ends up in the page: the built folder loads no script from a CDN and no
-font from a network.
-
-| Want to… | Do this |
-|---|---|
-| just look at it | `make export && make web`, then open `web/dist/index.html` |
-| send it to a colleague | zip `web/dist/` and email it — it opens on their machine with nothing installed |
-| change the front end | `make web-dev` → hot reload on <http://localhost:4321> |
-| point it at another run | `make export OUT=outputs/01_landscape/v0.6 && make web` |
-| add the country facet | `make enrich` before `make export` — needs network, ~3 OpenAlex calls |
-
-If the page opens **unstyled and inert**, you opened `web/src/pages/index.astro`
-or a stale `dist/` — rebuild with `make web` and open `web/dist/index.html`. If
-`make web` says *"No exported run"*, run `make export` first.
-
-### Why it is a folder and not a URL
-
-The front end is a static [Astro](https://astro.build) site with no runtime
-dependencies and no backend: the run is compiled into the page, so a copy of the
-folder is a copy of the data. That property is the point — the research
-direction is unpublished and lives on institutional infrastructure, so "send a
-reviewer the folder" is the distribution method, and a page that only works over
-`http://` works for everybody except the person you sent it to.
-`web/scripts/relativise.mjs` exists for that one reason, and it is the kind of
-bug you cannot see from the machine that built it.
-
-### What the dashboard adds over the markdown
-
-- **A summary table first.** The funnel from 11,191 harvested records to the 38
-  with a readable evaluation section, one counted row at a time, each naming its
-  denominator and what it counts. The last row is the one that needed care: this
-  run cannot say how many sources a paywall cost, because `papers.csv` has no
-  paywall column and `access_status: abstract-only` covers paywalls,
-  bot-protected nominal open access, software deposits and records with no
-  abstract in any API alike — so the row reports what *is* counted and says the
-  rest is narrated in `unreachable.md` rather than tallied.
-- **Filters second.** The 151-source explorer is the second section, not the
-  fifth, because filtering is what most readers came to do.
-- **Bibliographic facets** — publication type, journal or venue, and country of
-  author institution. Country is the one figure on the page that needs a network
-  call (`make enrich`), and the one whose denominator is not the whole corpus:
-  94 of 151 sources report an affiliation, because OpenAlex takes them from
-  publisher metadata that preprint servers largely do not supply. The panel
-  leads with that denominator.
-- **The report, re-cut.** Each thematic section sits beside the counts it
-  describes rather than in a prose file next to charts it never mentions.
-- **Evidence tags as filters.** `[Certain]` / `[Likely]` / `[Absent-searched]`
-  become chips, so "show me only what a source actually stated" is one click.
-- **Citations that resolve on the page.** Every `[[doi:…]]` is a numbered
-  reference marker; clicking it opens that source's full comparison-grid record,
-  including — for the 38 core sources — the verbatim sentences from `papers.md`
-  that the characterisation rests on.
-- **All 151 sources, filterable** by tier, field, architecture, technique,
-  framework, maturity, model family and year, with the filtered set
-  downloadable as RFC 4180 CSV.
-- **One derived facet, labelled as such.** "Frameworks the agents call" is a
-  keyword match over `tools_used` and `base_model`, not a `SCHEMA.md` column and
-  not covered by any audit check. The page says so everywhere it appears, and
-  Method prints the whole keyword list including the terms that matched nothing.
-
-Everything else on the page is either read from a run artifact or counted from
-one, and the contract audit is reproduced in full: 26 executed checks, not a
-claim of quality.
+**Full details** — what the page adds over the markdown, the Node requirement,
+why it is a folder and not a URL, and what to do when it opens unstyled — are in
+**[docs/dashboard.md](docs/dashboard.md)**.
 
 ## Development
 
 ```bash
 make check      # ruff, ruff-format, mypy --strict, pytest + coverage, hooks, symlinks
+make verify     # re-audit every finished run against its committed artifacts
 ```
 
+The two answer different questions. `make check` says the **code** is healthy;
+`make verify` says the **published numbers** are still the numbers. Both run
+from a bare clone with no network and no API key, and CI runs both.
+
 `make check` must pass from a bare clone — no network, no API key, no run
-directory — which is what makes CI meaningful. 200 tests, `mypy --strict` over
+directory — which is what makes CI meaningful. 385 tests, `mypy --strict` over
 `scripts/` and `tests/`, and a coverage floor in `pyproject.toml` rather than on
 the command line (at the default precision, `--cov-fail-under` compares the
 *rounded* figure, so a run at 64.8% prints FAIL and then exits 0).
 
 [`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs the same gates
 across Python 3.11–3.13.
+
+Conventions, and which changes are **method changes** rather than refactors, are
+in [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 A change to `triage.py`'s scoring is a **method change**: it alters what a re-run
 admits, so it belongs in a version bump with a re-triage and a `decisions.md`

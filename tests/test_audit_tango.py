@@ -514,3 +514,47 @@ class TestVacuousPasses:
         out = tmp_path / "empty"
         (out / "report").mkdir(parents=True)
         assert audit_tango.main(["--out", str(out)]) == 1
+
+
+class TestVocabularyMatchesTheQueryPlan:
+    """The gate's vocabulary and the config triage scores against must not drift apart.
+
+    `triage_tango.py` reads its domain groups and touchpoints from
+    `reference/queries_tango.json`; `audit_tango.py` hardcodes the same vocabulary as
+    validation sets. Nothing connected the two, so adding a group to the config gave a
+    run whose triage emits a value its own audit then rejects — and the failure surfaces
+    at the end of a long run rather than at the edit that caused it.
+
+    These are not a request to make the audit config-driven. The duplication is
+    deliberate (see docs/architecture.md §14: the export needs a fixed facet *order*, and
+    the audit needs a closed set to validate against). They just assert the two copies
+    still say the same thing.
+    """
+
+    @staticmethod
+    def _config() -> dict[str, object]:
+        import json
+
+        path = Path(__file__).resolve().parents[1] / "reference" / "queries_tango.json"
+        loaded: dict[str, object] = json.loads(path.read_text(encoding="utf-8"))
+        return loaded
+
+    def test_touchpoints_match(self) -> None:
+        """Config names them with underscores, the grid with hyphens; `none` is a sentinel."""
+        triage = self._config()["triage"]
+        assert isinstance(triage, dict)
+        configured = {k.replace("_", "-") for k in triage["touchpoints"] if not k.startswith("_")}
+        assert configured == audit_tango.TOUCHPOINTS - {"none"}
+
+    def test_subfields_match(self) -> None:
+        """SUBFIELDS is every harvested group plus the `triage.general` fallback bucket."""
+        groups = self._config()["domain_groups"]
+        assert isinstance(groups, dict)
+        harvested = {
+            g for scope in ("core", "periphery") for g in groups.get(scope, {}).get("groups", {})
+        }
+        extra = audit_tango.SUBFIELDS - harvested
+        assert harvested <= audit_tango.SUBFIELDS, (
+            f"harvested but not accepted: {harvested - audit_tango.SUBFIELDS}"
+        )
+        assert extra == {"simulation_general"}, f"unexpected accepted-but-never-harvested: {extra}"

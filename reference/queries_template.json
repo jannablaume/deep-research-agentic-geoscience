@@ -1,0 +1,115 @@
+{
+  "_comment": "TEMPLATE query plan — copy to reference/queries_<yourtopic>.json and edit. Contract: reference/SCHEMA_queries.md. Walkthrough: docs/adapting.md. The `bands` block below is the technique axis and is topic-neutral: reuse it as-is unless you are reviewing something other than LLM-based agentic systems. The `domain_groups` and `triage` blocks are the subject axis and are EXAMPLES ONLY — replace every group with your own. Check your edit with: python3 scripts/harvest.py --out outputs/04_yours/v0.1 --dry-run --config reference/queries_<yourtopic>.json",
+
+  "from_date": "2022-11-01",
+
+  "_comment_from_date": "2022-11-01 is the ChatGPT release. It is the right floor for an LLM-era review and the wrong one for anything else — set it to where your literature actually begins.",
+
+  "openalex_max_pages": 20,
+  "arxiv_max_results": 2000,
+
+  "_comment_caps": "200 records per OpenAlex page. A query that reaches the cap is marked TRUNCATED in queries.csv so that a section cannot report the cap as the size of a literature. The 01 plan shipped at 5 and had to be raised mid-run.",
+
+  "bands": {
+    "A_agentic": {
+      "precision": "high",
+      "note": "Explicit agent vocabulary. Nearly everything here is on-topic for technique/architecture questions. Topic-neutral — reuse verbatim.",
+      "terms": [
+        "\"agentic AI\"",
+        "\"agentic workflow\"",
+        "\"AI agent\"",
+        "\"LLM agent\"",
+        "\"language model agent\"",
+        "\"autonomous agent\"",
+        "\"multi-agent system\"",
+        "\"multi-agent LLM\"",
+        "\"tool use\"",
+        "\"function calling\"",
+        "\"ReAct\"",
+        "\"chain of thought\"",
+        "\"AI scientist\"",
+        "\"autonomous experimentation\"",
+        "\"self-driving laboratory\"",
+        "\"copilot\"",
+        "\"AI assistant\"",
+        "\"retrieval-augmented generation\"",
+        "\"agent orchestration\"",
+        "\"planning agent\"",
+        "\"human-in-the-loop\""
+      ]
+    },
+    "B_llm": {
+      "precision": "recall",
+      "note": "Foundation-model vocabulary without an agent term. Large and noisy; exists so that agentic systems that never use the word 'agent' are still found. Screened hard. Topic-neutral — reuse verbatim.",
+      "terms": [
+        "\"large language model\"",
+        "\"foundation model\"",
+        "\"GPT-4\"",
+        "\"ChatGPT\"",
+        "\"LLM\"",
+        "\"generative AI\"",
+        "\"prompt engineering\"",
+        "\"vision language model\""
+      ]
+    }
+  },
+
+  "domain_groups": {
+    "core": {
+      "in_scope": true,
+      "note": "REPLACE. Your subject, at full depth: these records are deep-read. Aim each group at recall — a record never harvested cannot be recovered by any downstream knob. Every term is a single phrase; a bare AND/OR/NOT makes OpenAlex return zero with no error and harvest.py refuses to start.",
+      "groups": {
+        "example_subfield_one": [
+          "\"first phrase\"",
+          "\"second phrase\"",
+          "singleword"
+        ],
+        "example_subfield_two": [
+          "\"another phrase\"",
+          "\"yet another\""
+        ]
+      }
+    },
+    "periphery": {
+      "in_scope": true,
+      "note": "REPLACE. Adjacent literatures you want counted but not deep-read. Keep at least one — the periphery section reports how the neighbouring field compares, and it cannot be written from harvest counts if nothing periphery was harvested.",
+      "groups": {
+        "example_adjacent_field": [
+          "\"adjacent phrase\"",
+          "\"another adjacent phrase\""
+        ]
+      }
+    }
+  },
+
+  "triage": {
+    "_comment": "Read by scripts/triage_tango.py, not by harvest.py. Values are regexes, compiled case-insensitively. Keys under `core` and `periphery` must match the domain_groups above EXACTLY — a group that is harvested but has no triage pattern scores scope 'none' and is dropped from the shortlist without appearing in any count. triage_tango.py refuses to run on a mismatch in either direction. Omit this whole block only if you are writing your own triage script instead of reusing 02's.",
+
+    "core": {
+      "example_subfield_one": "first phrase|second phrase|singleword",
+      "example_subfield_two": "another phrase|yet another"
+    },
+    "periphery": {
+      "example_adjacent_field": "adjacent phrase|another adjacent phrase"
+    },
+
+    "general": "REPLACE with a broad fallback for your field, e.g. simulat|solver|numerical model",
+
+    "_comment_general": "Required. A record that names no specific group would otherwise score scope 'none' and be cut regardless of its score. The fallback counts its own matches toward domain_score — it once did not, and the default --min-domain 1 silently deleted a whole bucket.",
+
+    "touchpoints": {
+      "_comment": "OPTIONAL and orthogonal to the groups above: a second regex pass over whatever surfaces you want tallied per record. 02 uses it for the surfaces of the system under study. Delete the block if you have no such axis.",
+      "example_touchpoint": "surface phrase|another surface phrase"
+    }
+  },
+
+  "venue_hints": {
+    "_comment": "Not queried by harvest.py. Passed to the model for the grey-literature pass, which is the one thing the bibliographic APIs cannot reach. REPLACE with your field's.",
+    "grey": [
+      "the society or preprint venues your field actually uses",
+      "GitHub",
+      "Hugging Face",
+      "agency and consortium technical reports"
+    ]
+  }
+}
